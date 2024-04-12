@@ -18,5 +18,6 @@
   <modules>
     <module>xsd-web-ui</module>
     <module>xsd-web-serv</module>
+    <module>xsd-om</module>
   </modules>
 </project>
