@@ -1,9 +1,7 @@
-package xyz.cofe.xsd.http;
+package xyz.cofe.xsd.http.mount;
 
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Response;
-
-import java.util.Optional;
 
 public record Mime(String name) {
     public static final Mime textPlain = new Mime("text/plain");

@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.http;
+package xyz.cofe.xsd.http.mount;
 
 import java.nio.file.Path;
 import java.util.Optional;

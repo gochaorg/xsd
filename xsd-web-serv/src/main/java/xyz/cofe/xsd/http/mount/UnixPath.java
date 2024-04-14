@@ -1,7 +1,6 @@
-package xyz.cofe.xsd.http;
+package xyz.cofe.xsd.http.mount;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
