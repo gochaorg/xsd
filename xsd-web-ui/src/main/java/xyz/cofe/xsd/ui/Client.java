@@ -1,12 +1,12 @@
-package xyz.cofe;
+package xyz.cofe.xsd.ui;
 
-import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.html.HTMLButtonElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.html.HTMLInputElement;
 import org.teavm.jso.ajax.XMLHttpRequest;
-import org.teavm.jso.dom.xml.DOMParser;
+import xyz.cofe.xsd.om.xml.print.XmlPrinter;
+import xyz.cofe.xsd.om.xml.jso.XmlDocJSOAdapter;
 
 public class Client {
     public static void main(String[] args) {
@@ -19,13 +19,14 @@ public class Client {
 
         HTMLInputElement urlAddr = HTMLDocument.current().createElement("input").cast();
         urlAddr.setType("text");
+        urlAddr.setValue("/xsd/xml.xsd");
         div.appendChild(urlAddr);
 
         HTMLButtonElement but = HTMLDocument.current().createElement("button").cast();
         but.setInnerText("get");
         div.appendChild(but);
 
-        HTMLElement res = HTMLDocument.current().createElement("div");
+        HTMLElement res = HTMLDocument.current().createElement("pre");
         div.appendChild(res);
         but.addEventListener("click", evt -> {
             getPlainText(urlAddr.getValue(), res);
@@ -35,13 +36,18 @@ public class Client {
     private void getPlainText(String addr, HTMLElement result) {
         var xhr = XMLHttpRequest.create();
         xhr.onComplete(() -> {
-            xhr.getResponseXML();
-            result.setInnerText(xhr.getResponseText());
+            var str = xhr.getResponseText();
+            var doc = XmlDocJSOAdapter.parse(str);
 
-            System.out.println("bla bla");
+            var buff = new StringBuilder();
+            new XmlPrinter(buff).print(doc);
+
+            result.setInnerText(
+                "parsed\n"+buff.toString()
+            );
         });
         xhr.onError(err->{
-
+            System.out.println("err!");
         });
         xhr.open("GET", addr);
         xhr.send();

@@ -8,7 +8,21 @@ public class Runs {
             new WebConf().configure( conf -> {
                 conf.getBinds().add(new Bind.Http(8080,"127.0.0.1"));
                 conf.setThreads(new WebConf.Threads(1,4,15000));
-                conf.getMounts().add(new Mount("/home/user/code/xsd/xsd-om/src/test/resources/XMLSchemas", "/xsd", ".*"));
+                conf.getMounts().add(
+                    new Mount( "/home/user/code/xsd/xsd-om/src/test/resources/XMLSchemas",
+                        "/xsd",
+                        ".*")
+                );
+                conf.getMounts().add(
+                    new Mount( "/home/user/code/xsd/xsd-web-ui/target/generated/js/teavm",
+                        "/teavm",
+                        ".*")
+                );
+                conf.getMounts().add(
+                    new Mount( "/home/user/code/xsd/xsd-web-ui/src/main/webapp/index.html",
+                        "/index.html",
+                        ".*")
+                );
             })
         );
     }

@@ -19,7 +19,7 @@ public record Mime(String name) {
     public static Mime of(FileExtension extension){
         if( extension==null ) throw new IllegalArgumentException("extension==null");
         return switch (extension.name().toLowerCase()){
-            case "txt" -> textPlain;
+            case "txt", "java" -> textPlain;
             case "css" -> textCss;
             case "html" -> textHtml;
             case "js" -> textJavascript;

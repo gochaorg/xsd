@@ -39,6 +39,12 @@
       <version>6.0.0</version>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>xsd-om</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -84,7 +90,7 @@
               <targetDirectory>${project.build.directory}/generated/js/teavm</targetDirectory>
 
               <!-- Main class, containing static void main(String[]) -->
-              <mainClass>xyz.cofe.Client</mainClass>
+              <mainClass>xyz.cofe.xsd.ui.Client</mainClass>
 
               <!-- Whether TeaVM should produce minified JavaScript. Can reduce JavaScript file size more than
                    two times -->
