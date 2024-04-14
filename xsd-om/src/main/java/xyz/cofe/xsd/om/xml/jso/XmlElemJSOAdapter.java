@@ -9,7 +9,7 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XmlElemJSOAdapter extends XmlNode.XmlNodeJSOAdapter implements XmlElem {
+public class XmlElemJSOAdapter extends XmlNodeJSOAdapter implements XmlElem {
     private final Element element;
 
     public XmlElemJSOAdapter(Element element) {
