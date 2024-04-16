@@ -36,7 +36,7 @@ public class XmlNodeIterator implements Iterator<ImList<XmlNode>> {
             if( h instanceof XmlElem e ){
                 workSet.addAll(
                     0,
-                    e.getChildren().stream().map(res::prepend).toList()
+                    e.getChildren().map(res::prepend).toList()
                 );
             }
         });

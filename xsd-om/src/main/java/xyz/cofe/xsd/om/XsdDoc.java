@@ -17,7 +17,7 @@ public class XsdDoc {
         this.xmlDoc = xmlDoc;
     }
 
-    //region includes : ImList<XsdInclude>
+    //region includes : List<XsdInclude>
     private List<XsdInclude> includes;
     public List<XsdInclude> getIncludes(){
         if( includes!=null )return includes;
@@ -32,7 +32,7 @@ public class XsdDoc {
     }
     //endregion
 
-    //region imports : ImList<XsdImport>
+    //region imports : List<XsdImport>
     private List<XsdImport> imports;
     public List<XsdImport> getImports(){
         if( imports!=null )return imports;
@@ -56,4 +56,7 @@ public class XsdDoc {
         return targetNamespace;
     }
     //endregion
+
+    public List<XsdDoc> getNestedXsdDocs(){
+    }
 }

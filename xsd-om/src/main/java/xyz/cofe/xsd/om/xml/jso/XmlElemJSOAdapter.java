@@ -2,6 +2,7 @@ package xyz.cofe.xsd.om.xml.jso;
 
 import org.teavm.jso.dom.xml.Element;
 import org.teavm.jso.dom.xml.Node;
+import xyz.cofe.im.struct.ImList;
 import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
@@ -42,25 +43,26 @@ public class XmlElemJSOAdapter extends XmlNodeJSOAdapter implements XmlElem {
         return element.getAttribute(name);
     }
 
-    private List<XmlAttr> attributes;
+    private ImList<XmlAttr> attributes;
 
     @Override
-    public List<XmlAttr> getAttributes() {
+    public ImList<XmlAttr> getAttributes() {
         if( attributes!=null )return attributes;
-        attributes = new ArrayList<>();
+        var attributes = ImList.<XmlAttr>empty();
         var atts = element.getAttributes();
         for( var i=0;i<atts.getLength();i++ ){
-            attributes.add(new XMLAttrJSOAdapter(atts.get(i)));
+            attributes = attributes.prepend(new XMLAttrJSOAdapter(atts.get(i)));
         }
+        this.attributes = attributes.reverse();
         return attributes;
     }
 
-    private List<XmlNode> children;
+    private ImList<XmlNode> children;
 
     @Override
-    public List<XmlNode> getChildren() {
+    public ImList<XmlNode> getChildren() {
         if (children != null) return children;
-        children = new ArrayList<>();
+        var children = ImList.<XmlNode>empty();
 
         var nodeList = element.getChildNodes();
         if (nodeList != null) {
@@ -70,13 +72,13 @@ public class XmlElemJSOAdapter extends XmlNodeJSOAdapter implements XmlElem {
                     switch (child.getNodeType()) {
                         case Node.ELEMENT_NODE -> {
                             var el = new XmlElemJSOAdapter((Element) child);
-                            children.add(el);
+                            children = children.prepend(el);
                         }
                         case Node.TEXT_NODE -> {
-                            children.add(new XmlTextJSOAdapter(child));
+                            children = children.prepend(new XmlTextJSOAdapter(child));
                         }
                         case Node.CDATA_SECTION_NODE -> {
-                            children.add(new XmlCDataJSOAdapter(child));
+                            children = children.prepend(new XmlCDataJSOAdapter(child));
                         }
                         case Node.COMMENT_NODE -> {}
                         case Node.DOCUMENT_FRAGMENT_NODE -> {}
@@ -85,6 +87,7 @@ public class XmlElemJSOAdapter extends XmlNodeJSOAdapter implements XmlElem {
             }
         }
 
-        return children;
+        this.children = children.reverse();
+        return this.children;
     }
 }

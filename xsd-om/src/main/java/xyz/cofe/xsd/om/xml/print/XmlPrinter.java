@@ -59,7 +59,7 @@ public class XmlPrinter {
             + " namespace=" + elem.getNamespaceURI()
             + " prefix=" + elem.getPrefix()
             + " localName=" + elem.getLocalName()
-            + " attribs=" + elem.getAttributes().stream()
+            + " attribs=" + elem.getAttributes()
             .map(a ->
                 " a.name=" + a.getName()
                     + " a.localName=" + a.getLocalName()
@@ -67,13 +67,13 @@ public class XmlPrinter {
                     + " a.namespace=" + a.getNamespaceURI()
                     + " a.prefix=" + a.getPrefix()
                     + " a.value=" + a.getValue())
-            .reduce("", (acc, it) -> acc + " " + it)
+            .foldLeft("", (acc, it) -> acc + " " + it)
             + " text=" + elem.getTextContent()
         );
 
-        for (var ch : elem.getChildren()) {
+        elem.getChildren().each( ch -> {
             print(ch, level + 1);
-        }
+        });
     }
 
     public void print(XmlCData elem, int level) {

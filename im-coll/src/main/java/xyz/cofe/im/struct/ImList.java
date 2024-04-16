@@ -155,4 +155,10 @@ public interface ImList<E> {
         if( other==null ) throw new IllegalArgumentException("other==null");
         return reverse().foldLeft( other, ImList::prepend);
     }
+
+    default List<E> toList(){
+        var lst = new ArrayList<E>();
+        each(lst::add);
+        return lst;
+    }
 }

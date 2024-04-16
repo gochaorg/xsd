@@ -11,13 +11,5 @@ public class XSDParseTest {
         var res = "/XMLSchemas/ed/cbr_ed101_v2024.4.0.xsd";
         var xdoc = xmlDocResource(res);
         var xsd = new XsdDoc(xdoc);
-//        xsd.includes().each(e -> {
-//            System.out.println(""+e.getSchemaLocation());
-//        });
-//        xsd.imports().each(e -> {
-//            System.out.println(""+e.getSchemaLocation());
-//        });
-//        assertTrue(xsd.includes().size()>0);
-//        assertTrue(xsd.imports().size()>0);
     }
 }

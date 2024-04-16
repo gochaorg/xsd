@@ -18,10 +18,10 @@ public interface XmlElem extends XmlNode {
 
     default ImList<XmlAttr> attrib(String localName){
         if( localName==null ) throw new IllegalArgumentException("localName==null");
-        return ImList.from(getAttributes()).filter( a -> localName.equals(a.getLocalName()) );
+        return getAttributes().filter( a -> localName.equals(a.getLocalName()) );
     }
 
-    List<XmlAttr> getAttributes();
+    ImList<XmlAttr> getAttributes();
 
-    List<XmlNode> getChildren();
+    ImList<XmlNode> getChildren();
 }
