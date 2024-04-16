@@ -1,4 +1,6 @@
-package xyz.cofe.xsd.om.coll;
+package xyz.cofe.im.iter;
+
+import xyz.cofe.im.struct.ImList;
 
 import java.util.ArrayList;
 import java.util.Collections;

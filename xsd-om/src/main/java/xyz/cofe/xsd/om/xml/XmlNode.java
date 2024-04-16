@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om.xml;
 
-import xyz.cofe.xsd.om.coll.ExtIterable;
-import xyz.cofe.xsd.om.coll.ImList;
+import xyz.cofe.im.iter.ExtIterable;
+import xyz.cofe.im.struct.ImList;
 
 import java.util.Collections;
 import java.util.List;

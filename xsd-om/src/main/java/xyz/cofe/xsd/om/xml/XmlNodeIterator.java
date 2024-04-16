@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om.xml;
 
-import xyz.cofe.xsd.om.coll.ImList;
+import xyz.cofe.im.struct.ImList;
 
 import java.util.ArrayList;
 import java.util.Iterator;

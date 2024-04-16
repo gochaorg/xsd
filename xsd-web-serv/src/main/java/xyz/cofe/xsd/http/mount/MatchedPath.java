@@ -4,6 +4,7 @@ import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
+import xyz.cofe.nixpath.UnixPath;
 import xyz.cofe.xsd.http.HtmlBuilder;
 
 import java.io.IOException;

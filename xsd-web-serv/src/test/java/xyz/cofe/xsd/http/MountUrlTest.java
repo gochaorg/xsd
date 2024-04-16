@@ -2,9 +2,10 @@ package xyz.cofe.xsd.http;
 
 import org.junit.jupiter.api.Test;
 import xyz.cofe.xsd.http.mount.MountUrl;
-import xyz.cofe.xsd.http.mount.UnixPath;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import xyz.cofe.nixpath.UnixPath;
 
 public class MountUrlTest {
     @Test

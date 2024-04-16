@@ -1,23 +1,31 @@
 package xyz.cofe.xsd.om;
 
+import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Tuple2;
 import xyz.cofe.xsd.om.xml.XmlElem;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class XsdInclude {
+public final class XsdInclude implements XsdSchemaLocation {
     public XsdInclude(Optional<String> schemaLocation) {
         this.schemaLocation = schemaLocation;
     }
 
-    private Optional<String> schemaLocation;
+    //region schemaLocation : Optional<String>
+    private final Optional<String> schemaLocation;
 
     public Optional<String> getSchemaLocation() {
         return schemaLocation;
     }
+    //endregion
 
-    public void setSchemaLocation(Optional<String> schemaLocation) {
-        this.schemaLocation = schemaLocation;
+    private Map<URI, LinkedDoc> xsdDocs = new HashMap<>();
+    public Map<URI, LinkedDoc> getXsdDocs() {
+        return xsdDocs;
     }
 
     public static Optional<XsdInclude> parse(XmlElem elem){

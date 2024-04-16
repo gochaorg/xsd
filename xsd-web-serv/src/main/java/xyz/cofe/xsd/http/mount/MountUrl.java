@@ -1,5 +1,7 @@
 package xyz.cofe.xsd.http.mount;
 
+import xyz.cofe.nixpath.UnixPath;
+
 import java.util.Optional;
 
 public record MountUrl(String baseUrl) {
@@ -14,6 +16,6 @@ public record MountUrl(String baseUrl) {
         if (subUriPath.isEmpty()) return Optional.of(UnixPath.empty);
         if (!subUriPath.startsWith("/")) return Optional.empty();
 
-        return UnixPath.parse(subUriPath, true);
+        return UnixPath.parse(subUriPath, true).toOptional();
     }
 }

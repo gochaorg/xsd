@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.om.coll;
+package xyz.cofe.im.iter;
 
 import java.util.Iterator;
 import java.util.function.Function;

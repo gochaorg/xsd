@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.om.coll;
+package xyz.cofe.im.struct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,15 @@ public interface ImList<E> {
         if (node == null) throw new IllegalArgumentException("node==null");
         //noinspection unchecked
         return ((ImList<E>) empty()).prepend(node);
+    }
+
+    public static <E> ImList<E> from(Iterable<E> src){
+        if( src==null ) throw new IllegalArgumentException("src==null");
+        ImList<E> lst = empty();
+        for( var e : src ){
+            lst = lst.prepend(e);
+        }
+        return lst.reverse();
     }
 
     record Empty<E>(int size) implements ImList<E> {}
@@ -140,5 +149,10 @@ public interface ImList<E> {
             res = res.prepend(e);
         }
         return res;
+    }
+
+    default ImList<E> join(ImList<E> other){
+        if( other==null ) throw new IllegalArgumentException("other==null");
+        return reverse().foldLeft( other, ImList::prepend);
     }
 }
