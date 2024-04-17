@@ -7,9 +7,10 @@ import static xyz.cofe.xsd.om.XMLParseTest.xmlDocResource;
 
 public class XSDParseTest {
     @Test
-    public void test1(){
-        var res = "/XMLSchemas/ed/cbr_ed101_v2024.4.0.xsd";
-        var xdoc = xmlDocResource(res);
-        var xsd = new XsdDoc(xdoc);
+    public void namespace(){
+        var xsd = new XSDLoaderTest().verbose(false).syncLoad();
+        xsd.getNamespaces().getNamespaceMap().forEach( (name,ns) -> {
+            System.out.println("name "+name);
+        });
     }
 }

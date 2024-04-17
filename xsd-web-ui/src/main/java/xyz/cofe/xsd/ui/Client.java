@@ -6,7 +6,7 @@ import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.html.HTMLInputElement;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import xyz.cofe.im.struct.Result;
-import xyz.cofe.xsd.om.XsdDoc;
+import xyz.cofe.xsd.om.XsdSchema;
 import xyz.cofe.xsd.om.ldr.XsdLoader;
 import xyz.cofe.xsd.om.xml.print.XmlPrinter;
 import xyz.cofe.xsd.om.xml.jso.XmlDocJSOAdapter;
@@ -149,7 +149,7 @@ public class Client {
 
                 log.accept("loaded");
                 var xmlDoc = XmlDocJSOAdapter.parse(xsdTextOpt.get());
-                var xsdDoc = new XsdDoc(xmlDoc);
+                var xsdDoc = new XsdSchema(xmlDoc);
 
                 return Result.ok(xsdDoc);
             },

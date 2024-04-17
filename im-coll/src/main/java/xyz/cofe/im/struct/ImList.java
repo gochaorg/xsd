@@ -1,6 +1,9 @@
 package xyz.cofe.im.struct;
 
+import xyz.cofe.im.iter.EachToMap;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -8,7 +11,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface ImList<E> {
+public interface ImList<E> extends Iterable<E>,
+                                   EachToMap<E> {
     int size();
 
     public static <E> ImList<E> empty() {
@@ -31,8 +35,35 @@ public interface ImList<E> {
         return lst.reverse();
     }
 
+    @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
+    public static <E> ImList<E> from(Optional<E> src){
+        if( src==null ) throw new IllegalArgumentException("src==null");
+        return src.isPresent() ? ImList.first(src.get()) : empty();
+    }
+
     record Empty<E>(int size) implements ImList<E> {}
     record Cons<E>(E elem, ImList<E> next, int size) implements ImList<E> {}
+
+    @SuppressWarnings("unchecked")
+    default Iterator<E> iterator() {
+        ImList<E>[] ptr = new ImList[]{ this };
+        return new Iterator<E>() {
+            @Override
+            public boolean hasNext() {
+                return ptr[0] instanceof ImList.Cons<E>;
+            }
+
+            @Override
+            public E next() {
+                if( ptr[0] instanceof ImList.Cons<E> cons ){
+                    var res = cons.elem();
+                    ptr[0] = cons.next();
+                    return res;
+                }
+                return null;
+            }
+        };
+    }
 
     default ImList<E> prepend(E elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");

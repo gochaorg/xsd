@@ -3,14 +3,18 @@ package xyz.cofe.xsd.om;
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Tuple2;
 import xyz.cofe.xsd.om.xml.XmlElem;
+import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
+import static xyz.cofe.xsd.om.XsdConst.XMLSchemaNamespace;
+
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public final class XsdInclude implements XsdSchemaLocation {
+public final class XsdInclude implements XsdSchemaLocation, Xsd {
     public XsdInclude(Optional<String> schemaLocation) {
         this.schemaLocation = schemaLocation;
     }
@@ -30,11 +34,20 @@ public final class XsdInclude implements XsdSchemaLocation {
 
     public static Optional<XsdInclude> parse(XmlElem elem){
         if( elem==null ) throw new IllegalArgumentException("elem==null");
-        if( !XsdConst.XMLSchemaNamespace.equals(elem.getNamespaceURI()) )return Optional.empty();
-        if( !XsdConst.Include.equals(elem.getLocalName()) )return Optional.empty();
+        if( !XMLSchemaNamespace.equals(elem.getNamespaceURI()) )return Optional.empty();
+        if( !Include.equals(elem.getLocalName()) )return Optional.empty();
 
         return Optional.of(
             new XsdInclude( Optional.ofNullable(elem.getAttribute("schemaLocation")) )
         );
+    }
+
+    public static final String Include = "include";
+
+    public static boolean isInclude(XmlNode node) {
+        return
+            node instanceof XmlElem el &&
+                Objects.equals(el.getNamespaceURI(), XMLSchemaNamespace) &&
+                Objects.equals(el.getLocalName(), Include);
     }
 }

@@ -16,7 +16,16 @@ public class XSDLoaderTest {
     private String base = "/XMLSchemas";
     private String testUri = "/ed/cbr_ed101_v2024.4.0.xsd";
 
-    private Result<XsdDoc, String> load(URI uri) {
+    private boolean verbose = true;
+
+    public boolean verbose() {return verbose;}
+
+    public XSDLoaderTest verbose(boolean switchOn) {
+        verbose = switchOn;
+        return this;
+    }
+
+    private Result<XsdSchema, String> load(URI uri) {
         var pathRes = UnixPath.parse(uri.getPath());
         if (pathRes.isOk()) {
             var nixPath = pathRes.toOptional().get();
@@ -27,7 +36,7 @@ public class XSDLoaderTest {
                 return targetNixPath.fold(
                     target -> {
                         var xdoc1 = xmlDocResource(target.toString());
-                        var xsd11 = new XsdDoc(xdoc1);
+                        var xsd11 = new XsdSchema(xdoc1);
                         return Result.ok(xsd11);
                     },
                     ignore -> Result.err("")
@@ -35,7 +44,7 @@ public class XSDLoaderTest {
             } else {
                 var resName = base + nixPath.toString();
                 var xdoc1 = xmlDocResource(resName);
-                var xsd1 = new XsdDoc(xdoc1);
+                var xsd1 = new XsdSchema(xdoc1);
                 return Result.ok(xsd1);
             }
         }
@@ -49,25 +58,38 @@ public class XSDLoaderTest {
     }
 
     @Test
-    public void load_1() {
+    public XsdSchema syncLoad() {
         var xsdLdr = new XsdLoader(
             this::load,
             this::resolveUri
         );
 
         xsdLdr.setLoadLog(((uri, xsdDocLoadResult) -> {
-            System.out.println(
-                "load " + uri + " " + (xsdDocLoadResult instanceof Result.Ok<XsdDoc, ?> succ
-                    ? "success " + succ.value().getTargetNamespace()
-                    : "fail"));
+            if (verbose) {
+                System.out.println(
+                    "load " + uri + " " + (xsdDocLoadResult instanceof Result.Ok<XsdSchema, ?> succ
+                        ? "success " + succ.value().getTargetNamespace()
+                        : "fail"));
+            }
         }));
-        var res = xsdLdr.load(URI.create(testUri));
+
+        var xsdRes = xsdLdr.load(URI.create(testUri));
+        var xsd = xsdRes.toOptional().get();
+
+        xsd.getNestedXsdDocs().forEach(xd -> {
+            if (verbose) {
+                System.out.println("xd " + xd.getTargetNamespace());
+            }
+        });
+
+        assertTrue(xsd.getNestedXsdDocs().size() == 4);
+        return xsd;
     }
 
     @Test
-    public void asyncLoad(){
+    public void asyncLoad() {
         var xsdLdr = new XsdAsyncLoader(
-            (uri,consumer) -> {
+            (uri, consumer) -> {
                 consumer.accept(load(uri));
             },
             this::resolveUri
@@ -75,13 +97,15 @@ public class XSDLoaderTest {
 
         xsdLdr.setLoadLog(((uri, xsdDocLoadResult) -> {
             System.out.println(
-                "load " + uri + " " + (xsdDocLoadResult instanceof Result.Ok<XsdDoc, ?> succ
+                "load " + uri + " " + (xsdDocLoadResult instanceof Result.Ok<XsdSchema, ?> succ
                     ? "success " + succ.value().getTargetNamespace()
                     : "fail"));
         }));
 
         xsdLdr.load(URI.create(testUri), res -> {
             assertTrue(res.isOk());
+            var xsd = res.toOptional().get();
+            assertTrue(xsd.getNestedXsdDocs().size() == 4);
         });
     }
 }
