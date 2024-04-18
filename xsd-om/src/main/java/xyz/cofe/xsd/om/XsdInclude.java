@@ -11,8 +11,21 @@ import java.util.Optional;
 
 import static xyz.cofe.xsd.om.Const.XMLSchemaNamespace;
 
+/*
+https://www.w3schools.com/xml/el_include.asp
+
+<include
+id=ID
+schemaLocation=anyURI
+any attributes
+>
+
+(annotation?)
+
+</include>
+ */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public final class XsdInclude implements XsdSchemaLocation, Xsd {
+public final class XsdInclude implements SchemaLocation, Xsd {
     public XsdInclude(Optional<String> schemaLocation) {
         this.schemaLocation = schemaLocation;
     }

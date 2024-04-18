@@ -6,6 +6,25 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_attribute.asp
+
+<attribute
+default=string
+fixed=string
+form=qualified|unqualified
+id=ID
+name=NCName
+ref=QName
+type=QName
+use=optional|prohibited|required
+any attributes
+>
+
+(annotation?,(simpleType?))
+
+</attribute>
+ */
 public final class XsdAttribute implements Xsd {
     public static final String Attribute = "attribute";
 

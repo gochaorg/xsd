@@ -6,6 +6,20 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_any.asp
+
+<any
+id=ID
+maxOccurs=nonNegativeInteger|unbounded
+minOccurs=nonNegativeInteger
+namespace=namespace
+processContents=lax|skip|strict
+any attributes
+>
+
+(annotation?)
+ */
 public final class XsdAny implements Xsd {
     public static final String Any = "any";
 

@@ -6,6 +6,20 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_sequence.asp
+
+<sequence
+id=ID
+maxOccurs=nonNegativeInteger|unbounded
+minOccurs=nonNegativeInteger
+any attributes
+>
+
+(annotation?,(element|group|choice|sequence|any)*)
+
+</sequence>
+ */
 public final class XsdSequence implements Xsd, ElementsLayout {
     public static final String Sequence = "sequence";
 

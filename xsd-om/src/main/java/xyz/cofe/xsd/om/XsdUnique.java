@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_unique.asp
+
+<unique
+id=ID
+name=NCName
+any attributes
+>
+
+(annotation?,(selector,field+))
+
+</unique>
+ */
 public final class XsdUnique implements Xsd {
     public static final String Unique = "unique";
 

@@ -6,6 +6,20 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_attributegroup.asp
+
+<attributeGroup
+id=ID
+name=NCName
+ref=QName
+any attributes
+>
+
+(annotation?),((attribute|attributeGroup)*,anyAttribute?))
+
+</attributeGroup>
+ */
 public final class XsdAttributeGroup implements Xsd {
     public static final String AttributeGroup = "attributeGroup";
 

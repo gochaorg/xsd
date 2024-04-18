@@ -6,6 +6,32 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_restriction.asp
+
+<restriction
+id=ID
+base=QName
+any attributes
+>
+
+Content for simpleType:
+(annotation?,(simpleType?,(minExclusive|minInclusive|
+maxExclusive|maxInclusive|totalDigits|fractionDigits|
+length|minLength|maxLength|enumeration|whiteSpace|pattern)*))
+
+Content for simpleContent:
+(annotation?,(simpleType?,(minExclusive |minInclusive|
+maxExclusive|maxInclusive|totalDigits|fractionDigits|
+length|minLength|maxLength|enumeration|whiteSpace|pattern)*)?,
+((attribute|attributeGroup)*,anyAttribute?))
+
+Content for complexContent:
+(annotation?,(group|all|choice|sequence)?,
+((attribute|attributeGroup)*,anyAttribute?))
+
+</restriction>
+ */
 public final class XsdRestriction implements Xsd {
     public static final String Restriction = "restriction";
 

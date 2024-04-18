@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_field.asp
+
+<field
+id=ID
+xpath=XPath expression
+any attributes
+>
+
+(annotation?)
+
+</field>
+ */
 public final class XsdField implements Xsd {
     public static final String Field = "field";
 

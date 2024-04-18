@@ -6,6 +6,20 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_choice.asp
+
+<choice
+id=ID
+maxOccurs=nonNegativeInteger|unbounded
+minOccurs=nonNegativeInteger
+any attributes
+>
+
+(annotation?,(element|group|choice|sequence|any)*)
+
+</choice>
+ */
 public final class XsdChoice implements Xsd, ElementsLayout {
     public static final String Choice = "choice";
 

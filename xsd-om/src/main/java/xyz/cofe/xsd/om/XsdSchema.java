@@ -15,6 +15,26 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/*
+https://www.w3schools.com/xml/el_schema.asp
+
+<schema
+id=ID
+attributeFormDefault=qualified|unqualified
+elementFormDefault=qualified|unqualified
+blockDefault=(#all|list of (extension|restriction|substitution))
+finalDefault=(#all|list of (extension|restriction|list|union))
+targetNamespace=anyURI
+version=token
+xmlns=anyURI
+any attributes
+>
+
+((include|import|redefine|annotation)*,(((simpleType|complexType|
+group|attributeGroup)|element|attribute|notation),annotation*)*)
+
+</schema>
+ */
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
 public final class XsdSchema implements Xsd {
     public final XmlDoc xmlDoc;

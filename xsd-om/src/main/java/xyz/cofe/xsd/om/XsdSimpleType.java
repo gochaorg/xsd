@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_simpletype.asp
+
+<simpleType
+id=ID
+name=NCName
+any attributes
+>
+
+(annotation?,(restriction|list|union))
+
+</simpleType>
+ */
 public final class XsdSimpleType implements Xsd, TypeDef {
     public static final String SimpleType = "simpleType";
 

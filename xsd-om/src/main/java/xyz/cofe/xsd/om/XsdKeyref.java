@@ -6,6 +6,20 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_keyref.asp
+
+<keyref
+id=ID
+name=NCName
+refer=QName
+any attributes
+>
+
+(annotation?,(selector,field+))
+
+</keyref>
+ */
 public final class XsdKeyref implements Xsd {
     public static final String Keyref = "keyref";
 

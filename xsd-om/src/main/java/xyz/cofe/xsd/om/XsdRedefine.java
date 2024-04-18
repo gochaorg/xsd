@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_redefine.asp
+
+<redefine
+id=ID
+schemaLocation=anyURI
+any attributes
+>
+
+(annotation|(simpleType|complexType|group|attributeGroup))*
+
+</redefine>
+ */
 public final class XsdRedefine implements Xsd {
     public static final String Redefine = "redefine";
 

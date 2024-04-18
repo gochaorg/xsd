@@ -6,6 +6,18 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_simpleContent.asp
+
+<simpleContent
+id=ID
+any attributes
+>
+
+(annotation?,(restriction|extension))
+
+</simpleContent>
+ */
 public final class XsdSimpleContent implements Xsd, ContentDef {
     public static final String SimpleContent = "simpleContent";
 

@@ -6,6 +6,17 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_documentation.asp
+
+<documentation
+source=URI reference
+xml:lang=language>
+
+Any well-formed XML content
+
+</documentation>
+ */
 public final class XsdDocumentation implements Xsd {
     public static final String Documentation = "documentation";
 

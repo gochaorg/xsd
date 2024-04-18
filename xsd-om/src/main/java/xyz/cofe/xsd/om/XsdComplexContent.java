@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_complexcontent.asp
+
+<complexContent
+id=ID
+mixed=true|false
+any attributes
+>
+
+(annotation?,(restriction|extension))
+
+</complexContent>
+*/
 public final class XsdComplexContent implements Xsd, ContentDef {
     public static final String ComplexType = "complexType";
 

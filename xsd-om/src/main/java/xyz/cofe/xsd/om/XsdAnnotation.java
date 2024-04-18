@@ -6,6 +6,18 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_annotation.asp
+
+<annotation
+id=ID
+any attributes
+>
+
+(appinfo|documentation)*
+
+</annotation>
+ */
 public final class XsdAnnotation implements Xsd {
     public static ImList<XsdAnnotation> parseList( XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");

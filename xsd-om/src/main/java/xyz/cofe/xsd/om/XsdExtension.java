@@ -6,6 +6,20 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_extension.asp
+
+<extension
+id=ID
+base=QName
+any attributes
+>
+
+(annotation?,((group|all|choice|sequence)?,
+((attribute|attributeGroup)*,anyAttribute?)))
+
+</extension>
+ */
 public final class XsdExtension implements Xsd {
     public static final String Extension = "extension";
 

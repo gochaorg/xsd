@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_list.asp
+
+<list
+id=ID
+itemType=QName
+any attributes
+>
+
+(annotation?,(simpleType?))
+
+</list>
+ */
 public final class XsdList implements Xsd {
     public static final String List = "list";
 

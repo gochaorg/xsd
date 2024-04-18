@@ -6,6 +6,18 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_all.asp
+
+<annotation
+id=ID
+any attributes
+>
+
+(appinfo|documentation)*
+
+</annotation>
+*/
 public final class XsdAll implements Xsd,
                                      ElementsLayout {
     public static final String All = "all";

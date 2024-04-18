@@ -6,6 +6,22 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_group.asp
+
+<group
+id=ID
+name=NCName
+ref=QName
+maxOccurs=nonNegativeInteger|unbounded
+minOccurs=nonNegativeInteger
+any attributes
+>
+
+(annotation?,(all|choice|sequence)?)
+
+</group>
+ */
 public final class XsdGroup implements Xsd,
                                        ElementsLayout {
     public static final String Group = "group";

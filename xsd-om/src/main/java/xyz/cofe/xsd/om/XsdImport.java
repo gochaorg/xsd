@@ -9,8 +9,22 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+/*
+https://www.w3schools.com/xml/el_import.asp
+
+<import
+id=ID
+namespace=anyURI
+schemaLocation=anyURI
+any attributes
+>
+
+(annotation?)
+
+</import>
+ */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public final class XsdImport implements XsdSchemaLocation, Xsd {
+public final class XsdImport implements SchemaLocation, Xsd {
     @SuppressWarnings("OptionalAssignedToNull")
     public XsdImport(Optional<String> schemaLocation, Optional<String> namespace) {
         if( schemaLocation==null ) throw new IllegalArgumentException("schemaLocation==null");

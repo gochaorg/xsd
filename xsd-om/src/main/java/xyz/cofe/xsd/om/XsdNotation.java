@@ -6,6 +6,21 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_notation.asp
+
+<notation
+id=ID
+name=NCName
+public=anyURI
+system=anyURI
+any attributes
+>
+
+(annotation?)
+
+</notation>
+ */
 public final class XsdNotation implements Xsd {
     public static final String Notation = "notation";
 

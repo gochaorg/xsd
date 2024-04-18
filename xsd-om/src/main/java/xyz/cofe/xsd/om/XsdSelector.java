@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_selector.asp
+
+<selector
+id=ID
+xpath=a subset of XPath expression
+any attributes
+>
+
+(annotation?)
+
+</selector>
+ */
 public final class XsdSelector implements Xsd {
     public static final String Selector = "selector";
 

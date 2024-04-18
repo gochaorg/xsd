@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_key.asp
+
+<key
+id=ID
+name=NCName
+any attributes
+>
+
+(annotation?,(selector,field+))
+
+</key>
+ */
 public final class XsdKey implements Xsd {
     public static final String Key = "key";
 

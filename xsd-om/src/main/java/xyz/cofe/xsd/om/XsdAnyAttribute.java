@@ -6,6 +6,20 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_anyattribute.asp
+
+<anyAttribute
+id=ID
+namespace=namespace
+processContents=lax|skip|strict
+any attributes
+>
+
+(annotation?)
+
+</anyAttribute>
+ */
 public final class XsdAnyAttribute implements Xsd {
     public static final String AnyAttribute = "anyAttribute";
 

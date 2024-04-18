@@ -4,7 +4,7 @@ import xyz.cofe.im.struct.Result;
 import xyz.cofe.im.struct.Tuple2;
 import xyz.cofe.xsd.om.LinkedDoc;
 import xyz.cofe.xsd.om.XsdSchema;
-import xyz.cofe.xsd.om.XsdSchemaLocation;
+import xyz.cofe.xsd.om.SchemaLocation;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public class XsdAsyncLoader {
                     }
                 };
 
-                Consumer<XsdSchemaLocation> xsdLocal = lcl -> {
+                Consumer<SchemaLocation> xsdLocal = lcl -> {
                     lcl.getSchemaRefs()
                         .map(ref -> Tuple2.of(ref, resolveBaseTarget.apply(uri, ref)))
                         .each(resolvUriTup -> {

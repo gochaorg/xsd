@@ -6,6 +6,17 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_appinfo.asp
+
+<appinfo
+source=anyURL
+>
+
+Any well-formed XML content
+
+</appinfo>
+ */
 public final class XsdAppinfo implements Xsd {
     public static final String Appinfo = "appinfo";
 

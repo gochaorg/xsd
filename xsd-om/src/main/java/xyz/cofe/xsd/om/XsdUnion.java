@@ -6,6 +6,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
+/*
+https://www.w3schools.com/xml/el_union.asp
+
+<union
+id=ID
+memberTypes="list of QNames"
+any attributes
+>
+
+(annotation?,(simpleType*))
+
+</union>
+ */
 public final class XsdUnion implements Xsd {
     public static final String Union = "union";
 
