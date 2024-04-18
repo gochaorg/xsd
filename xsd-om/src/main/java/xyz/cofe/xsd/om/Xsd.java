@@ -1,6 +1,7 @@
 package xyz.cofe.xsd.om;
 
-public sealed interface Xsd permits XsdAnnotation,
+public sealed interface Xsd permits XsdAll,
+                                    XsdAnnotation,
                                     XsdAny,
                                     XsdAnyAttribute,
                                     XsdAppinfo,

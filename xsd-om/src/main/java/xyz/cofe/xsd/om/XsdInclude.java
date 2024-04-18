@@ -1,7 +1,5 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Tuple2;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -11,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static xyz.cofe.xsd.om.XsdConst.XMLSchemaNamespace;
+import static xyz.cofe.xsd.om.Const.XMLSchemaNamespace;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class XsdInclude implements XsdSchemaLocation, Xsd {

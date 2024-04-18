@@ -12,7 +12,7 @@ public final class XsdExtension implements Xsd {
     public static boolean isExtension(XmlNode node) {
         return
             node instanceof XmlElem el &&
-                Objects.equals(el.getNamespaceURI(), XsdConst.XMLSchemaNamespace) &&
+                Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
                 Objects.equals(el.getLocalName(), Extension);
     }
 

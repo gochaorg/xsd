@@ -6,13 +6,13 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-public final class XsdChoice implements Xsd {
+public final class XsdChoice implements Xsd, ElementsLayout {
     public static final String Choice = "choice";
 
     public static boolean isAttribute(XmlNode node) {
         return
             node instanceof XmlElem el &&
-                Objects.equals(el.getNamespaceURI(), XsdConst.XMLSchemaNamespace) &&
+                Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
                 Objects.equals(el.getLocalName(), Choice);
     }
 

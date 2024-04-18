@@ -6,13 +6,13 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-public final class XsdSequence implements Xsd {
+public final class XsdSequence implements Xsd, ElementsLayout {
     public static final String Sequence = "sequence";
 
     public static boolean isSequence(XmlNode node) {
         return
             node instanceof XmlElem el &&
-                Objects.equals(el.getNamespaceURI(), XsdConst.XMLSchemaNamespace) &&
+                Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
                 Objects.equals(el.getLocalName(), Sequence);
     }
 

@@ -1,13 +1,10 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,7 +50,7 @@ public final class XsdImport implements XsdSchemaLocation, Xsd {
 
     public static Optional<XsdImport> parse(XmlElem elem){
         if( elem==null ) throw new IllegalArgumentException("elem==null");
-        if( !XsdConst.XMLSchemaNamespace.equals(elem.getNamespaceURI()) )return Optional.empty();
+        if( !Const.XMLSchemaNamespace.equals(elem.getNamespaceURI()) )return Optional.empty();
         if( !Import.equals(elem.getLocalName()) )return Optional.empty();
 
         return Optional.of(
@@ -69,7 +66,7 @@ public final class XsdImport implements XsdSchemaLocation, Xsd {
     public static boolean isImport(XmlNode node) {
         return
             node instanceof XmlElem el &&
-                Objects.equals(el.getNamespaceURI(), XsdConst.XMLSchemaNamespace) &&
+                Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
                 Objects.equals(el.getLocalName(), Import);
     }
 }
