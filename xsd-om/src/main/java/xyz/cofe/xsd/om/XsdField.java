@@ -20,18 +20,18 @@ any attributes
 </field>
  */
 public final class XsdField implements Xsd {
-    public static final String Field = "field";
+    public static final String Name = "field";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Field);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdField> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdField((XmlElem) el))
             : ImList.empty();
     }

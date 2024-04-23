@@ -21,18 +21,18 @@ any attributes
 (annotation?)
  */
 public final class XsdAny implements Xsd {
-    public static final String Any = "any";
+    public static final String Name = "any";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Any);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdAny> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdAny((XmlElem) el))
             : ImList.empty();
     }

@@ -18,18 +18,18 @@ Any well-formed XML content
 </appinfo>
  */
 public final class XsdAppinfo implements Xsd {
-    public static final String Appinfo = "appinfo";
+    public static final String Name = "appinfo";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Appinfo);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdAppinfo> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdAppinfo((XmlElem) el))
             : ImList.empty();
     }

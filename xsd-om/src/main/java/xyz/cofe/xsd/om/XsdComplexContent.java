@@ -20,18 +20,18 @@ any attributes
 </complexContent>
 */
 public final class XsdComplexContent implements Xsd, ContentDef {
-    public static final String ComplexType = "complexType";
+    public static final String Name = "complexType";
 
-    public static boolean isComplexType(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), ComplexType);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdComplexContent> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isComplexType(el)
+        return isMatch(el)
             ? ImList.first(new XsdComplexContent((XmlElem) el))
             : ImList.empty();
     }

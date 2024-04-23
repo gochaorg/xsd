@@ -20,18 +20,18 @@ any attributes
 </unique>
  */
 public final class XsdUnique implements Xsd {
-    public static final String Unique = "unique";
+    public static final String Name = "unique";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Unique);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdUnique> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdUnique((XmlElem) el))
             : ImList.empty();
     }

@@ -24,18 +24,18 @@ any attributes
  */
 public final class XsdGroup implements Xsd,
                                        ElementsLayout {
-    public static final String Group = "group";
+    public static final String Name = "group";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Group);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdGroup> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdGroup((XmlElem) el))
             : ImList.empty();
     }

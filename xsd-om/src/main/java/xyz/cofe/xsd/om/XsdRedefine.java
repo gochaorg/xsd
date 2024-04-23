@@ -20,18 +20,18 @@ any attributes
 </redefine>
  */
 public final class XsdRedefine implements Xsd {
-    public static final String Redefine = "redefine";
+    public static final String Name = "redefine";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Redefine);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdRedefine> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdRedefine((XmlElem) el))
             : ImList.empty();
     }

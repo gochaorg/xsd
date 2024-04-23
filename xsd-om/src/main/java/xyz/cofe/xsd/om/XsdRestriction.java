@@ -16,9 +16,9 @@ any attributes
 >
 
 Content for simpleType:
-(annotation?,(simpleType?,(minExclusive|minInclusive|
-maxExclusive|maxInclusive|totalDigits|fractionDigits|
-length|minLength|maxLength|enumeration|whiteSpace|pattern)*))
+( annotation?,
+  (simpleType?,(minExclusive|minInclusive|maxExclusive|maxInclusive|totalDigits|fractionDigits|length|minLength|maxLength|enumeration|whiteSpace|pattern)*)
+)
 
 Content for simpleContent:
 (annotation?,(simpleType?,(minExclusive |minInclusive|
@@ -32,19 +32,20 @@ Content for complexContent:
 
 </restriction>
  */
-public final class XsdRestriction implements Xsd {
-    public static final String Restriction = "restriction";
+public final class XsdRestriction implements Xsd,
+                                             SimpleTypeContent {
+    public static final String Name = "restriction";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Restriction);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdRestriction> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdRestriction((XmlElem) el))
             : ImList.empty();
     }

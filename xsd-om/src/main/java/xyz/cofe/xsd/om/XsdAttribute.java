@@ -26,18 +26,18 @@ any attributes
 </attribute>
  */
 public final class XsdAttribute implements Xsd {
-    public static final String Attribute = "attribute";
+    public static final String Name = "attribute";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Attribute);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdAttribute> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdAttribute((XmlElem) el))
             : ImList.empty();
     }

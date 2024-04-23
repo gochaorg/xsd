@@ -20,18 +20,18 @@ any attributes
 </key>
  */
 public final class XsdKey implements Xsd {
-    public static final String Key = "key";
+    public static final String Name = "key";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Key);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdKey> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdKey((XmlElem) el))
             : ImList.empty();
     }

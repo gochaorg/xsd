@@ -21,18 +21,18 @@ any attributes
 </extension>
  */
 public final class XsdExtension implements Xsd {
-    public static final String Extension = "extension";
+    public static final String Name = "extension";
 
-    public static boolean isExtension(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Extension);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdExtension> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isExtension(el)
+        return isMatch(el)
             ? ImList.first(new XsdExtension((XmlElem) el))
             : ImList.empty();
     }

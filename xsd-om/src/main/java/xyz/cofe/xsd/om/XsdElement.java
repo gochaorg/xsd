@@ -1,12 +1,16 @@
 package xyz.cofe.xsd.om;
 
+import xyz.cofe.im.struct.Either;
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 import java.util.Optional;
+
+import xyz.cofe.xsd.om.BuiltInTypes.*;
 
 /*
 https://www.w3schools.com/xml/el_element.asp
@@ -61,18 +65,18 @@ final	           Optional. Sets the default value of the final attribute on the 
 any attributes	  Optional. Specifies any other attributes with non-schema namespace
  */
 public final class XsdElement implements Xsd {
-    public static final String Element = "element";
+    public static final String Name = "element";
 
-    public static boolean isElement(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Element);
+                Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdElement> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
-        return isElement(el)
+    public static ImList<XsdElement> parseList(XmlNode el) {
+        if (el == null) throw new IllegalArgumentException("el==null");
+        return isMatch(el)
             ? ImList.first(new XsdElement((XmlElem) el))
             : ImList.empty();
     }
@@ -80,81 +84,115 @@ public final class XsdElement implements Xsd {
     public final XmlElem elem;
 
     public XsdElement(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
     }
 
-    public ImList<XsdAnnotation> getAnnotations(){
+    public ImList<XsdAnnotation> getAnnotations() {
         return elem.getChildren().flatMap(XsdAnnotation::parseList);
     }
 
-    public ImList<XsdUnique> getUniques(){
+    public ImList<XsdUnique> getUniques() {
         return elem.getChildren().flatMap(XsdUnique::parseList);
     }
 
-    public ImList<XsdKey> getKeys(){
+    public ImList<XsdKey> getKeys() {
         return elem.getChildren().flatMap(XsdKey::parseList);
     }
 
-    public ImList<XsdKeyref> getKeyrefs(){
+    public ImList<XsdKeyref> getKeyrefs() {
         return elem.getChildren().flatMap(XsdKeyref::parseList);
     }
 
-    public Optional<TypeDef> getTypeDef(){
-        Optional<TypeDef> simple = elem.getChildren().flatMap(XsdSimpleType::parseList).head().map(a -> (TypeDef)a);
-        Optional<TypeDef> complex = elem.getChildren().flatMap(XsdComplexType::parseList).head().map(a -> (TypeDef)a);
-        return simple.or(()->complex);
+    public Optional<TypeDef> getTypeDef() {
+        Optional<TypeDef> simple = elem.getChildren().flatMap(XsdSimpleType::parseList).head().map(a -> (TypeDef) a);
+        Optional<TypeDef> complex = elem.getChildren().flatMap(XsdComplexType::parseList).head().map(a -> (TypeDef) a);
+        return simple.or(() -> complex);
     }
 
-    public Optional<String> getId(){
-        return elem.attrib("id").map(XmlAttr::getValue).head();
+    public Result<ID, String> getId() {
+        return Result.of(
+            elem.attrib("id").map(XmlAttr::getValue).head(),
+            "id not found"
+        ).flatMap(ID::parse);
     }
 
-    public Optional<String> getName(){
-        return elem.attrib("name").map(XmlAttr::getValue).head();
+    public Result<NCNAME, String> getName() {
+        return Result.of(
+            elem.attrib("name").map(XmlAttr::getValue).head(),
+            "name not found"
+        ).flatMap(NCNAME::parse);
     }
 
-    public Optional<String> getRef(){
-        return elem.attrib("ref").map(XmlAttr::getValue).head();
+    public Result<QName,String> getRef() {
+        return Result.of(elem.attrib("ref")
+            .map(XmlAttr::getValue).head(),"ref")
+            .flatMap(QName::parse);
     }
 
-    public Optional<String> getType(){
-        return elem.attrib("type").map(XmlAttr::getValue).head();
+    public Result<QName,String> getType() {
+        return Result.of(elem.attrib("type")
+            .map(XmlAttr::getValue).head(),"type")
+            .flatMap(QName::parse);
     }
 
-    public Optional<String> getSubstitutionGroup(){
-        return elem.attrib("substitutionGroup").map(XmlAttr::getValue).head();
+    public Result<QName,String> getSubstitutionGroup() {
+        return Result.of(elem.attrib("substitutionGroup")
+            .map(XmlAttr::getValue).head(),"substitutionGroup")
+            .flatMap(QName::parse);
     }
 
-    public Optional<String> getDefault(){
-        return elem.attrib("default").map(XmlAttr::getValue).head();
+    public Result<String,String> getDefault() {
+        return Result.of(elem.attrib("default")
+            .map(XmlAttr::getValue).head(),"default");
     }
 
-    public Optional<String> getFixed(){
-        return elem.attrib("fixed").map(XmlAttr::getValue).head();
+    public Result<String,String> getFixed() {
+        return Result.of(elem.attrib("fixed")
+            .map(XmlAttr::getValue).head(),"fixed");
     }
 
-    public Optional<String> getMaxOccurs(){
-        return elem.attrib("maxOccurs").map(XmlAttr::getValue).head();
+    public static final class Unbounded {
+        private Unbounded(){
+        }
+        @SuppressWarnings("InstantiationOfUtilityClass")
+        public static final Unbounded instance = new Unbounded();
     }
 
-    public Optional<String> getMinOccurs(){
-        return elem.attrib("minOccurs").map(XmlAttr::getValue).head();
+    public Result<Either<NON_NEGATIVE_INTEGER,Unbounded>,String> getMaxOccurs() {
+        return Result.of(elem.attrib("maxOccurs")
+            .map(XmlAttr::getValue).head(),"maxOccurs")
+            .flatMap( s -> {
+                if( s.equalsIgnoreCase("unbounded"))
+                    return Result.ok(Either.right(Unbounded.instance));
+                return NON_NEGATIVE_INTEGER.parse(s).map(Either::left);
+            });
     }
 
-    public Optional<String> getNillable(){
-        return elem.attrib("nillable").map(XmlAttr::getValue).head();
+    public Result<NON_NEGATIVE_INTEGER,String> getMinOccurs() {
+        return Result.of(elem.attrib("minOccurs")
+            .map(XmlAttr::getValue).head(),"minOccurs")
+            .flatMap(NON_NEGATIVE_INTEGER::parse);
     }
 
-    public Optional<String> getAbstract(){
-        return elem.attrib("abstract").map(XmlAttr::getValue).head();
+    public Result<BOOLEAN,String> getNillable() {
+        return Result.of(elem.attrib("nillable")
+            .map(XmlAttr::getValue).head(),"nillable")
+            .flatMap(BOOLEAN::parse);
     }
 
-    public Optional<String> getBlock(){
-        return elem.attrib("block").map(XmlAttr::getValue).head();
+    public Result<String,String> getAbstract() {
+        return Result.of(elem.attrib("abstract")
+            .map(XmlAttr::getValue).head(),"abstract");
     }
 
-    public Optional<String> getFinal(){
-        return elem.attrib("final").map(XmlAttr::getValue).head();
+    public Result<String,String> getBlock() {
+        return Result.of(elem.attrib("block")
+            .map(XmlAttr::getValue).head(),"block");
+    }
+
+    public Result<String,String> getFinal() {
+        return Result.of(elem.attrib("final")
+            .map(XmlAttr::getValue).head(),"final");
     }
 }

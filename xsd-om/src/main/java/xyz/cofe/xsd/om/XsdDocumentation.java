@@ -18,13 +18,13 @@ Any well-formed XML content
 </documentation>
  */
 public final class XsdDocumentation implements Xsd {
-    public static final String Documentation = "documentation";
+    public static final String Name = "documentation";
 
-    public static boolean isDocumentation(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Documentation);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public final XmlElem elem;
@@ -36,7 +36,7 @@ public final class XsdDocumentation implements Xsd {
 
     public static ImList<XsdDocumentation> parseList( XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isDocumentation(el)
+        return isMatch(el)
             ? ImList.first(new XsdDocumentation((XmlElem) el))
             : ImList.empty();
     }

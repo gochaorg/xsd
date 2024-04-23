@@ -19,19 +19,20 @@ any attributes
 
 </union>
  */
-public final class XsdUnion implements Xsd {
-    public static final String Union = "union";
+public final class XsdUnion implements Xsd,
+                                       SimpleTypeContent {
+    public static final String Name = "union";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Union);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdUnion> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdUnion((XmlElem) el))
             : ImList.empty();
     }

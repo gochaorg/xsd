@@ -21,18 +21,18 @@ any attributes
 </keyref>
  */
 public final class XsdKeyref implements Xsd {
-    public static final String Keyref = "keyref";
+    public static final String Name = "keyref";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Keyref);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdKeyref> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdKeyref((XmlElem) el))
             : ImList.empty();
     }

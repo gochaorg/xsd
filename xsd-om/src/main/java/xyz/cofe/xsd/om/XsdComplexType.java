@@ -1,6 +1,10 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.BuiltInTypes.ID;
+import xyz.cofe.xsd.om.BuiltInTypes.BOOLEAN;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -43,18 +47,18 @@ any attributes	Optional. Specifies any other attributes with non-schema namespac
  */
 public final class XsdComplexType implements Xsd,
                                              TypeDef {
-    public static final String ComplexType = "complexType";
+    public static final String Name = "complexType";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), ComplexType);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdComplexType> parseList(XmlNode el) {
         if (el == null) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdComplexType((XmlElem) el))
             : ImList.empty();
     }
@@ -96,5 +100,39 @@ public final class XsdComplexType implements Xsd,
             attrGroup,
             anyAttr
         ));
+    }
+
+    public Result<ID,String> getId(){
+        return Result.of(elem.attrib("id").head(), "id not found")
+            .map(XmlAttr::getValue)
+            .flatMap(ID::parse);
+    }
+
+    public Result<ID,String> getName(){
+        return Result.of(elem.attrib("name").head(), "name not found")
+            .map(XmlAttr::getValue)
+            .flatMap(ID::parse);
+    }
+
+    public Result<BOOLEAN,String> getAbstract(){
+        return Result.of(elem.attrib("abstract").head(), "abstract not found")
+            .map(XmlAttr::getValue)
+            .flatMap(BOOLEAN::parse);
+    }
+
+    public Result<BOOLEAN,String> getMixed(){
+        return Result.of(elem.attrib("mixed").head(), "mixed not found")
+            .map(XmlAttr::getValue)
+            .flatMap(BOOLEAN::parse);
+    }
+
+    public Result<String,String> getBlock(){
+        return Result.of(elem.attrib("block").head(), "block not found")
+            .map(XmlAttr::getValue);
+    }
+
+    public Result<String,String> getFinal(){
+        return Result.of(elem.attrib("final").head(), "final not found")
+            .map(XmlAttr::getValue);
     }
 }

@@ -17,6 +17,12 @@ public sealed interface Result<A, B> extends Iterable<A> {
         return new Err<>(b);
     }
 
+    @SuppressWarnings({"OptionalAssignedToNull", "OptionalUsedAsFieldOrParameterType"})
+    public static <A, B> Result<A, B> of(Optional<A> aOpt, B err){
+        if( aOpt==null ) throw new IllegalArgumentException("aOpt==null");
+        return aOpt.<Result<A, B>>map(Result::ok).orElseGet(() -> err(err));
+    }
+
     public default <R> R fold(Function<A, R> succ, Function<B, R> fail) {
         if (succ == null) throw new IllegalArgumentException("succ==null");
         if (fail == null) throw new IllegalArgumentException("fail==null");

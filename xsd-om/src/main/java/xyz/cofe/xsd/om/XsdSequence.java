@@ -21,18 +21,18 @@ any attributes
 </sequence>
  */
 public final class XsdSequence implements Xsd, ElementsLayout {
-    public static final String Sequence = "sequence";
+    public static final String Name = "sequence";
 
-    public static boolean isSequence(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Sequence);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdSequence> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isSequence(el)
+        return isMatch(el)
             ? ImList.first(new XsdSequence((XmlElem) el))
             : ImList.empty();
     }

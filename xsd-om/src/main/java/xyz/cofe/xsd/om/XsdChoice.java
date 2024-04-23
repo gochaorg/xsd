@@ -21,18 +21,18 @@ any attributes
 </choice>
  */
 public final class XsdChoice implements Xsd, ElementsLayout {
-    public static final String Choice = "choice";
+    public static final String Name = "choice";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), Choice);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdChoice> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdChoice((XmlElem) el))
             : ImList.empty();
     }

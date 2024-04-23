@@ -21,18 +21,18 @@ any attributes
 </attributeGroup>
  */
 public final class XsdAttributeGroup implements Xsd {
-    public static final String AttributeGroup = "attributeGroup";
+    public static final String Name = "attributeGroup";
 
-    public static boolean isAttribute(XmlNode node) {
+    public static boolean isMatch(XmlNode node) {
         return
             node instanceof XmlElem el &&
                 Objects.equals(el.getNamespaceURI(), Const.XMLSchemaNamespace) &&
-                Objects.equals(el.getLocalName(), AttributeGroup);
+                Objects.equals(el.getLocalName(), Name);
     }
 
     public static ImList<XsdAttributeGroup> parseList(XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
-        return isAttribute(el)
+        return isMatch(el)
             ? ImList.first(new XsdAttributeGroup((XmlElem) el))
             : ImList.empty();
     }
