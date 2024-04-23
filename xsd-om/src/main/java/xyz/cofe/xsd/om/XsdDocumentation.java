@@ -29,6 +29,11 @@ public final class XsdDocumentation implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdDocumentation(XmlElem elem) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         this.elem = elem;

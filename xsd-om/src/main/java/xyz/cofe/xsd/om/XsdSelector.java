@@ -1,6 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -19,7 +21,7 @@ any attributes
 
 </selector>
  */
-public final class XsdSelector implements Xsd {
+public final class XsdSelector implements Xsd, IDAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "selector";
 
     public static boolean isMatch(XmlNode node) {
@@ -38,8 +40,20 @@ public final class XsdSelector implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdSelector(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+    }
+
+    public Result<BuiltInTypes.ID, String> getXPath() {
+        return Result.of(
+            elem().attrib("xpath").map(XmlAttr::getValue).head(),
+            "xpath not found"
+        ).flatMap(BuiltInTypes.ID::parse);
     }
 }

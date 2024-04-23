@@ -46,7 +46,11 @@ any attributes	Optional. Specifies any other attributes with non-schema namespac
 
  */
 public final class XsdComplexType implements Xsd,
-                                             TypeDef {
+                                             TypeDef,
+                                             IDAttribute,
+                                             NameAttribute,
+                                             XsdAnnotation.AnnotationProperty
+{
     public static final String Name = "complexType";
 
     public static boolean isMatch(XmlNode node) {
@@ -65,13 +69,14 @@ public final class XsdComplexType implements Xsd,
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdComplexType(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
-    }
-
-    public ImList<XsdAnnotation> getAnnotations() {
-        return elem.getChildren().flatMap(XsdAnnotation::parseList);
     }
 
     public Optional<ContentDef> getContentDef() {
@@ -100,18 +105,6 @@ public final class XsdComplexType implements Xsd,
             attrGroup,
             anyAttr
         ));
-    }
-
-    public Result<ID,String> getId(){
-        return Result.of(elem.attrib("id").head(), "id not found")
-            .map(XmlAttr::getValue)
-            .flatMap(ID::parse);
-    }
-
-    public Result<ID,String> getName(){
-        return Result.of(elem.attrib("name").head(), "name not found")
-            .map(XmlAttr::getValue)
-            .flatMap(ID::parse);
     }
 
     public Result<BOOLEAN,String> getAbstract(){

@@ -20,7 +20,13 @@ any attributes
 
 </sequence>
  */
-public final class XsdSequence implements Xsd, ElementsLayout {
+public final class XsdSequence implements Xsd,
+                                          IDAttribute,
+                                          ElementsLayout,
+                                          XsdAnnotation.AnnotationProperty,
+                                          ElementsLayout.NestedHolder,
+                                          XsdGroup.Nested,
+                                          XsdExtension.NestedEl {
     public static final String Name = "sequence";
 
     public static boolean isMatch(XmlNode node) {
@@ -30,8 +36,8 @@ public final class XsdSequence implements Xsd, ElementsLayout {
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdSequence> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdSequence> parseList(XmlNode el) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
             ? ImList.first(new XsdSequence((XmlElem) el))
             : ImList.empty();
@@ -39,8 +45,13 @@ public final class XsdSequence implements Xsd, ElementsLayout {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdSequence(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
     }
 }

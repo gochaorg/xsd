@@ -1,6 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -20,7 +22,7 @@ any attributes
 
 </anyAttribute>
  */
-public final class XsdAnyAttribute implements Xsd {
+public final class XsdAnyAttribute implements Xsd, IDAttribute, NamespaceAttribute {
     public static final String Name = "anyAttribute";
 
     public static boolean isMatch(XmlNode node) {
@@ -39,8 +41,20 @@ public final class XsdAnyAttribute implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdAnyAttribute(XmlElem elem) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+    }
+
+    public Result<String, String> getProcessContents() {
+        return Result.of(
+            elem.attrib("processContents").map(XmlAttr::getValue).head(),
+            "processContents not found"
+        );
     }
 }

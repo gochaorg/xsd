@@ -1,6 +1,9 @@
 package xyz.cofe.xsd.om;
 
+import xyz.cofe.im.struct.Either;
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -20,7 +23,7 @@ any attributes
 
 (annotation?)
  */
-public final class XsdAny implements Xsd {
+public final class XsdAny implements Xsd, IDAttribute, MaxOccursAttribute, MinOccursAttribute, XsdAnnotation.AnnotationProperty, ElementsLayout {
     public static final String Name = "any";
 
     public static boolean isMatch(XmlNode node) {
@@ -38,6 +41,25 @@ public final class XsdAny implements Xsd {
     }
 
     public final XmlElem elem;
+
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
+    public Result<String, String> getNamespace() {
+        return Result.of(
+            elem.attrib("namespace").map(XmlAttr::getValue).head(),
+            "namespace not found"
+        );
+    }
+
+    public Result<String, String> getProcessContents() {
+        return Result.of(
+            elem.attrib("processContents").map(XmlAttr::getValue).head(),
+            "processContents not found"
+        );
+    }
 
     public XsdAny(XmlElem elem) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");

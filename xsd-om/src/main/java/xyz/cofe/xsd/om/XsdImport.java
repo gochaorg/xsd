@@ -26,11 +26,20 @@ any attributes
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class XsdImport implements SchemaLocation, Xsd {
     @SuppressWarnings("OptionalAssignedToNull")
-    public XsdImport(Optional<String> schemaLocation, Optional<String> namespace) {
+    public XsdImport(XmlElem elem, Optional<String> schemaLocation, Optional<String> namespace) {
+        if( elem==null ) throw new IllegalArgumentException("elem==null");
         if( schemaLocation==null ) throw new IllegalArgumentException("schemaLocation==null");
         if( namespace==null ) throw new IllegalArgumentException("namespace==null");
         this.schemaLocation = schemaLocation;
         this.namespace = namespace;
+        this.elem = elem;
+    }
+
+    public final XmlElem elem;
+
+    @Override
+    public XmlElem elem() {
+        return elem;
     }
 
     //region schemaLocation : Optional<String>
@@ -69,6 +78,7 @@ public final class XsdImport implements SchemaLocation, Xsd {
 
         return Optional.of(
             new XsdImport(
+                elem,
                 Optional.ofNullable(elem.getAttribute("schemaLocation")),
                 Optional.ofNullable(elem.getAttribute("namespace"))
             )

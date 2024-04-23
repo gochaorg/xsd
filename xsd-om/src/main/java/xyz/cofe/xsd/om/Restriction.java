@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public sealed interface Restriction {
-    public static Optional<Restriction> parse(XmlElem elem){
+    public static Optional<Restriction> parse(XmlNode elem){
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         Optional<Restriction> r1 = MinExclusive.parseList(elem).head().map(a->a);
         Optional<Restriction> r2 = MinInclusive.parseList(elem).head().map(a->a);
@@ -35,6 +35,33 @@ public sealed interface Restriction {
             .or(()->r13).or(()->r14).or(()->r15).or(()->r16)
             .or(()->r17).or(()->r18).or(()->r19)
             ;
+    }
+
+    public static ImList<Restriction> parseList(XmlNode elem){
+        ImList<Restriction> r1 = MinExclusive.parseList(elem).map(a->a);
+        ImList<Restriction> r2 = MinInclusive.parseList(elem).map(a->a);
+        ImList<Restriction> r3 = MaxExclusive.parseList(elem).map(a->a);
+        ImList<Restriction> r4 = MaxInclusive.parseList(elem).map(a->a);
+        ImList<Restriction> r18 = MaxLength.parseList(elem).map(a->a);
+        ImList<Restriction> r19 = WhiteSpace.parseList(elem).map(a->a);
+        ImList<Restriction> r5 = TotalDigits.parseList(elem).map(a->a);
+        ImList<Restriction> r6 = FractionDigits.parseList(elem).map(a->a);
+        ImList<Restriction> r7 = Length.parseList(elem).map(a->a);
+        ImList<Restriction> r8 = MinLength.parseList(elem).map(a->a);
+        ImList<Restriction> r9 = Enumeration.parseList(elem).map(a->a);
+        ImList<Restriction> r10 = Pattern.parseList(elem).map(a->a);
+        ImList<Restriction> r11 = Group.parseList(elem).map(a->a);
+        ImList<Restriction> r12 = All.parseList(elem).map(a->a);
+        ImList<Restriction> r13 = Choice.parseList(elem).map(a->a);
+        ImList<Restriction> r14 = Sequence.parseList(elem).map(a->a);
+        ImList<Restriction> r15 = Attribute.parseList(elem).map(a->a);
+        ImList<Restriction> r16 = AttributeGroup.parseList(elem).map(a->a);
+        ImList<Restriction> r17 = AnyAttribute.parseList(elem).map(a->a);
+        return r1.join(r2).join(r3).join(r4)
+            .join(r5).join(r6).join(r7).join(r8)
+            .join(r9).join(r10).join(r11).join(r12)
+            .join(r13).join(r14).join(r15).join(r16)
+            .join(r17).join(r18).join(r19);
     }
 
     public final class MinExclusive implements Restriction {

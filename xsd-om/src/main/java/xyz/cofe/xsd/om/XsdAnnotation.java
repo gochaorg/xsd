@@ -1,6 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -18,7 +20,13 @@ any attributes
 
 </annotation>
  */
-public final class XsdAnnotation implements Xsd {
+public final class XsdAnnotation implements Xsd, IDAttribute {
+    public non-sealed interface AnnotationProperty extends Xsd {
+        public default ImList<XsdAnnotation> getAnnotations() {
+            return elem().getChildren().flatMap(XsdAnnotation::parseList);
+        }
+    }
+
     public static ImList<XsdAnnotation> parseList( XmlNode el ){
         if( el==null ) throw new IllegalArgumentException("el==null");
         return isMatch(el)
@@ -36,6 +44,11 @@ public final class XsdAnnotation implements Xsd {
     }
 
     public final XmlElem elem;
+
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
 
     public XsdAnnotation(XmlElem elem) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");

@@ -5,6 +5,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /*
 https://www.w3schools.com/xml/el_list.asp
@@ -20,7 +21,7 @@ any attributes
 </list>
  */
 public final class XsdList implements Xsd,
-                                      SimpleTypeContent {
+                                      SimpleTypeContent, IDAttribute, ItemTypeAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "list";
 
     public static boolean isMatch(XmlNode node) {
@@ -39,8 +40,17 @@ public final class XsdList implements Xsd,
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdList(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+    }
+
+    public Optional<XsdSimpleType> getSimpleType(){
+        return elem().getChildren().flatMap(XsdSimpleType::parseList).head();
     }
 }

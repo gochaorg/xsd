@@ -18,7 +18,7 @@ any attributes
 
 </simpleContent>
  */
-public final class XsdSimpleContent implements Xsd, ContentDef {
+public final class XsdSimpleContent implements Xsd, ContentDef, IDAttribute {
     public static final String Name = "simpleContent";
 
     public static boolean isMatch(XmlNode node) {
@@ -36,6 +36,11 @@ public final class XsdSimpleContent implements Xsd, ContentDef {
     }
 
     public final XmlElem elem;
+
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
 
     public XsdSimpleContent(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");

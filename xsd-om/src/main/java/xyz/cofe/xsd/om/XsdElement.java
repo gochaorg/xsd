@@ -64,7 +64,9 @@ final	           Optional. Sets the default value of the final attribute on the 
                      #all - prevents all derived elements
 any attributes	  Optional. Specifies any other attributes with non-schema namespace
  */
-public final class XsdElement implements Xsd {
+public final class XsdElement implements Xsd,
+                                         IDAttribute,
+                                         XsdAnnotation.AnnotationProperty {
     public static final String Name = "element";
 
     public static boolean isMatch(XmlNode node) {
@@ -83,13 +85,14 @@ public final class XsdElement implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdElement(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
-    }
-
-    public ImList<XsdAnnotation> getAnnotations() {
-        return elem.getChildren().flatMap(XsdAnnotation::parseList);
     }
 
     public ImList<XsdUnique> getUniques() {
@@ -110,13 +113,6 @@ public final class XsdElement implements Xsd {
         return simple.or(() -> complex);
     }
 
-    public Result<ID, String> getId() {
-        return Result.of(
-            elem.attrib("id").map(XmlAttr::getValue).head(),
-            "id not found"
-        ).flatMap(ID::parse);
-    }
-
     public Result<NCNAME, String> getName() {
         return Result.of(
             elem.attrib("name").map(XmlAttr::getValue).head(),
@@ -124,75 +120,68 @@ public final class XsdElement implements Xsd {
         ).flatMap(NCNAME::parse);
     }
 
-    public Result<QName,String> getRef() {
+    public Result<QName, String> getRef() {
         return Result.of(elem.attrib("ref")
-            .map(XmlAttr::getValue).head(),"ref")
+                .map(XmlAttr::getValue).head(), "ref")
             .flatMap(QName::parse);
     }
 
-    public Result<QName,String> getType() {
+    public Result<QName, String> getType() {
         return Result.of(elem.attrib("type")
-            .map(XmlAttr::getValue).head(),"type")
+                .map(XmlAttr::getValue).head(), "type")
             .flatMap(QName::parse);
     }
 
-    public Result<QName,String> getSubstitutionGroup() {
+    public Result<QName, String> getSubstitutionGroup() {
         return Result.of(elem.attrib("substitutionGroup")
-            .map(XmlAttr::getValue).head(),"substitutionGroup")
+                .map(XmlAttr::getValue).head(), "substitutionGroup")
             .flatMap(QName::parse);
     }
 
-    public Result<String,String> getDefault() {
+    public Result<String, String> getDefault() {
         return Result.of(elem.attrib("default")
-            .map(XmlAttr::getValue).head(),"default");
+            .map(XmlAttr::getValue).head(), "default");
     }
 
-    public Result<String,String> getFixed() {
+    public Result<String, String> getFixed() {
         return Result.of(elem.attrib("fixed")
-            .map(XmlAttr::getValue).head(),"fixed");
+            .map(XmlAttr::getValue).head(), "fixed");
     }
 
-    public static final class Unbounded {
-        private Unbounded(){
-        }
-        @SuppressWarnings("InstantiationOfUtilityClass")
-        public static final Unbounded instance = new Unbounded();
-    }
-
-    public Result<Either<NON_NEGATIVE_INTEGER,Unbounded>,String> getMaxOccurs() {
+    public Result<Either<NON_NEGATIVE_INTEGER, Unbounded>, String> getMaxOccurs() {
         return Result.of(elem.attrib("maxOccurs")
-            .map(XmlAttr::getValue).head(),"maxOccurs")
-            .flatMap( s -> {
-                if( s.equalsIgnoreCase("unbounded"))
+                .map(XmlAttr::getValue).head(), "maxOccurs")
+            .flatMap(s -> {
+                if (s.equalsIgnoreCase("unbounded"))
                     return Result.ok(Either.right(Unbounded.instance));
                 return NON_NEGATIVE_INTEGER.parse(s).map(Either::left);
             });
     }
 
-    public Result<NON_NEGATIVE_INTEGER,String> getMinOccurs() {
+    public Result<NON_NEGATIVE_INTEGER, String> getMinOccurs() {
         return Result.of(elem.attrib("minOccurs")
-            .map(XmlAttr::getValue).head(),"minOccurs")
+                .map(XmlAttr::getValue).head(), "minOccurs")
             .flatMap(NON_NEGATIVE_INTEGER::parse);
     }
 
-    public Result<BOOLEAN,String> getNillable() {
+    public Result<BOOLEAN, String> getNillable() {
         return Result.of(elem.attrib("nillable")
-            .map(XmlAttr::getValue).head(),"nillable")
+                .map(XmlAttr::getValue).head(), "nillable")
             .flatMap(BOOLEAN::parse);
     }
 
-    public Result<String,String> getAbstract() {
+    public Result<String, String> getAbstract() {
         return Result.of(elem.attrib("abstract")
-            .map(XmlAttr::getValue).head(),"abstract");
+            .map(XmlAttr::getValue).head(), "abstract");
     }
 
-    public Result<String,String> getBlock() {
+    public Result<String, String> getBlock() {
         return Result.of(elem.attrib("block")
-            .map(XmlAttr::getValue).head(),"block");
+            .map(XmlAttr::getValue).head(), "block");
     }
 
-    public Result<String,String> getFinal() {
+    public Result<String, String> getFinal() {
         return Result.of(elem.attrib("final")
-            .map(XmlAttr::getValue).head(),"final");
+            .map(XmlAttr::getValue).head(), "final");
     }
 }

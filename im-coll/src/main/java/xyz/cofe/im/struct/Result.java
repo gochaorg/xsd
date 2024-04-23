@@ -66,6 +66,12 @@ public sealed interface Result<A, B> extends Iterable<A> {
 
     public default Optional<A> toOptional() {return fold(Optional::ofNullable, b -> Optional.empty());}
 
+    public default ImList<A> toImList(){
+        var opt = toOptional();
+        if( opt.isEmpty() )return ImList.empty();
+        return ImList.first(opt.get());
+    }
+
     public default Optional<B> toErrOptional() {
         return fold(a -> Optional.empty(), Optional::ofNullable);
     }

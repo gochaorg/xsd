@@ -22,7 +22,7 @@ any attributes
 
 </simpleType>
  */
-public final class XsdSimpleType implements Xsd, TypeDef {
+public final class XsdSimpleType implements Xsd, TypeDef, IDAttribute, NamespaceAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "simpleType";
 
     public static boolean isMatch(XmlNode node) {
@@ -41,19 +41,14 @@ public final class XsdSimpleType implements Xsd, TypeDef {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdSimpleType(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
-    }
-
-    public Result<BuiltInTypes.ID,String> getId(){
-        return Result.of(elem.attrib("id").head(), "id not found")
-            .map(XmlAttr::getValue)
-            .flatMap(BuiltInTypes.ID::parse);
-    }
-
-    public ImList<XsdAnnotation> getAnnotations() {
-        return elem.getChildren().flatMap(XsdAnnotation::parseList);
     }
 
     public Optional<SimpleTypeContent> getRestriction() {

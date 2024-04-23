@@ -1,6 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -21,7 +23,7 @@ any attributes
 
 </notation>
  */
-public final class XsdNotation implements Xsd {
+public final class XsdNotation implements Xsd, IDAttribute, NamespaceAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "notation";
 
     public static boolean isMatch(XmlNode node) {
@@ -40,8 +42,27 @@ public final class XsdNotation implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdNotation(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+    }
+
+    public Result<BuiltInTypes.AnyURI, String> getPublic() {
+        return Result.of(
+            elem().attrib("public").map(XmlAttr::getValue).head(),
+            "public not found"
+        ).flatMap(BuiltInTypes.AnyURI::parse);
+    }
+
+    public Result<BuiltInTypes.AnyURI, String> getSystem() {
+        return Result.of(
+            elem().attrib("system").map(XmlAttr::getValue).head(),
+            "system not found"
+        ).flatMap(BuiltInTypes.AnyURI::parse);
     }
 }

@@ -1,6 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -9,17 +11,22 @@ import java.util.Objects;
 /*
 https://www.w3schools.com/xml/el_all.asp
 
-<annotation
+<all
 id=ID
+maxOccurs=1
+minOccurs=0|1
 any attributes
 >
 
-(appinfo|documentation)*
+(annotation?,element*)
 
-</annotation>
+</all>
 */
 public final class XsdAll implements Xsd,
-                                     ElementsLayout {
+                                     ElementsLayout,
+                                     IDAttribute,
+                                     XsdGroup.Nested,
+                                     XsdExtension.NestedEl {
     public static final String Name = "all";
 
     public static boolean isMatch(XmlNode node) {
@@ -38,8 +45,16 @@ public final class XsdAll implements Xsd,
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdAll(XmlElem elem) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
     }
+
+    public ImList<XsdAppinfo> getAppinfos(){ return elem.getChildren().flatMap(XsdAppinfo::parseList); }
+    public ImList<XsdDocumentation> getDocumentations(){ return elem.getChildren().flatMap(XsdDocumentation::parseList); }
 }

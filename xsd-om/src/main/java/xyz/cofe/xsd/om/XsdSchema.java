@@ -5,6 +5,7 @@ import xyz.cofe.im.struct.Result;
 import xyz.cofe.im.struct.Tuple2;
 import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlDoc;
+import xyz.cofe.xsd.om.xml.XmlElem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,12 +37,18 @@ group|attributeGroup)|element|attribute|notation),annotation*)*)
 </schema>
  */
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
-public final class XsdSchema implements Xsd {
+public final class XsdSchema implements Xsd, IDAttribute {
     public final XmlDoc xmlDoc;
 
     public XsdSchema(XmlDoc xmlDoc) {
         if (xmlDoc == null) throw new IllegalArgumentException("xmlDoc==null");
         this.xmlDoc = xmlDoc;
+    }
+
+
+    @Override
+    public XmlElem elem() {
+        return xmlDoc.getDocumentElement();
     }
 
     //region includes : List<XsdInclude>
@@ -173,6 +180,10 @@ public final class XsdSchema implements Xsd {
         return namespaces;
     }
     //endregion
+
+    public Optional<String> getVersion(){
+        return elem().attrib("id").map(XmlAttr::getValue).head();
+    }
 
     public ImList<XsdAnnotation> getAnnotations(){
         return xmlDoc.getDocumentElement().getChildren().flatMap(XsdAnnotation::parseList);

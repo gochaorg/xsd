@@ -20,7 +20,15 @@ any attributes
 
 </choice>
  */
-public final class XsdChoice implements Xsd, ElementsLayout {
+public final class XsdChoice implements Xsd,
+                                        ElementsLayout,
+                                        IDAttribute,
+                                        MinOccursAttribute,
+                                        MaxOccursAttribute,
+                                        XsdAnnotation.AnnotationProperty,
+                                        ElementsLayout.NestedHolder,
+                                        XsdGroup.Nested,
+                                        XsdExtension.NestedEl {
     public static final String Name = "choice";
 
     public static boolean isMatch(XmlNode node) {
@@ -30,8 +38,8 @@ public final class XsdChoice implements Xsd, ElementsLayout {
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdChoice> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdChoice> parseList(XmlNode el) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
             ? ImList.first(new XsdChoice((XmlElem) el))
             : ImList.empty();
@@ -39,8 +47,13 @@ public final class XsdChoice implements Xsd, ElementsLayout {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdChoice(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
     }
 }

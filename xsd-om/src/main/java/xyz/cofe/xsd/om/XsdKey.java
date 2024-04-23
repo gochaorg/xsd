@@ -1,6 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -19,7 +20,10 @@ any attributes
 
 </key>
  */
-public final class XsdKey implements Xsd {
+public final class XsdKey implements Xsd,
+                                     IDAttribute,
+                                     NameAttribute,
+                                     XsdAnnotation.AnnotationProperty {
     public static final String Name = "key";
 
     public static boolean isMatch(XmlNode node) {
@@ -38,8 +42,24 @@ public final class XsdKey implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdKey(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+    }
+
+    public Result<XsdSelector, String> getSelectors() {
+        return Result.of(
+            elem().getChildren().flatMap(XsdSelector::parseList).head(),
+            "nested selector not found"
+        );
+    }
+
+    public ImList<XsdField> getFields() {
+        return elem().getChildren().flatMap(XsdField::parseList);
     }
 }

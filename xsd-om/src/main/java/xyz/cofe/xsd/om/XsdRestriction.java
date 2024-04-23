@@ -1,6 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -33,7 +35,11 @@ Content for complexContent:
 </restriction>
  */
 public final class XsdRestriction implements Xsd,
-                                             SimpleTypeContent {
+                                             SimpleTypeContent,
+                                             XsdComplexContent.Nested,
+                                             BaseAttribute,
+                                             IDAttribute
+{
     public static final String Name = "restriction";
 
     public static boolean isMatch(XmlNode node) {
@@ -52,8 +58,17 @@ public final class XsdRestriction implements Xsd,
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdRestriction(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+    }
+
+    public ImList<Restriction> getRestrictions(){
+        return elem.getChildren().flatMap(Restriction::parseList);
     }
 }

@@ -1,6 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -36,8 +38,20 @@ public final class XsdAppinfo implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdAppinfo(XmlElem elem) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+    }
+
+    public Result<BuiltInTypes.AnyURI, String> getSource() {
+        return Result.of(
+            elem.attrib("source").map(XmlAttr::getValue).head(),
+            "source not found"
+        ).flatMap(BuiltInTypes.AnyURI::parse);
     }
 }

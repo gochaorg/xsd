@@ -1,10 +1,13 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
+import xyz.cofe.xsd.om.xml.XmlAttr;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /*
 https://www.w3schools.com/xml/el_attributegroup.asp
@@ -20,7 +23,11 @@ any attributes
 
 </attributeGroup>
  */
-public final class XsdAttributeGroup implements Xsd {
+public final class XsdAttributeGroup implements Xsd,
+                                                IDAttribute,
+                                                NameAttribute,
+                                                RefAttribute,
+                                                XsdAnnotation.AnnotationProperty {
     public static final String Name = "attributeGroup";
 
     public static boolean isMatch(XmlNode node) {
@@ -30,8 +37,8 @@ public final class XsdAttributeGroup implements Xsd {
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdAttributeGroup> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdAttributeGroup> parseList(XmlNode el) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
             ? ImList.first(new XsdAttributeGroup((XmlElem) el))
             : ImList.empty();
@@ -39,8 +46,17 @@ public final class XsdAttributeGroup implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdAttributeGroup(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
     }
+
+    public ImList<XsdAttribute> getAttributes(){ return elem().getChildren().flatMap(XsdAttribute::parseList); }
+    public ImList<XsdAttributeGroup> getAttributeGroups(){ return elem().getChildren().flatMap(XsdAttributeGroup::parseList); }
+    public Optional<XsdAnyAttribute> getAnyAttribute(){ return elem().getChildren().flatMap(XsdAnyAttribute::parseList).head(); }
 }

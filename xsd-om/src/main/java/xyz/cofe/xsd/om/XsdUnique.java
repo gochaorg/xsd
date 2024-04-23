@@ -1,6 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -19,7 +20,7 @@ any attributes
 
 </unique>
  */
-public final class XsdUnique implements Xsd {
+public final class XsdUnique implements Xsd, XsdAnnotation.AnnotationProperty, IDAttribute, NamespaceAttribute {
     public static final String Name = "unique";
 
     public static boolean isMatch(XmlNode node) {
@@ -38,8 +39,22 @@ public final class XsdUnique implements Xsd {
 
     public final XmlElem elem;
 
+    @Override
+    public XmlElem elem() {
+        return elem;
+    }
+
     public XsdUnique(XmlElem elem) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
     }
+
+    public Result<XsdSelector,String> getSelector(){
+        return Result.of(
+            elem().getChildren().flatMap(XsdSelector::parseList).head(),
+            "selector not found"
+        );
+    }
+
+    public ImList<XsdField> getFields(){ return elem().getChildren().flatMap(XsdField::parseList); }
 }
