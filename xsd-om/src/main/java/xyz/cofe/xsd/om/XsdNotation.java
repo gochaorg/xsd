@@ -8,20 +8,31 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_notation.asp
+/**
+The <a href="https://www.w3schools.com/xml/el_notation.asp">notation</a> element describes the format of non-XML data within an XML document.
 
-<notation
-id=ID
-name=NCName
-public=anyURI
-system=anyURI
-any attributes
->
+ <pre>
+&lt;notation
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?)
+ name=NCName
+   Required. Specifies a name for the element
 
-</notation>
+ public=anyURI
+   Required. Specifies a URI corresponding to the public identifier
+
+ system=anyURI ?
+   Optional. Specifies a URI corresponding to the system identifier
+
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?)
+
+&lt;/notation&gt;
+ </pre>
  */
 public final class XsdNotation implements Xsd, IDAttribute, NamespaceAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "notation";

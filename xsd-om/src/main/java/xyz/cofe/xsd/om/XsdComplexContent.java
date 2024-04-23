@@ -7,18 +7,29 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_complexcontent.asp
+/**
 
-<complexContent
-id=ID
-mixed=true|false
-any attributes
->
+ The <a href="https://www.w3schools.com/xml/el_complexcontent.asp">complexType</a>
+ element defines a complex type. A complex type element is an XML element that contains other elements and/or attributes.
 
-(annotation?,(restriction|extension))
+ <pre>
+&lt;complexContent
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-</complexContent>
+ mixed=true|false ?
+   Optional.
+   Specifies whether character data is allowed to appear
+   between the child elements of this complexType element. Default is false
+
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?,({@link XsdRestriction restriction}|{@link XsdExtension extension}))
+
+&lt;/complexContent&gt;
+ </pre>
 */
 public final class XsdComplexContent implements Xsd,
                                                 ContentDef,

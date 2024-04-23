@@ -7,21 +7,43 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 import java.util.Objects;
 import java.util.Optional;
 
-/*
-https://www.w3schools.com/xml/el_group.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_group.asp">group</a> element is used to define a group of elements to be used in complex type definitions.
 
-<group
-id=ID
-name=NCName
-ref=QName
-maxOccurs=nonNegativeInteger|unbounded
-minOccurs=nonNegativeInteger
-any attributes
->
+ <pre>
+&lt;group
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?,(all|choice|sequence)?)
+ name=NCName ?
+   Optional.
+   Specifies a name for the group. This attribute is used only when the schema element is
+ the parent of this group element. Name and ref attributes cannot both be present
 
-</group>
+ ref=QName ?
+   Optional. Refers to the name of another group.
+   Name and ref attributes cannot both be present
+
+ maxOccurs=nonNegativeInteger|unbounded ?
+   Optional. Specifies the maximum number of times the group element can occur in the parent element.
+   The value can be any number >= 0, or
+   if you want to set no limit on the maximum number, use the value "unbounded".
+   Default value is 1
+
+ minOccurs=nonNegativeInteger ?
+   Optional. Specifies the minimum number of times the group element can occur in the parent element.
+   The value can be any number >= 0. Default value is 1
+
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+( {@link XsdAnnotation annotation}?,
+  ({@link XsdAll all}|{@link XsdChoice choice}|{@link XsdSequence sequence})?
+)
+
+&lt;/group&gt;
+ </pre>
  */
 public final class XsdGroup implements Xsd,
                                        ElementsLayout,

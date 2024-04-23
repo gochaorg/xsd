@@ -7,18 +7,28 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 import java.util.Objects;
 import java.util.Optional;
 
-/*
-https://www.w3schools.com/xml/el_list.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_list.asp">list</a> element defines a simple type element as a list of values of a specified data type.
 
-<list
-id=ID
-itemType=QName
-any attributes
->
+ <pre>
+&lt;list
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?,(simpleType?))
+ itemType=QName
+   Specifies the name of a built-in data type or
+   simpleType element defined in this or another schema.
+   This attribute is not allowed if the content contains a
+   simpleType element, otherwise it is required
 
-</list>
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?,({@link XsdSimpleType simpleType}?))
+
+&lt;/list&gt;
+ </pre>
  */
 public final class XsdList implements Xsd,
                                       SimpleTypeContent, IDAttribute, ItemTypeAttribute, XsdAnnotation.AnnotationProperty {

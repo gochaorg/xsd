@@ -8,18 +8,31 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_redefine.asp
+/**
+The <a href="https://www.w3schools.com/xml/el_redefine.asp">redefine</a> element redefines simple and complex types, groups, and attribute groups from an external schema.
 
-<redefine
-id=ID
-schemaLocation=anyURI
-any attributes
->
+ <pre>
+&lt;redefine
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation|(simpleType|complexType|group|attributeGroup))*
+ schemaLocation=anyURI
+   Required. A URI to the location of a schema document
 
-</redefine>
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+( {@link XsdAnnotation annotation}
+| ( {@link XsdSimpleType simpleType}
+  | {@link XsdComplexType complexType}
+  | {@link XsdGroup group}
+  | {@link XsdAttributeGroup attributeGroup}
+  )
+)*
+
+&lt;/redefine&gt;
+ </pre>
  */
 public final class XsdRedefine implements Xsd, IDAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "redefine";

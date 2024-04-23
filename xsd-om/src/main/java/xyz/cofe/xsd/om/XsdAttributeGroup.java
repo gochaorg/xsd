@@ -9,19 +9,34 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 import java.util.Objects;
 import java.util.Optional;
 
-/*
-https://www.w3schools.com/xml/el_attributegroup.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_attributegroup.asp">attributeGroup</a> element is used to group
+ a set of attribute declarations so that they can be incorporated as a group into complex type definitions.
 
-<attributeGroup
-id=ID
-name=NCName
-ref=QName
-any attributes
->
+ <pre>
+&lt;attributeGroup
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?),((attribute|attributeGroup)*,anyAttribute?))
+ name=NCName ?
+   Optional.
+   Specifies the name of the attribute group.
+   Name and ref attributes cannot both be present
 
-</attributeGroup>
+ ref=QName ?
+   Optional.
+   Specifies a reference to a named attribute group.
+   Name and ref attributes cannot both be present
+
+ any attributes ?
+   Optional.
+   Specifies any other attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?),(({@link XsdAttribute attribute}|{@link XsdAttributeGroup attributeGroup})*,{@link XsdAnyAttribute anyAttribute}?))
+
+&lt;/attributeGroup&gt;
+ </pre>
  */
 public final class XsdAttributeGroup implements Xsd,
                                                 IDAttribute,

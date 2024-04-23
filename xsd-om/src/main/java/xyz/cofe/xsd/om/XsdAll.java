@@ -8,19 +8,22 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_all.asp
+/**
+The <a href="https://www.w3schools.com/xml/el_all.asp">all</a> element specifies that the child elements
+ can appear in <b>any order</b> and that each child element can occur zero or one time.
 
-<all
-id=ID
-maxOccurs=1
-minOccurs=0|1
-any attributes
->
+ <pre>
+&lt;all
+  id=ID?
+  maxOccurs=1?    <i>The value must be 1.</i>
+  minOccurs=0|1?  <i>The value can be 0 or 1. Default value is 1</i>
+  any attributes?
+&gt;
 
-(annotation?,element*)
+({@link XsdAnnotation annotation}?,{@link XsdElement element}*)
 
-</all>
+&lt;/all&gt;
+ </pre>
 */
 public final class XsdAll implements Xsd,
                                      ElementsLayout,

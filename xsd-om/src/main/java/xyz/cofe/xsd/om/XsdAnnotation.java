@@ -8,17 +8,19 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_annotation.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_annotation.asp">annotation</a> element is a top level element that specifies schema comments. The comments serve as inline documentation.
 
-<annotation
-id=ID
-any attributes
->
+ <pre>
+&lt;annotation
+  id=ID?
+  any attributes?
+&gt;
 
-(appinfo|documentation)*
+({@link XsdAppinfo appinfo}|{@link XsdDocumentation documentation})*
 
-</annotation>
+&lt;/annotation&gt;
+ </pre>
  */
 public final class XsdAnnotation implements Xsd, IDAttribute {
     public non-sealed interface AnnotationProperty extends Xsd {

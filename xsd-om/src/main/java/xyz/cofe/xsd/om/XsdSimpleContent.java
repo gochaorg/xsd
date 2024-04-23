@@ -6,17 +6,24 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_simpleContent.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_simpleContent.asp">simpleContent</a> element contains extensions or 
+ restrictions on a text-only complex type or on a simple type as content and contains no elements.
 
-<simpleContent
-id=ID
-any attributes
->
+<pre>
+&lt;simpleContent
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?,(restriction|extension))
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
 
-</simpleContent>
+({@link XsdAnnotation annotation}?,({@link XsdRestriction restriction}|{@link XsdExtension extension}))
+
+&lt;/simpleContent&gt;
+ </pre>
+ 
  */
 public final class XsdSimpleContent implements Xsd, ContentDef, IDAttribute {
     public static final String Name = "simpleContent";

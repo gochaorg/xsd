@@ -9,18 +9,30 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 import java.util.Arrays;
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_union.asp
+/**
+The <a href="https://www.w3schools.com/xml/el_union.asp">union</a> element defines a simple 
+ type as a collection (union) of values from specified simple data types.
 
-<union
-id=ID
-memberTypes="list of QNames"
-any attributes
->
+<pre>
+&lt;union
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?,(simpleType*))
+ memberTypes="list of QNames" ?
+   Optional.
+   Specifies a list of built-in data types or
+   simpleType elements defined in a schema
 
-</union>
+ any attributes ?
+   Optional. Specifies any other
+   attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?,({@link XsdSimpleType simpleType}*))
+
+&lt;/union&gt;
+</pre>
+ 
  */
 public final class XsdUnion implements Xsd,
                                        SimpleTypeContent,

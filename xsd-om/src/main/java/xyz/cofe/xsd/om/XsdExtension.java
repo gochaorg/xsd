@@ -7,28 +7,35 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 import java.util.Objects;
 import java.util.Optional;
 
-/*
-https://www.w3schools.com/xml/el_extension.asp
+/**
 
-<extension
-id=ID
-base=QName
-any attributes
->
+ The <a href="https://www.w3schools.com/xml/el_extension.asp">extension</a> element extends an existing simpleType or complexType element.
+
+<pre>
+&lt;extension
+ id=ID ?
+   Optional. Specifies a unique ID for the element
+
+ base=QName
+   Required. Specifies the name of a built-in data type, a simpleType element, or a complexType element
+
+ any attributes ?
+ Optional. Specifies any other attributes with non-schema namespace
+&gt;
 
 (
-  annotation?,
+ {@link XsdAnnotation annotation}?,
 
-  ( (group|all|choice|sequence)? ,
+  ( ({@link XsdGroup group}|{@link XsdAll all}|{@link XsdChoice choice}|{@link XsdSequence sequence})? ,
 
-    ( (attribute | attributeGroup )*,
-       anyAttribute?
+    ( ({@link XsdAttribute attribute} | {@link XsdAttributeGroup attributeGroup})*,
+      {@link XsdAnyAttribute anyAttribute}?
     )
   )
-
 )
-
-</extension>
+ 
+&lt;/extension&gt;
+ </pre>
  */
 public final class XsdExtension implements Xsd,
                                            XsdComplexContent.Nested,

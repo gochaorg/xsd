@@ -8,18 +8,26 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_field.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_field.asp">field</a> element specifies an XPath expression that
+ specifies the value used to define an identity constraint.
 
-<field
-id=ID
-xpath=XPath expression
-any attributes
->
+ <pre>
+&lt;field
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?)
+ xpath=XPath expression
+   Required. Identifies a single element or attribute whose content or value is used for the constraint
 
-</field>
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?)
+
+&lt;/field&gt;
+ </pre>
  */
 public final class XsdField implements Xsd, XsdAnnotation.AnnotationProperty, IDAttribute {
     public static final String Name = "field";

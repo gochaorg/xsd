@@ -8,19 +8,46 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_anyattribute.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_anyattribute.asp">anyAttribute</a> element enables the author to extend
+ the XML document with attributes not specified by the schema.
 
-<anyAttribute
-id=ID
-namespace=namespace
-processContents=lax|skip|strict
-any attributes
->
+ <pre>
+&lt;anyAttribute
+ id=ID ?
+ namespace=namespace ?
+ 
+   Optional. 
+   Specifies the namespaces containing the attributes that can be used. 
+   Can be set to one of the following:
 
-(annotation?)
+   ##any - attributes from any namespace is allowed (this is default)
+   ##other - attributes from any namespace that is not the namespace of the parent element can be present
+   ##local - attributes must come from no namespace
+   ##targetNamespace - attributes from the namespace of the parent element can be present
+   List of {URI references of namespaces, ##targetNamespace, ##local} - attributes
+     from a space-delimited list of the namespaces can be present
 
-</anyAttribute>
+ processContents=lax|skip|strict ?
+
+   Optional. Specifies how the XML processor should handle 
+   validation against the elements specified by this any element. 
+   Can be set to one of the following:
+
+     strict - the XML processor must obtain 
+              the schema for the required namespaces and validate the elements (this is default)
+     lax - same as strict but; 
+           if the schema cannot be obtained, no errors will occur
+     skip - The XML processor does not attempt 
+            to validate any elements from the specified namespaces
+
+ any attributes ?
+&gt;
+
+({@link XsdAnnotation annotation}?)
+
+&lt;/anyAttribute&gt;
+ </pre>
  */
 public final class XsdAnyAttribute implements Xsd, IDAttribute, NamespaceAttribute {
     public static final String Name = "anyAttribute";

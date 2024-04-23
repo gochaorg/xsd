@@ -7,19 +7,41 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_keyref.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_keyref.asp">keyref</a> element specifies
+ that an attribute or element value correspond to those of the specified key or unique element.
 
-<keyref
-id=ID
-name=NCName
-refer=QName
-any attributes
->
+ <p></p>
+ The keyref element MUST contain the following (in order):
 
-(annotation?,(selector,field+))
+ <ul>
+  <li>
+    one and only one selector element  (contains an XPath expression that specifies the set of elements across which the values specified by field must be unique)
+  </li>
+  <li>
+    one or more field elements (contains an XPath expression that specifies the values that must be unique for the set of elements specified by the selector element)
+  </li>
+ </ul>
 
-</keyref>
+<pre> 
+&lt;keyref
+ id=ID ?
+   Optional. Specifies a unique ID for the element
+
+ name=NCName
+   Required. Specifies the name of the keyref element
+
+ refer=QName
+   Required. Specifies the name of a key or unique element defined in this or another schema
+
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?,({@link XsdSelector selector},{@link XsdField field}+))
+
+&lt;/keyref&gt;
+ </pre>
  */
 public final class XsdKeyref implements Xsd, XsdAnnotation.AnnotationProperty, IDAttribute, NameAttribute {
     public static final String Name = "keyref";

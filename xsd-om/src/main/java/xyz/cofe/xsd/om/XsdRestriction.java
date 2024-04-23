@@ -8,31 +8,130 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_restriction.asp
+/**
+ The <a href="https://www.w3schools.com/xml/el_restriction.asp">restriction</a> element defines restrictions on 
+ a simpleType, simpleContent, or complexContent definition.
 
-<restriction
+ <pre>
+&lt;restriction
 id=ID
 base=QName
 any attributes
->
+&gt;
 
 Content for simpleType:
 ( annotation?,
-  (simpleType?,(minExclusive|minInclusive|maxExclusive|maxInclusive|totalDigits|fractionDigits|length|minLength|maxLength|enumeration|whiteSpace|pattern)*)
+  ( simpleType?,
+    ( minExclusive
+    | minInclusive
+    | maxExclusive
+    | maxInclusive
+    | totalDigits
+    | fractionDigits
+    | length
+    | minLength
+    | maxLength
+    | enumeration
+    | whiteSpace
+    | pattern
+    )*
+  )
 )
 
 Content for simpleContent:
-(annotation?,(simpleType?,(minExclusive |minInclusive|
-maxExclusive|maxInclusive|totalDigits|fractionDigits|
-length|minLength|maxLength|enumeration|whiteSpace|pattern)*)?,
-((attribute|attributeGroup)*,anyAttribute?))
+( annotation?,
+ ( simpleType?,
+   ( minExclusive
+   | minInclusive
+   | maxExclusive
+   | maxInclusive
+   | totalDigits
+   | fractionDigits
+   | length
+   | minLength
+   | maxLength
+   | enumeration
+   | whiteSpace
+   | pattern
+   )*
+ )?,
+ (
+   ( attribute
+   | attributeGroup
+   )*,
+   anyAttribute?
+ )
+)
 
 Content for complexContent:
-(annotation?,(group|all|choice|sequence)?,
-((attribute|attributeGroup)*,anyAttribute?))
+( annotation?,
+  ( group
+  | all
+  | choice
+  | sequence
+  )?,
+  (
+    ( attribute
+    | attributeGroup
+    )*,
+  anyAttribute?
+ )
+)
 
-</restriction>
+&lt;/restriction&gt;
+ </pre>
+
+ <h2> examples </h2>
+
+ <pre>
+ &lt;xs:element name="age"&gt;
+     &lt;xs:simpleType&gt;
+         &lt;xs:restriction base="xs:integer"&gt;
+             &lt;xs:minInclusive value="0"/&gt;
+             &lt;xs:maxInclusive value="100"/&gt;
+         &lt;/xs:restriction&gt;
+     &lt;/xs:simpleType&gt;
+ &lt;/xs:element&gt; 
+
+ &lt;xs:element name="initials"&gt;
+     &lt;xs:simpleType&gt;
+         &lt;xs:restriction base="xs:string"&gt;
+            &lt;xs:pattern value="[a-zA-Z][a-zA-Z][a-zA-Z]"/&gt;
+         &lt;/xs:restriction&gt;
+     &lt;/xs:simpleType&gt;
+ &lt;/xs:element&gt;
+
+ &lt;xs:element name="password"&gt;
+     &lt;xs:simpleType&gt;
+         &lt;xs:restriction base="xs:string"&gt;
+             &lt;xs:minLength value="5"/&gt;
+             &lt;xs:maxLength value="8"/&gt;
+         &lt;/xs:restriction&gt;
+     &lt;/xs:simpleType&gt;
+ &lt;/xs:element&gt;
+
+ &lt;xs:complexType name="customer"&gt;
+     &lt;xs:sequence&gt;
+         &lt;xs:element name="firstname" type="xs:string"/&gt;
+         &lt;xs:element name="lastname" type="xs:string"/&gt;
+         &lt;xs:element name="country" type="xs:string"/&gt;
+     &lt;/xs:sequence&gt;
+ &lt;/xs:complexType&gt;
+
+ &lt;xs:complexType name="Norwegian_customer"&gt;
+     &lt;xs:complexContent&gt;
+         &lt;xs:restriction base="customer"&gt;
+             &lt;xs:sequence&gt;
+                 &lt;xs:element name="firstname" type="xs:string"/&gt;
+                 &lt;xs:element name="lastname" type="xs:string"/&gt;
+                 &lt;xs:element name="country" type="xs:string" fixed="Norway"/&gt;
+             &lt;/xs:sequence&gt;
+         &lt;/xs:restriction&gt;
+     &lt;/xs:complexContent&gt;
+ &lt;/xs:complexType&gt; 
+ 
+ </pre>
+
  */
 public final class XsdRestriction implements Xsd,
                                              SimpleTypeContent,

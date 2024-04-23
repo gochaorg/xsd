@@ -6,19 +6,36 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_choice.asp
+/**
+ XML Schema <a href="https://www.w3schools.com/xml/el_choice.asp">choice</a> element allows only one of the elements contained in the <choice> declaration to be present within the containing element.
 
-<choice
-id=ID
-maxOccurs=nonNegativeInteger|unbounded
-minOccurs=nonNegativeInteger
-any attributes
->
+ <pre>
+&lt;choice
+ id=ID ?
+   Optional.
+   Specifies a unique ID for the element
 
-(annotation?,(element|group|choice|sequence|any)*)
+ maxOccurs=nonNegativeInteger|unbounded ?
+   Optional.
+   Specifies the maximum number of times the choice element can occur in the parent element.
+   The value can be any number >= 0, or if you want to
+   set no limit on the maximum number, use the value "unbounded". Default value is 1
 
-</choice>
+ minOccurs=nonNegativeInteger ?
+   Optional.
+   Specifies the minimum number of times the choice element can occur in the parent the element.
+   The value can be any number &gt;= 0. Default value is 1
+
+ any attributes ?
+   Optional. Specifies any other attributes with non-schema namespace
+&gt;
+
+( {@link XsdAnnotation annotation}?,
+ ({@link XsdElement element}|{@link XsdGroup group}|{@link XsdChoice choice}|{@link XsdSequence sequence}|{@link XsdAny any})*
+)
+
+&lt;/choice&gt;
+ </pre>
  */
 public final class XsdChoice implements Xsd,
                                         ElementsLayout,

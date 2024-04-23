@@ -8,18 +8,30 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
 
-/*
-https://www.w3schools.com/xml/el_selector.asp
+/**
+The <a href="https://www.w3schools.com/xml/el_selector.asp">selector</a> element specifies
+ an XPath expression that selects a set of elements for an identity constraint (unique, key, and keyref elements).
 
-<selector
-id=ID
-xpath=a subset of XPath expression
-any attributes
->
+ <pre>
+&lt;selector
+ id=ID ?
+   Optional. Specifies a unique ID for the element
 
-(annotation?)
+ xpath=a subset of XPath expression
+   Required. Specifies an XPath expression,
+   relative to the element being declared,
+   that identifies the child elements to
+   which the identity constraint applies
 
-</selector>
+ any attributes ?
+   Optional.
+   Specifies any other attributes with non-schema namespace
+&gt;
+
+({@link XsdAnnotation annotation}?)
+
+&lt;/selector&gt;
+ </pre>
  */
 public final class XsdSelector implements Xsd, IDAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "selector";
