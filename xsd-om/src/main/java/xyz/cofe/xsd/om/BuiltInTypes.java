@@ -1,14 +1,25 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.Result;
+import xyz.cofe.im.struct.Tuple2;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Optional;
 
 import static xyz.cofe.im.struct.Result.*;
 
 // https://www.w3.org/TR/xmlschema-2/#built-in-datatypes
 public sealed interface BuiltInTypes {
+    public sealed interface AnySimpleType {}
+    public sealed interface Numeric extends AnySimpleType {}
+    public sealed interface IntegerNum extends Numeric {}
+    public sealed interface LongNum extends IntegerNum {}
+    public sealed interface UnsignedLongNum extends IntegerNum {}
+    public sealed interface UnsignedIntNum extends UnsignedLongNum {}
+    public sealed interface UnsignedShortNum extends UnsignedIntNum {}
+    public sealed interface UnsignedByteNum extends UnsignedShortNum {}
+
     // https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName
     private static boolean isNCNameChar(char chr){ return Const.isLetter(chr) || Const.isDigit(chr) || chr=='.'  || chr=='-' || chr=='_' || Const.isCombiningChar(chr) || Const.isExtender(chr); }
 
@@ -21,7 +32,7 @@ public sealed interface BuiltInTypes {
         return true;
     }
 
-    record STRING(String value) implements BuiltInTypes {
+    record STRING(String value) implements BuiltInTypes, AnySimpleType {
         public static Result<STRING,String> parse(String str){
             if(str==null) return err("null value");
             return ok(new STRING(str));
@@ -46,6 +57,32 @@ public sealed interface BuiltInTypes {
                     ? ok(new NCNAME(v.value)) : err("value "+v.value+" is not NCName, see https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName")
                 );
         }
+
+        public static Optional<Tuple2<NCNAME,Integer>> parse(String value,int offset){
+            if( value==null ) throw new IllegalArgumentException("value==null");
+
+            if( offset<0 ) throw new IllegalArgumentException("offset<0");
+            if( offset>=value.length() ) return Optional.empty();
+
+            var ptr = offset;
+            if( !Const.isLetter(value.charAt(ptr)) || !(value.charAt(ptr)=='_') )return Optional.empty();
+
+            ptr++;
+            while (ptr < value.length()){
+                if( isNCNameChar(value.charAt(ptr)) ){
+                    ptr++;
+                    continue;
+                }
+                break;
+            }
+
+            return Optional.of(
+                Tuple2.of(
+                    new NCNAME(value.substring(offset,ptr)),
+                    ptr
+                )
+            );
+        }
     }
 
     record ID(String value) implements BuiltInTypes {
@@ -60,7 +97,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record FLOAT(float value,String string) implements BuiltInTypes {
+    record FLOAT(float value,String string) implements BuiltInTypes, AnySimpleType {
         public static Result<FLOAT,String> parse(String value){
             if(value==null) return err("null value");
             try {
@@ -73,7 +110,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record DOUBLE(double value,String string) implements BuiltInTypes {
+    record DOUBLE(double value,String string) implements BuiltInTypes, AnySimpleType {
         public static Result<DOUBLE,String> parse(String value){
             if(value==null) return err("null value");
             try {
@@ -86,7 +123,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record BOOLEAN(boolean value) implements BuiltInTypes {
+    record BOOLEAN(boolean value) implements BuiltInTypes, AnySimpleType {
         public static Result<BOOLEAN, String> parse(String value) {
             if (value == null) return err("null value");
             if (value.equals("true") || value.equals("1")) return ok(new BOOLEAN(true));
@@ -101,7 +138,7 @@ public sealed interface BuiltInTypes {
     // P<date>T<time>
     record Duration(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<Duration, String> parse(String value) {
             return STRING.parse(value).map(v -> new Duration(v.value()));
         }
@@ -109,7 +146,7 @@ public sealed interface BuiltInTypes {
 
     record DateTime(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<DateTime, String> parse(String value) {
             return STRING.parse(value).map(v -> new DateTime(v.value()));
         }
@@ -117,7 +154,7 @@ public sealed interface BuiltInTypes {
 
     record Time(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<Time, String> parse(String value) {
             return STRING.parse(value).map(v -> new Time(v.value()));
         }
@@ -125,7 +162,7 @@ public sealed interface BuiltInTypes {
 
     record Date(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<Date, String> parse(String value) {
             return STRING.parse(value).map(v -> new Date(v.value()));
         }
@@ -133,7 +170,7 @@ public sealed interface BuiltInTypes {
 
     record GYearMonth(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<GYearMonth, String> parse(String value) {
             return STRING.parse(value).map(v -> new GYearMonth(v.value()));
         }
@@ -141,7 +178,7 @@ public sealed interface BuiltInTypes {
 
     record GYear(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<GYear, String> parse(String value) {
             return STRING.parse(value).map(v -> new GYear(v.value()));
         }
@@ -149,7 +186,7 @@ public sealed interface BuiltInTypes {
 
     record GMonthDay(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<GMonthDay, String> parse(String value) {
             return STRING.parse(value).map(v -> new GMonthDay(v.value()));
         }
@@ -157,7 +194,7 @@ public sealed interface BuiltInTypes {
 
     record GDay(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<GDay, String> parse(String value) {
             return STRING.parse(value).map(v -> new GDay(v.value()));
         }
@@ -165,7 +202,7 @@ public sealed interface BuiltInTypes {
 
     record GMonth(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<GMonth, String> parse(String value) {
             return STRING.parse(value).map(v -> new GMonth(v.value()));
         }
@@ -173,7 +210,7 @@ public sealed interface BuiltInTypes {
 
     record Base64Binary(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<Base64Binary, String> parse(String value) {
             return STRING.parse(value).map(v -> new Base64Binary(v.value()));
         }
@@ -181,7 +218,7 @@ public sealed interface BuiltInTypes {
 
     record HexBinary(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<HexBinary, String> parse(String value) {
             return STRING.parse(value).map(v -> new HexBinary(v.value()));
         }
@@ -189,23 +226,43 @@ public sealed interface BuiltInTypes {
 
     record AnyURI(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<AnyURI, String> parse(String value) {
             return STRING.parse(value).map(v -> new AnyURI(v.value()));
         }
     }
 
+    // https://www.w3.org/TR/1999/REC-xml-names-19990114/#dt-qname
     record QName(
-        String string
-    ) implements BuiltInTypes {
+        Optional<String> prefix,
+        String localPart
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<QName, String> parse(String value) {
-            return STRING.parse(value).map(v -> new QName(v.value()));
+            return STRING.parse(value).flatMap(v -> {
+                var str = v.value();
+
+                var p1opt = NCNAME.parse(str,0);
+                if(p1opt.isEmpty())return err("can't parse NCName from \""+v.value()+"\" offset=0");
+
+                var p1tup = p1opt.get();
+                var p1 = p1tup.a();
+                var off1 = p1tup.b();
+
+                String str2 = off1 >= str.length() ? "" : str.substring(off1);
+                if( str2.isEmpty() )return ok(new QName(Optional.empty(), p1.value()));
+
+                if( !str2.startsWith(":") )return err("expect begin ':', but found "+str2);
+                if( str2.length()<2 )return err("expect length > 2, but found '"+str2+"'");
+
+                String str3 = str2.substring(1);
+                return NCNAME.parse(str3).map( p2 -> new QName(Optional.of(p1.value()), p2.value()));
+            });
         }
     }
 
     record NOTATION(
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, AnySimpleType {
         public static Result<NOTATION, String> parse(String value) {
             return STRING.parse(value).map(v -> new NOTATION(v.value()));
         }
@@ -214,7 +271,7 @@ public sealed interface BuiltInTypes {
     record Decimal(
         BigDecimal value,
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, Numeric {
         public static Result<Decimal, String> parse(String value) {
             if (value == null) return err("null value");
             try {
@@ -230,7 +287,7 @@ public sealed interface BuiltInTypes {
     record INTEGER(
         BigInteger value,
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, IntegerNum {
         public static Result<INTEGER, String> parse(String value) {
             if (value == null) return err("null value");
             try {
@@ -246,7 +303,7 @@ public sealed interface BuiltInTypes {
     record NON_POSITIVE_INTEGER(
         BigInteger value,
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, IntegerNum {
         public static Result<NON_POSITIVE_INTEGER, String> parse(String value) {
             return INTEGER.parse(value).flatMap(v ->
                 v.value.compareTo(BigInteger.ZERO)<=0
@@ -259,7 +316,7 @@ public sealed interface BuiltInTypes {
     record NEGATIVE_INTEGER(
         BigInteger value,
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, IntegerNum {
         public static Result<NEGATIVE_INTEGER, String> parse(String value) {
             return INTEGER.parse(value).flatMap(v ->
                 v.value.compareTo(BigInteger.ZERO)<0
@@ -272,7 +329,7 @@ public sealed interface BuiltInTypes {
     record NON_NEGATIVE_INTEGER(
         BigInteger value,
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, IntegerNum {
         public static Result<NON_NEGATIVE_INTEGER, String> parse(String value) {
             return INTEGER.parse(value).flatMap(v ->
                 v.value.compareTo(BigInteger.ZERO)>=0
@@ -285,7 +342,7 @@ public sealed interface BuiltInTypes {
     record POSTIVE_INTEGER(
         BigInteger value,
         String string
-    ) implements BuiltInTypes {
+    ) implements BuiltInTypes, IntegerNum {
         public static Result<POSTIVE_INTEGER, String> parse(String value) {
             return INTEGER.parse(value).flatMap(v ->
                 v.value.compareTo(BigInteger.ZERO)>0
@@ -295,7 +352,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record LONG(long value, String string) implements BuiltInTypes {
+    record LONG(long value, String string) implements BuiltInTypes, LongNum {
         public static Result<LONG, String> parse(String value) {
             if (value == null) return err("null value");
             try {
@@ -308,7 +365,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record INT(int value, String string) implements BuiltInTypes {
+    record INT(int value, String string) implements BuiltInTypes, LongNum {
         public static Result<INT, String> parse(String value) {
             if (value == null) return err("null value");
             try {
@@ -321,7 +378,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record SHORT(short value, String string) implements BuiltInTypes {
+    record SHORT(short value, String string) implements BuiltInTypes, LongNum {
         public static Result<SHORT, String> parse(String value) {
             if (value == null) return err("null value");
             try {
@@ -334,7 +391,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record BYTE(byte value, String string) implements BuiltInTypes {
+    record BYTE(byte value, String string) implements BuiltInTypes, LongNum {
         public static Result<BYTE, String> parse(String value) {
             if (value == null) return err("null value");
             try {
@@ -347,7 +404,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record UNSIGNED_LONG(BigInteger value, String string) implements BuiltInTypes {
+    record UNSIGNED_LONG(BigInteger value, String string) implements BuiltInTypes, UnsignedLongNum {
         public static Result<UNSIGNED_LONG, String> parse(String value) {
             return NON_NEGATIVE_INTEGER.parse(value).flatMap(
                 v -> v.value().compareTo(new BigInteger("18446744073709551615")) > 0
@@ -357,7 +414,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record UNSIGNED_INT(long value, String string) implements BuiltInTypes {
+    record UNSIGNED_INT(long value, String string) implements BuiltInTypes, UnsignedIntNum {
         public static Result<UNSIGNED_INT, String> parse(String value) {
             return LONG.parse(value).flatMap(
                 v -> v.value() > 4294967295L || v.value < 0
@@ -367,7 +424,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record UNSIGNED_SHORT(int value, String string) implements BuiltInTypes {
+    record UNSIGNED_SHORT(int value, String string) implements BuiltInTypes, UnsignedShortNum {
         public static Result<UNSIGNED_SHORT, String> parse(String value) {
             return INT.parse(value).flatMap(
                 v -> v.value > 65535 || v.value < 0
@@ -377,7 +434,7 @@ public sealed interface BuiltInTypes {
         }
     }
 
-    record UNSIGNED_BYTE(int value, String string) implements BuiltInTypes {
+    record UNSIGNED_BYTE(int value, String string) implements BuiltInTypes, UnsignedByteNum {
         public static Result<UNSIGNED_SHORT, String> parse(String value) {
             return INT.parse(value).flatMap(
                 v -> v.value > 255 || v.value < 0
