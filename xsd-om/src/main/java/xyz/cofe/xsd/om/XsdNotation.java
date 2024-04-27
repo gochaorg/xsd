@@ -7,6 +7,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
 The <a href="https://www.w3schools.com/xml/el_notation.asp">notation</a> element describes the format of non-XML data within an XML document.
@@ -44,23 +45,27 @@ public final class XsdNotation implements Xsd, IDAttribute, NamespaceAttribute, 
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdNotation> parseList(XmlNode el) {
+    public static ImList<XsdNotation> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdNotation((XmlElem) el))
+            ? ImList.first(new XsdNotation((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdNotation(XmlElem elem) {
+    public XsdNotation(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Result<BuiltInTypes.AnyURI, String> getPublic() {

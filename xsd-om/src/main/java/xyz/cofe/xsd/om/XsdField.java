@@ -7,6 +7,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  The <a href="https://www.w3schools.com/xml/el_field.asp">field</a> element specifies an XPath expression that
@@ -29,7 +30,9 @@ import java.util.Objects;
 &lt;/field&gt;
  </pre>
  */
-public final class XsdField implements Xsd, XsdAnnotation.AnnotationProperty, IDAttribute {
+public final class XsdField implements Xsd,
+                                       XsdAnnotation.AnnotationProperty,
+                                       IDAttribute {
     public static final String Name = "field";
 
     public static boolean isMatch(XmlNode node) {
@@ -39,23 +42,27 @@ public final class XsdField implements Xsd, XsdAnnotation.AnnotationProperty, ID
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdField> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdField> parseList(XmlNode el, Xsd parent) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdField((XmlElem) el))
+            ? ImList.first(new XsdField((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdField(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+    public XsdField(XmlElem elem, Xsd parent) {
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Result<BuiltInTypes.ID, String> getId() {

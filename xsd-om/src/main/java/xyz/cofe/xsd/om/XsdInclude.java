@@ -26,14 +26,16 @@ any attributes
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class XsdInclude implements SchemaLocation, Xsd {
-    public XsdInclude(XmlElem elem, Optional<String> schemaLocation) {
+    public XsdInclude(XmlElem elem, Optional<String> schemaLocation, Xsd parent) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         if( schemaLocation==null ) throw new IllegalArgumentException("schemaLocation==null");
         this.schemaLocation = schemaLocation;
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
@@ -53,13 +55,13 @@ public final class XsdInclude implements SchemaLocation, Xsd {
         return xsdDocs;
     }
 
-    public static Optional<XsdInclude> parse(XmlElem elem){
+    public static Optional<XsdInclude> parse(XmlElem elem, Xsd parent){
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         if( !XMLSchemaNamespace.equals(elem.getNamespaceURI()) )return Optional.empty();
         if( !Include.equals(elem.getLocalName()) )return Optional.empty();
 
         return Optional.of(
-            new XsdInclude( elem, Optional.ofNullable(elem.getAttribute("schemaLocation")) )
+            new XsdInclude( elem, Optional.ofNullable(elem.getAttribute("schemaLocation")), parent )
         );
     }
 

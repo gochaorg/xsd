@@ -5,6 +5,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  XML Schema <a href="https://www.w3schools.com/xml/el_choice.asp">choice</a> element allows only one of the elements contained in the <choice> declaration to be present within the containing element.
@@ -55,22 +56,26 @@ public final class XsdChoice implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdChoice> parseList(XmlNode el) {
+    public static ImList<XsdChoice> parseList(XmlNode el,Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdChoice((XmlElem) el))
+            ? ImList.first(new XsdChoice((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdChoice(XmlElem elem) {
+    public XsdChoice(XmlElem elem,Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 }

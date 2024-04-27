@@ -41,7 +41,8 @@ public final class XsdExtension implements Xsd,
                                            XsdComplexContent.Nested,
                                            IDAttribute,
                                            BaseAttribute,
-                                           XsdAnnotation.AnnotationProperty {
+                                           XsdAnnotation.AnnotationProperty,
+                                           XsdSimpleContent.Nested {
     public static final String Name = "extension";
 
     public static boolean isMatch(XmlNode node) {
@@ -51,48 +52,52 @@ public final class XsdExtension implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdExtension> parseList(XmlNode el) {
+    public static ImList<XsdExtension> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdExtension((XmlElem) el))
+            ? ImList.first(new XsdExtension((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdExtension(XmlElem elem) {
+    public XsdExtension(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public sealed interface NestedEl permits XsdGroup, XsdAll, XsdChoice, XsdSequence {
-        public static ImList<NestedEl> parseList(XmlNode node){
-            ImList<NestedEl> r1 = XsdGroup.parseList(node).map(a->a);
-            ImList<NestedEl> r2 = XsdAll.parseList(node).map(a->a);
-            ImList<NestedEl> r3 = XsdChoice.parseList(node).map(a->a);
-            ImList<NestedEl> r4 = XsdSequence.parseList(node).map(a->a);
+        public static ImList<NestedEl> parseList(XmlNode node, Xsd parent){
+            ImList<NestedEl> r1 = XsdGroup.parseList(node, parent).map(a->a);
+            ImList<NestedEl> r2 = XsdAll.parseList(node, parent).map(a->a);
+            ImList<NestedEl> r3 = XsdChoice.parseList(node, parent).map(a->a);
+            ImList<NestedEl> r4 = XsdSequence.parseList(node, parent).map(a->a);
             return r1.join(r2).join(r3).join(r4);
         }
     }
 
     public Optional<NestedEl> getNested(){
-        return elem().getChildren().flatMap(NestedEl::parseList).head();
+        return elem().getChildren().flatMap(n -> NestedEl.parseList(n,this)).head();
     }
 
     public Optional<XsdAnyAttribute> getAnyAttribute(){
-        return elem().getChildren().flatMap(XsdAnyAttribute::parseList).head();
+        return elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
     }
 
     public ImList<XsdAttribute> getAttributes(){
-        return elem().getChildren().flatMap(XsdAttribute::parseList);
+        return elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
     }
 
     public ImList<XsdAttributeGroup> getAttributeGroups(){
-        return elem().getChildren().flatMap(XsdAttributeGroup::parseList);
+        return elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
     }
 }

@@ -7,6 +7,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  The <a href="https://www.w3schools.com/xml/el_anyattribute.asp">anyAttribute</a> element enables the author to extend
@@ -49,7 +50,11 @@ import java.util.Objects;
 &lt;/anyAttribute&gt;
  </pre>
  */
-public final class XsdAnyAttribute implements Xsd, IDAttribute, NamespaceAttribute {
+public final class XsdAnyAttribute implements Xsd,
+                                              IDAttribute,
+                                              NamespaceAttribute,
+                                              XsdAnnotation.AnnotationProperty
+                                              {
     public static final String Name = "anyAttribute";
 
     public static boolean isMatch(XmlNode node) {
@@ -59,23 +64,26 @@ public final class XsdAnyAttribute implements Xsd, IDAttribute, NamespaceAttribu
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdAnyAttribute> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdAnyAttribute> parseList(XmlNode el, Xsd parent) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAnyAttribute((XmlElem) el))
+            ? ImList.first(new XsdAnyAttribute((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdAnyAttribute(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+    public XsdAnyAttribute(XmlElem elem, Xsd parent) {
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Result<String, String> getProcessContents() {
