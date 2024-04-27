@@ -26,6 +26,7 @@ any attributes
  */
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class XsdInclude implements SchemaLocation, Xsd {
+    @SuppressWarnings("OptionalAssignedToNull")
     public XsdInclude(XmlElem elem, Optional<String> schemaLocation, Xsd parent) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         if( schemaLocation==null ) throw new IllegalArgumentException("schemaLocation==null");
@@ -36,6 +37,11 @@ public final class XsdInclude implements SchemaLocation, Xsd {
 
     public final XmlElem elem;
     public final Optional<Xsd> parent;
+
+    @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
 
     @Override
     public XmlElem elem() {

@@ -65,6 +65,11 @@ public final class XsdExtension implements Xsd,
     public final Optional<Xsd> parent;
 
     @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
+
+    @Override
     public XmlElem elem() {
         return elem;
     }

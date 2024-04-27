@@ -194,7 +194,13 @@ public final class XsdElement implements Xsd,
     }
 
     public final XmlElem elem;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public final Optional<Xsd> parent;
+
+    @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
 
     @Override
     public XmlElem elem() {

@@ -17,9 +17,9 @@ import java.util.Optional;
 &lt;anyAttribute
  id=ID ?
  namespace=namespace ?
- 
-   Optional. 
-   Specifies the namespaces containing the attributes that can be used. 
+
+   Optional.
+   Specifies the namespaces containing the attributes that can be used.
    Can be set to one of the following:
 
    ##any - attributes from any namespace is allowed (this is default)
@@ -31,15 +31,15 @@ import java.util.Optional;
 
  processContents=lax|skip|strict ?
 
-   Optional. Specifies how the XML processor should handle 
-   validation against the elements specified by this any element. 
+   Optional. Specifies how the XML processor should handle
+   validation against the elements specified by this any element.
    Can be set to one of the following:
 
-     strict - the XML processor must obtain 
+     strict - the XML processor must obtain
               the schema for the required namespaces and validate the elements (this is default)
-     lax - same as strict but; 
+     lax - same as strict but;
            if the schema cannot be obtained, no errors will occur
-     skip - The XML processor does not attempt 
+     skip - The XML processor does not attempt
             to validate any elements from the specified namespaces
 
  any attributes ?
@@ -53,8 +53,7 @@ import java.util.Optional;
 public final class XsdAnyAttribute implements Xsd,
                                               IDAttribute,
                                               NamespaceAttribute,
-                                              XsdAnnotation.AnnotationProperty
-                                              {
+                                              XsdAnnotation.AnnotationProperty {
     public static final String Name = "anyAttribute";
 
     public static boolean isMatch(XmlNode node) {
@@ -74,6 +73,11 @@ public final class XsdAnyAttribute implements Xsd,
     public final XmlElem elem;
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public final Optional<Xsd> parent;
+
+    @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
 
     @Override
     public XmlElem elem() {

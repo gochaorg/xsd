@@ -52,6 +52,11 @@ public final class XsdAnnotation implements Xsd,
     public final Optional<Xsd> parent;
 
     @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
+
+    @Override
     public XmlElem elem() {
         return elem;
     }

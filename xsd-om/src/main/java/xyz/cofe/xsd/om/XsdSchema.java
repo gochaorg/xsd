@@ -51,6 +51,11 @@ public final class XsdSchema implements Xsd, IDAttribute {
         return xmlDoc.getDocumentElement();
     }
 
+    @Override
+    public Optional<Xsd> getParent() {
+        return Optional.empty();
+    }
+
     //region includes : List<XsdInclude>
     private List<XsdInclude> includes;
 
@@ -180,6 +185,13 @@ public final class XsdSchema implements Xsd, IDAttribute {
         return namespaces;
     }
     //endregion
+
+    private ImList<NsPrefix> nsPrefixes;
+    public ImList<NsPrefix> getNsPrefixes(){
+        if( nsPrefixes!=null )return nsPrefixes;
+        nsPrefixes = elem().getAttributes().flatMap(NsPrefix::parseList);
+        return nsPrefixes;
+    }
 
     public Optional<String> getVersion(){
         return elem().attrib("id").map(XmlAttr::getValue).head();

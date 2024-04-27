@@ -98,6 +98,11 @@ public final class XsdSequence implements Xsd,
     public final Optional<Xsd> parent;
 
     @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
+
+    @Override
     public XmlElem elem() {
         return elem;
     }

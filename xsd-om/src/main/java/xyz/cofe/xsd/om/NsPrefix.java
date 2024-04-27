@@ -4,6 +4,7 @@ import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.xml.XmlAttr;
 
+@Deprecated
 public final class NsPrefix {
     public static Result<NsPrefix,String> parse(XmlAttr attr){
         if( attr==null ) throw new IllegalArgumentException("attr==null");

@@ -71,6 +71,11 @@ public final class XsdSimpleType implements Xsd, TypeDef, IDAttribute, Namespace
     public final Optional<Xsd> parent;
 
     @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
+
+    @Override
     public XmlElem elem() {
         return elem;
     }

@@ -59,6 +59,11 @@ public final class XsdAll implements Xsd,
 
     public final Optional<Xsd> parent;
 
+    @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
+
     public XsdAll(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;

@@ -58,6 +58,11 @@ public final class XsdNotation implements Xsd, IDAttribute, NamespaceAttribute, 
     public final Optional<Xsd> parent;
 
     @Override
+    public Optional<Xsd> getParent() {
+        return parent;
+    }
+
+    @Override
     public XmlElem elem() {
         return elem;
     }
