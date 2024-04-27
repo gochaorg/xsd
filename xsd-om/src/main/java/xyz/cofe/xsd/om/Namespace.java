@@ -12,4 +12,16 @@ public class Namespace {
         this.xsdDocs = xsdDocs;
         this.name = name;
     }
+
+    public ImList<XsdElement> getElements() {
+        return xsdDocs.flatMap(XsdSchema::getElements);
+    }
+
+    public ImList<XsdComplexType> getComplexTypes(){
+        return xsdDocs.flatMap(XsdSchema::getComplexTypes);
+    }
+
+    public ImList<XsdSimpleType> getSimpleType(){
+        return xsdDocs.flatMap(XsdSchema::getSimpleTypes);
+    }
 }
