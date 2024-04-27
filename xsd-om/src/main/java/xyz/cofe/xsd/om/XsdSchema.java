@@ -59,7 +59,7 @@ public final class XsdSchema implements Xsd, IDAttribute {
         this.includes =
             xmlDoc.getDocumentElement().walk().elems()
                 .flatMap(elem ->
-                    XsdInclude.parse(elem)
+                    XsdInclude.parse(elem, this)
                         .map(xsdInclude -> List.of(xsdInclude).iterator())
                         .orElse(Collections.emptyIterator()))
                 .toList();
@@ -75,7 +75,7 @@ public final class XsdSchema implements Xsd, IDAttribute {
         this.imports =
             xmlDoc.getDocumentElement().walk().elems()
                 .flatMap(elem ->
-                    XsdImport.parse(elem)
+                    XsdImport.parse(elem, this)
                         .map(xsdInclude -> List.of(xsdInclude).iterator())
                         .orElse(Collections.emptyIterator()))
                 .toList();
@@ -186,38 +186,38 @@ public final class XsdSchema implements Xsd, IDAttribute {
     }
 
     public ImList<XsdAnnotation> getAnnotations(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdAnnotation::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAnnotation.parseList(n,this));
     }
 
     public ImList<XsdElement> getElements(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdElement::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdElement.parseList(n,this));
     }
 
     public ImList<XsdAttribute> getAttributes(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdAttribute::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
     }
 
     public ImList<XsdSimpleType> getSimpleTypes(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdSimpleType::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this));
     }
 
     public ImList<XsdComplexType> getComplexTypes(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdComplexType::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdComplexType.parseList(n,this));
     }
 
     public ImList<XsdGroup> getGroups(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdGroup::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdGroup.parseList(n,this));
     }
 
     public ImList<XsdAttributeGroup> getAttributeGroups(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdAttributeGroup::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
     }
 
     public ImList<XsdNotation> getNotations(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdNotation::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdNotation.parseList(n,this));
     }
 
     public ImList<XsdRedefine> getRedefines(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(XsdRedefine::parseList);
+        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdRedefine.parseList(n,this));
     }
 }

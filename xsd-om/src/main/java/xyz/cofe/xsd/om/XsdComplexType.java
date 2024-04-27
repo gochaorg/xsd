@@ -106,44 +106,46 @@ public final class XsdComplexType implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdComplexType> parseList(XmlNode el) {
+    public static ImList<XsdComplexType> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdComplexType((XmlElem) el))
+            ? ImList.first(new XsdComplexType((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdComplexType(XmlElem elem) {
+    public XsdComplexType(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Optional<ContentDef> getContentDef() {
-        var simpleContent = elem.getChildren().flatMap(XsdSimpleContent::parseList).head();
+        var simpleContent = elem.getChildren().flatMap(n -> XsdSimpleContent.parseList(n,this)).head();
         if (simpleContent.isPresent()) return simpleContent.map(a -> a);
 
-        var complexContent = elem.getChildren().flatMap(XsdComplexContent::parseList).head();
+        var complexContent = elem.getChildren().flatMap(n -> XsdComplexContent.parseList(n,this)).head();
         if (complexContent.isPresent()) return complexContent.map(a -> a);
 
-        Optional<ElementsLayout> group = elem.getChildren().flatMap(XsdGroup::parseList).head().map(a -> a);
-        Optional<ElementsLayout> all = elem.getChildren().flatMap(XsdAll::parseList).head().map(a -> a);
-        Optional<ElementsLayout> choice = elem.getChildren().flatMap(XsdChoice::parseList).head().map(a -> a);
-        Optional<ElementsLayout> seq = elem.getChildren().flatMap(XsdSequence::parseList).head().map(a -> a);
+        Optional<ElementsLayout> group = elem.getChildren().flatMap(n -> XsdGroup.parseList(n,this)).head().map(a -> a);
+        Optional<ElementsLayout> all = elem.getChildren().flatMap(n -> XsdAll.parseList(n, this)).head().map(a -> a);
+        Optional<ElementsLayout> choice = elem.getChildren().flatMap(n -> XsdChoice.parseList(n,this)).head().map(a -> a);
+        Optional<ElementsLayout> seq = elem.getChildren().flatMap(n -> XsdSequence.parseList(n,this)).head().map(a -> a);
         Optional<ElementsLayout> elemLayout =
             group.or(()->all)
                 .or(()->choice)
                 .or(()->seq);
 
-        ImList<XsdAttribute> attr = elem.getChildren().flatMap(XsdAttribute::parseList);
-        ImList<XsdAttributeGroup> attrGroup = elem.getChildren().flatMap(XsdAttributeGroup::parseList);
-        Optional<XsdAnyAttribute> anyAttr = elem.getChildren().flatMap(XsdAnyAttribute::parseList).head();
+        ImList<XsdAttribute> attr = elem.getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        ImList<XsdAttributeGroup> attrGroup = elem.getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        Optional<XsdAnyAttribute> anyAttr = elem.getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
 
         return Optional.of(new ElementContent(
             elemLayout,

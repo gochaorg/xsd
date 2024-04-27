@@ -5,6 +5,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  The <a href="https://www.w3schools.com/xml/el_sequence.asp">sequence</a> element specifies that the child elements must appear in a sequence. Each child element can occur from 0 to any number of times.
@@ -84,22 +85,26 @@ public final class XsdSequence implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdSequence> parseList(XmlNode el) {
+    public static ImList<XsdSequence> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdSequence((XmlElem) el))
+            ? ImList.first(new XsdSequence((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdSequence(XmlElem elem) {
+    public XsdSequence(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 }

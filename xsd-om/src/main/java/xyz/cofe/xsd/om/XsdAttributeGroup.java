@@ -52,26 +52,29 @@ public final class XsdAttributeGroup implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdAttributeGroup> parseList(XmlNode el) {
+    public static ImList<XsdAttributeGroup> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAttributeGroup((XmlElem) el))
+            ? ImList.first(new XsdAttributeGroup((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdAttributeGroup(XmlElem elem) {
+    public XsdAttributeGroup(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
-    public ImList<XsdAttribute> getAttributes(){ return elem().getChildren().flatMap(XsdAttribute::parseList); }
-    public ImList<XsdAttributeGroup> getAttributeGroups(){ return elem().getChildren().flatMap(XsdAttributeGroup::parseList); }
-    public Optional<XsdAnyAttribute> getAnyAttribute(){ return elem().getChildren().flatMap(XsdAnyAttribute::parseList).head(); }
+    public ImList<XsdAttribute> getAttributes(){ return elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this)); }
+    public ImList<XsdAttributeGroup> getAttributeGroups(){ return elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this)); }
+    public Optional<XsdAnyAttribute> getAnyAttribute(){ return elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head(); }
 }

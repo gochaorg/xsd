@@ -6,6 +6,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
 
@@ -43,36 +44,40 @@ public final class XsdComplexContent implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdComplexContent> parseList(XmlNode el) {
+    public static ImList<XsdComplexContent> parseList(XmlNode el,Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdComplexContent((XmlElem) el))
+            ? ImList.first(new XsdComplexContent((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdComplexContent(XmlElem elem) {
+    public XsdComplexContent(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public sealed interface Nested permits XsdExtension,
                                            XsdRestriction {
-        public static ImList<Nested> parseList(XmlNode node){
+        public static ImList<Nested> parseList(XmlNode node, Xsd parent){
             if( node==null ) throw new IllegalArgumentException("node==null");
-            ImList<Nested> r1 = XsdExtension.parseList(node).map(a -> a);
-            ImList<Nested> r2 = XsdRestriction.parseList(node).map(a -> a);
+            ImList<Nested> r1 = XsdExtension.parseList(node, parent).map(a -> a);
+            ImList<Nested> r2 = XsdRestriction.parseList(node, parent).map(a -> a);
             return r1.join(r2);
         }
     }
 
     public Result<Nested, String> getNested(){
-        return Result.of( elem().getChildren().flatMap(Nested::parseList).head(), "not found nested restriction|extension" );
+        return Result.of( elem().getChildren().flatMap(n -> Nested.parseList(n,this)).head(), "not found nested restriction|extension" );
     }
 }

@@ -26,16 +26,18 @@ any attributes
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class XsdImport implements SchemaLocation, Xsd {
     @SuppressWarnings("OptionalAssignedToNull")
-    public XsdImport(XmlElem elem, Optional<String> schemaLocation, Optional<String> namespace) {
+    public XsdImport(XmlElem elem, Optional<String> schemaLocation, Optional<String> namespace, Xsd parent) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         if( schemaLocation==null ) throw new IllegalArgumentException("schemaLocation==null");
         if( namespace==null ) throw new IllegalArgumentException("namespace==null");
         this.schemaLocation = schemaLocation;
         this.namespace = namespace;
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
@@ -71,7 +73,7 @@ public final class XsdImport implements SchemaLocation, Xsd {
         return xsdDocs;
     }
 
-    public static Optional<XsdImport> parse(XmlElem elem){
+    public static Optional<XsdImport> parse(XmlElem elem, Xsd parent){
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         if( !Const.XMLSchemaNamespace.equals(elem.getNamespaceURI()) )return Optional.empty();
         if( !Import.equals(elem.getLocalName()) )return Optional.empty();
@@ -80,7 +82,8 @@ public final class XsdImport implements SchemaLocation, Xsd {
             new XsdImport(
                 elem,
                 Optional.ofNullable(elem.getAttribute("schemaLocation")),
-                Optional.ofNullable(elem.getAttribute("namespace"))
+                Optional.ofNullable(elem.getAttribute("namespace")),
+                parent
             )
         );
     }

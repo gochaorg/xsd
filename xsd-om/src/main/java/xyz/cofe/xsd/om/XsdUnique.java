@@ -6,6 +6,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  The <a href="https://www.w3schools.com/xml/el_unique.asp">unique</a> element defines
@@ -44,6 +45,7 @@ import java.util.Objects;
 &lt;/unique&gt;
 </pre>
  */
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class XsdUnique implements Xsd, XsdAnnotation.AnnotationProperty, IDAttribute, NamespaceAttribute {
     public static final String Name = "unique";
 
@@ -54,31 +56,34 @@ public final class XsdUnique implements Xsd, XsdAnnotation.AnnotationProperty, I
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdUnique> parseList(XmlNode el) {
+    public static ImList<XsdUnique> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
+        if( parent==null ) throw new IllegalArgumentException("parent==null");
         return isMatch(el)
-            ? ImList.first(new XsdUnique((XmlElem) el))
+            ? ImList.first(new XsdUnique((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdUnique(XmlElem elem) {
+    public XsdUnique(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Result<XsdSelector,String> getSelector(){
         return Result.of(
-            elem().getChildren().flatMap(XsdSelector::parseList).head(),
+            elem().getChildren().flatMap(n -> XsdSelector.parseList(n,this)).head(),
             "selector not found"
         );
     }
 
-    public ImList<XsdField> getFields(){ return elem().getChildren().flatMap(XsdField::parseList); }
+    public ImList<XsdField> getFields(){ return elem().getChildren().flatMap(n -> XsdField.parseList(n,this)); }
 }

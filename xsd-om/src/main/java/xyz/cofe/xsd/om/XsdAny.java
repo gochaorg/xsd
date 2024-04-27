@@ -1,6 +1,5 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.Either;
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.xml.XmlAttr;
@@ -8,6 +7,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  The <a href="https://www.w3schools.com/xml/el_any.asp">any</a> element enables the author to extend the XML document with elements not specified by the schema.
@@ -51,7 +51,12 @@ import java.util.Objects;
  &lt;/any&gt; 
 </pre>
  */
-public final class XsdAny implements Xsd, IDAttribute, MaxOccursAttribute, MinOccursAttribute, XsdAnnotation.AnnotationProperty, ElementsLayout {
+public final class XsdAny implements Xsd,
+                                     IDAttribute,
+                                     MaxOccursAttribute,
+                                     MinOccursAttribute,
+                                     XsdAnnotation.AnnotationProperty,
+                                     ElementsLayout {
     public static final String Name = "any";
 
     public static boolean isMatch(XmlNode node) {
@@ -61,14 +66,15 @@ public final class XsdAny implements Xsd, IDAttribute, MaxOccursAttribute, MinOc
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdAny> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdAny> parseList(XmlNode el, Xsd parent) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAny((XmlElem) el))
+            ? ImList.first(new XsdAny((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
@@ -89,8 +95,9 @@ public final class XsdAny implements Xsd, IDAttribute, MaxOccursAttribute, MinOc
         );
     }
 
-    public XsdAny(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+    public XsdAny(XmlElem elem, Xsd parent) {
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 }

@@ -64,36 +64,38 @@ public final class XsdGroup implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdGroup> parseList(XmlNode el) {
+    public static ImList<XsdGroup> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdGroup((XmlElem) el))
+            ? ImList.first(new XsdGroup((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdGroup(XmlElem elem) {
+    public XsdGroup(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public sealed interface Nested permits XsdAll,
                                            XsdChoice,
                                            XsdSequence {
-        public static ImList<Nested> parseList(XmlNode node) {
+        public static ImList<Nested> parseList(XmlNode node, Xsd parent) {
             if (node == null) throw new IllegalArgumentException("node==null");
-            ImList<Nested> r1 = XsdAll.parseList(node).map(a -> a);
-            ImList<Nested> r2 = XsdChoice.parseList(node).map(a -> a);
-            ImList<Nested> r3 = XsdSequence.parseList(node).map(a -> a);
+            ImList<Nested> r1 = XsdAll.parseList(node, parent).map(a -> a);
+            ImList<Nested> r2 = XsdChoice.parseList(node, parent).map(a -> a);
+            ImList<Nested> r3 = XsdSequence.parseList(node, parent).map(a -> a);
             return r1.join(r2).join(r3);
         }
     }
 
-    public Optional<Nested> getNested() {return elem().getChildren().flatMap(Nested::parseList).head();}
+    public Optional<Nested> getNested() {return elem().getChildren().flatMap(n -> Nested.parseList(n,this)).head();}
 }

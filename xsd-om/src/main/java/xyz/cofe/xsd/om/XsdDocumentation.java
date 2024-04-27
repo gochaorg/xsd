@@ -5,6 +5,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /*
 https://www.w3schools.com/xml/el_documentation.asp
@@ -28,21 +29,23 @@ public final class XsdDocumentation implements Xsd {
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdDocumentation(XmlElem elem) {
+    public XsdDocumentation(XmlElem elem, Xsd parent) {
         if( elem==null ) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
-    public static ImList<XsdDocumentation> parseList( XmlNode el ){
+    public static ImList<XsdDocumentation> parseList( XmlNode el, Xsd parent ){
         if( el==null ) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdDocumentation((XmlElem) el))
+            ? ImList.first(new XsdDocumentation((XmlElem) el, parent))
             : ImList.empty();
     }
 

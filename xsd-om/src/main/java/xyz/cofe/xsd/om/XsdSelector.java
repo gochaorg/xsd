@@ -7,6 +7,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
 The <a href="https://www.w3schools.com/xml/el_selector.asp">selector</a> element specifies
@@ -33,7 +34,9 @@ The <a href="https://www.w3schools.com/xml/el_selector.asp">selector</a> element
 &lt;/selector&gt;
  </pre>
  */
-public final class XsdSelector implements Xsd, IDAttribute, XsdAnnotation.AnnotationProperty {
+public final class XsdSelector implements Xsd,
+                                          IDAttribute,
+                                          XsdAnnotation.AnnotationProperty {
     public static final String Name = "selector";
 
     public static boolean isMatch(XmlNode node) {
@@ -43,23 +46,27 @@ public final class XsdSelector implements Xsd, IDAttribute, XsdAnnotation.Annota
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdSelector> parseList(XmlNode el) {
+    public static ImList<XsdSelector> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdSelector((XmlElem) el))
+            ? ImList.first(new XsdSelector((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdSelector(XmlElem elem) {
+    public XsdSelector(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.of(parent);
     }
 
     public Result<BuiltInTypes.ID, String> getXPath() {

@@ -5,9 +5,10 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
- The <a href="https://www.w3schools.com/xml/el_simpleContent.asp">simpleContent</a> element contains extensions or 
+ The <a href="https://www.w3schools.com/xml/el_simpleContent.asp">simpleContent</a> element contains extensions or
  restrictions on a text-only complex type or on a simple type as content and contains no elements.
 
 <pre>
@@ -23,9 +24,11 @@ import java.util.Objects;
 
 &lt;/simpleContent&gt;
  </pre>
- 
+
  */
-public final class XsdSimpleContent implements Xsd, ContentDef, IDAttribute {
+public final class XsdSimpleContent implements Xsd,
+                                               ContentDef,
+                                               IDAttribute {
     public static final String Name = "simpleContent";
 
     public static boolean isMatch(XmlNode node) {
@@ -35,22 +38,35 @@ public final class XsdSimpleContent implements Xsd, ContentDef, IDAttribute {
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdSimpleContent> parseList(XmlNode el) {
+    public static ImList<XsdSimpleContent> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdSimpleContent((XmlElem) el))
+            ? ImList.first(new XsdSimpleContent((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdSimpleContent(XmlElem elem) {
+    public XsdSimpleContent(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.of(parent);
+    }
+
+    public sealed interface Nested permits XsdRestriction,
+                                           XsdExtension {}
+
+    public Optional<Nested> getNested() {
+        Optional<Nested> r1 = elem().getChildren().flatMap(n -> XsdRestriction.parseList(n,this)).head().map(a -> a);
+        Optional<Nested> r2 = elem().getChildren().flatMap(n -> XsdExtension.parseList(n, this)).head().map(a -> a);
+        return r1.or(() -> r2);
     }
 }

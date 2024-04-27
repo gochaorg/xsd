@@ -175,7 +175,8 @@ any attributes
  */
 public final class XsdElement implements Xsd,
                                          IDAttribute,
-                                         XsdAnnotation.AnnotationProperty {
+                                         XsdAnnotation.AnnotationProperty,
+                                         ElementsLayout {
     public static final String Name = "element";
 
     public static boolean isMatch(XmlNode node) {
@@ -185,40 +186,42 @@ public final class XsdElement implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdElement> parseList(XmlNode el) {
+    public static ImList<XsdElement> parseList(XmlNode el,Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdElement((XmlElem) el))
+            ? ImList.first(new XsdElement((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdElement(XmlElem elem) {
+    public XsdElement(XmlElem elem,Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public ImList<XsdUnique> getUniques() {
-        return elem.getChildren().flatMap(XsdUnique::parseList);
+        return elem.getChildren().flatMap(n -> XsdUnique.parseList(n, this));
     }
 
     public ImList<XsdKey> getKeys() {
-        return elem.getChildren().flatMap(XsdKey::parseList);
+        return elem.getChildren().flatMap(n -> XsdKey.parseList(n, this));
     }
 
     public ImList<XsdKeyref> getKeyrefs() {
-        return elem.getChildren().flatMap(XsdKeyref::parseList);
+        return elem.getChildren().flatMap(n -> XsdKeyref.parseList(n,this));
     }
 
     public Optional<TypeDef> getTypeDef() {
-        Optional<TypeDef> simple = elem.getChildren().flatMap(XsdSimpleType::parseList).head().map(a -> (TypeDef) a);
-        Optional<TypeDef> complex = elem.getChildren().flatMap(XsdComplexType::parseList).head().map(a -> (TypeDef) a);
+        Optional<TypeDef> simple = elem.getChildren().flatMap(n -> XsdSimpleType.parseList(n, this)).head().map(a -> (TypeDef) a);
+        Optional<TypeDef> complex = elem.getChildren().flatMap(n -> XsdComplexType.parseList(n, this)).head().map(a -> (TypeDef) a);
         return simple.or(() -> complex);
     }
 

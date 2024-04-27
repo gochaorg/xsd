@@ -7,6 +7,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
 The <a href="https://www.w3schools.com/xml/el_attribute.asp">attribute</a> element defines an attribute.
@@ -73,7 +74,11 @@ The <a href="https://www.w3schools.com/xml/el_attribute.asp">attribute</a> eleme
 &lt;/attribute&gt;
  </pre>
  */
-public final class XsdAttribute implements Xsd, IDAttribute, TypeAttribute, RefAttribute, NameAttribute {
+public final class XsdAttribute implements Xsd,
+                                           IDAttribute,
+                                           TypeAttribute,
+                                           RefAttribute,
+                                           NameAttribute {
     public static final String Name = "attribute";
 
     public static boolean isMatch(XmlNode node) {
@@ -83,23 +88,26 @@ public final class XsdAttribute implements Xsd, IDAttribute, TypeAttribute, RefA
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdAttribute> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdAttribute> parseList(XmlNode el, Xsd parent) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAttribute((XmlElem) el))
+            ? ImList.first(new XsdAttribute((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdAttribute(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+    public XsdAttribute(XmlElem elem, Xsd parent) {
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Result<String, String> getDefault() {
@@ -128,5 +136,9 @@ public final class XsdAttribute implements Xsd, IDAttribute, TypeAttribute, RefA
             elem.attrib("use").map(XmlAttr::getValue).head(),
             "use not found"
         );
+    }
+
+    public Optional<XsdSimpleType> getSimpleType(){
+        return elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this)).head();
     }
 }

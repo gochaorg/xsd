@@ -58,29 +58,33 @@ public final class XsdSimpleType implements Xsd, TypeDef, IDAttribute, Namespace
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdSimpleType> parseList(XmlNode el) {
+    public static ImList<XsdSimpleType> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdSimpleType((XmlElem) el))
+            ? ImList.first(new XsdSimpleType((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdSimpleType(XmlElem elem) {
+    public XsdSimpleType(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Optional<SimpleTypeContent> getRestriction() {
-        Optional<SimpleTypeContent> c1 = elem.getChildren().flatMap(XsdRestriction::parseList).head().map( a->a );
-        Optional<SimpleTypeContent> c2 = elem.getChildren().flatMap(XsdList::parseList).head().map( a->a );
-        Optional<SimpleTypeContent> c3 = elem.getChildren().flatMap(XsdUnion::parseList).head().map( a->a );
+        Optional<SimpleTypeContent> c1 = elem.getChildren().flatMap(n -> XsdRestriction.parseList(n,this)).head().map( a->a );
+        Optional<SimpleTypeContent> c2 = elem.getChildren().flatMap(n -> XsdList.parseList(n,this)).head().map( a->a );
+        Optional<SimpleTypeContent> c3 = elem.getChildren().flatMap(n -> XsdUnion.parseList(n,this)).head().map( a->a );
         return c1.or(()->c2).or(()->c3);
     }
 }

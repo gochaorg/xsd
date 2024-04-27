@@ -8,6 +8,7 @@ import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
 The <a href="https://www.w3schools.com/xml/el_union.asp">union</a> element defines a simple 
@@ -47,23 +48,27 @@ public final class XsdUnion implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdUnion> parseList(XmlNode el) {
+    public static ImList<XsdUnion> parseList(XmlNode el,Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdUnion((XmlElem) el))
+            ? ImList.first(new XsdUnion((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdUnion(XmlElem elem) {
+    public XsdUnion(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Result<ImList<BuiltInTypes.QName>, String> getMemberTypes() {
@@ -77,5 +82,5 @@ public final class XsdUnion implements Xsd,
         );
     }
 
-    public ImList<XsdSimpleType> getSimpleTypes(){ return elem().getChildren().flatMap(XsdSimpleType::parseList); }
+    public ImList<XsdSimpleType> getSimpleTypes(){ return elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this)); }
 }

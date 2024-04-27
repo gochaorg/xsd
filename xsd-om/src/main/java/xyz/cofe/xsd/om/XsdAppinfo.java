@@ -7,6 +7,7 @@ import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /*
 https://www.w3schools.com/xml/el_appinfo.asp
@@ -29,23 +30,27 @@ public final class XsdAppinfo implements Xsd {
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdAppinfo> parseList(XmlNode el ){
-        if( el==null ) throw new IllegalArgumentException("el==null");
+    public static ImList<XsdAppinfo> parseList(XmlNode el, Xsd parent) {
+        if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAppinfo((XmlElem) el))
+            ? ImList.first(new XsdAppinfo((XmlElem) el, parent))
             : ImList.empty();
     }
 
     public final XmlElem elem;
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public final Optional<Xsd> parent;
 
     @Override
     public XmlElem elem() {
         return elem;
     }
 
-    public XsdAppinfo(XmlElem elem) {
-        if( elem==null ) throw new IllegalArgumentException("elem==null");
+    public XsdAppinfo(XmlElem elem, Xsd parent) {
+        if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
+        this.parent = Optional.ofNullable(parent);
     }
 
     public Result<BuiltInTypes.AnyURI, String> getSource() {
