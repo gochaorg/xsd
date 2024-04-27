@@ -26,6 +26,7 @@ import java.util.Optional;
  </pre>
 
  */
+@SuppressWarnings({"unused", "OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
 public final class XsdSimpleContent implements Xsd,
                                                ContentDef,
                                                IDAttribute {
@@ -69,9 +70,12 @@ public final class XsdSimpleContent implements Xsd,
     public sealed interface Nested permits XsdRestriction,
                                            XsdExtension {}
 
+    private Optional<Nested> nested;
     public Optional<Nested> getNested() {
+        if( nested!=null )return nested;
         Optional<Nested> r1 = elem().getChildren().flatMap(n -> XsdRestriction.parseList(n,this)).head().map(a -> a);
         Optional<Nested> r2 = elem().getChildren().flatMap(n -> XsdExtension.parseList(n, this)).head().map(a -> a);
-        return r1.or(() -> r2);
+        nested = r1.or(() -> r2);
+        return nested;
     }
 }

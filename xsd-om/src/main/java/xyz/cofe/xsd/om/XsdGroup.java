@@ -45,6 +45,7 @@ import java.util.Optional;
 &lt;/group&gt;
  </pre>
  */
+@SuppressWarnings({"OptionalAssignedToNull", "OptionalUsedAsFieldOrParameterType"})
 public final class XsdGroup implements Xsd,
                                        ElementsLayout,
                                        IDAttribute,
@@ -103,5 +104,10 @@ public final class XsdGroup implements Xsd,
         }
     }
 
-    public Optional<Nested> getNested() {return elem().getChildren().flatMap(n -> Nested.parseList(n,this)).head();}
+    private Optional<Nested> nested;
+    public Optional<Nested> getNested() {
+        if( nested!=null )return nested;
+        nested = elem().getChildren().flatMap(n -> Nested.parseList(n,this)).head();
+        return nested;
+    }
 }

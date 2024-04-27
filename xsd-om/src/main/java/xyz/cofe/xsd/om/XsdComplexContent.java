@@ -82,7 +82,10 @@ public final class XsdComplexContent implements Xsd,
         }
     }
 
+    private Result<Nested, String> nested;
     public Result<Nested, String> getNested(){
-        return Result.of( elem().getChildren().flatMap(n -> Nested.parseList(n,this)).head(), "not found nested restriction|extension" );
+        if( nested!=null )return nested;
+        nested = Result.of( elem().getChildren().flatMap(n -> Nested.parseList(n,this)).head(), "not found nested restriction|extension" );
+        return nested;
     }
 }

@@ -176,7 +176,10 @@ public final class XsdRestriction implements Xsd,
         this.parent = Optional.ofNullable(parent);
     }
 
+    private ImList<Restriction> restrictions;
     public ImList<Restriction> getRestrictions(){
-        return elem.getChildren().flatMap(Restriction::parseList);
+        if( restrictions!=null )return restrictions;
+        restrictions = elem.getChildren().flatMap(Restriction::parseList);
+        return restrictions;
     }
 }

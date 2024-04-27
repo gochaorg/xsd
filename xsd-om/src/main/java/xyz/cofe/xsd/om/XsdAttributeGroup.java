@@ -38,6 +38,7 @@ import java.util.Optional;
 &lt;/attributeGroup&gt;
  </pre>
  */
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
 public final class XsdAttributeGroup implements Xsd,
                                                 IDAttribute,
                                                 NameAttribute,
@@ -79,7 +80,24 @@ public final class XsdAttributeGroup implements Xsd,
         this.parent = Optional.ofNullable(parent);
     }
 
-    public ImList<XsdAttribute> getAttributes(){ return elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this)); }
-    public ImList<XsdAttributeGroup> getAttributeGroups(){ return elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this)); }
-    public Optional<XsdAnyAttribute> getAnyAttribute(){ return elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head(); }
+    private ImList<XsdAttribute> attributes;
+    public ImList<XsdAttribute> getAttributes(){
+        if( attributes!=null )return attributes;
+        attributes = elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        return attributes;
+    }
+
+    private ImList<XsdAttributeGroup> attributeGroups;
+    public ImList<XsdAttributeGroup> getAttributeGroups(){
+        if( attributeGroups!=null )return attributeGroups;
+        attributeGroups = elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        return attributeGroups;
+    }
+
+    private Optional<XsdAnyAttribute> anyAttribute;
+    public Optional<XsdAnyAttribute> getAnyAttribute(){
+        if( anyAttribute!=null )return anyAttribute;
+        anyAttribute = elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
+        return anyAttribute;
+    }
 }

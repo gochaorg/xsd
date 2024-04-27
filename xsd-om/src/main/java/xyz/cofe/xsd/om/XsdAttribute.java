@@ -74,6 +74,7 @@ The <a href="https://www.w3schools.com/xml/el_attribute.asp">attribute</a> eleme
 &lt;/attribute&gt;
  </pre>
  */
+@SuppressWarnings("ALL")
 public final class XsdAttribute implements Xsd,
                                            IDAttribute,
                                            TypeAttribute,
@@ -143,7 +144,10 @@ public final class XsdAttribute implements Xsd,
         );
     }
 
+    private Optional<XsdSimpleType> simpleType;
     public Optional<XsdSimpleType> getSimpleType(){
-        return elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this)).head();
+        if( simpleType!=null )return simpleType;
+        simpleType = elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this)).head();
+        return simpleType;
     }
 }

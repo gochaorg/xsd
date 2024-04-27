@@ -91,6 +91,7 @@ any attributes
  </table>
 
  */
+@SuppressWarnings({"unused", "OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
 public final class XsdComplexType implements Xsd,
                                              TypeDef,
                                              IDAttribute,
@@ -133,7 +134,10 @@ public final class XsdComplexType implements Xsd,
         this.parent = Optional.ofNullable(parent);
     }
 
+    private Optional<ContentDef> contentDef;
     public Optional<ContentDef> getContentDef() {
+        if( contentDef!=null )return contentDef;
+
         var simpleContent = elem.getChildren().flatMap(n -> XsdSimpleContent.parseList(n,this)).head();
         if (simpleContent.isPresent()) return simpleContent.map(a -> a);
 
@@ -153,12 +157,14 @@ public final class XsdComplexType implements Xsd,
         ImList<XsdAttributeGroup> attrGroup = elem.getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
         Optional<XsdAnyAttribute> anyAttr = elem.getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
 
-        return Optional.of(new ElementContent(
+        contentDef = Optional.of(new ElementContent(
             elemLayout,
             attr,
             attrGroup,
             anyAttr
         ));
+
+        return contentDef;
     }
 
     public Result<BOOLEAN,String> getAbstract(){

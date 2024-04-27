@@ -193,43 +193,71 @@ public final class XsdSchema implements Xsd, IDAttribute {
         return nsPrefixes;
     }
 
+    private Optional<String> version;
     public Optional<String> getVersion(){
         return elem().attrib("id").map(XmlAttr::getValue).head();
     }
 
+    private ImList<XsdAnnotation> annotations;
     public ImList<XsdAnnotation> getAnnotations(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAnnotation.parseList(n,this));
+        if( annotations!=null )return annotations;
+        annotations = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAnnotation.parseList(n,this));
+        return annotations;
     }
 
+    private ImList<XsdElement> elements;
     public ImList<XsdElement> getElements(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdElement.parseList(n,this));
+        if( elements!=null )return elements;
+        elements = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdElement.parseList(n,this));
+        return elements;
     }
 
+    private ImList<XsdAttribute> attributes;
     public ImList<XsdAttribute> getAttributes(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        if( attributes!=null )return attributes;
+        attributes = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        return attributes;
     }
 
+    private ImList<XsdSimpleType> simpleTypes;
     public ImList<XsdSimpleType> getSimpleTypes(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this));
+        if( simpleTypes!=null )return simpleTypes;
+        simpleTypes = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this));
+        return simpleTypes;
     }
 
+    private ImList<XsdComplexType> complexTypes;
     public ImList<XsdComplexType> getComplexTypes(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdComplexType.parseList(n,this));
+        if( complexTypes!=null )return complexTypes;
+        complexTypes = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdComplexType.parseList(n,this));
+        return complexTypes;
     }
 
+    private ImList<XsdGroup> groups;
     public ImList<XsdGroup> getGroups(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdGroup.parseList(n,this));
+        if( groups!=null )return groups;
+        groups = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdGroup.parseList(n,this));
+        return groups;
     }
 
+    private ImList<XsdAttributeGroup> attributeGroups;
     public ImList<XsdAttributeGroup> getAttributeGroups(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        if( attributeGroups!=null )return attributeGroups;
+        attributeGroups = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        return attributeGroups;
     }
 
+    private ImList<XsdNotation> notations;
     public ImList<XsdNotation> getNotations(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdNotation.parseList(n,this));
+        if( notations!=null )return notations;
+        notations = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdNotation.parseList(n,this));
+        return notations;
     }
 
+    private ImList<XsdRedefine> redefines;
     public ImList<XsdRedefine> getRedefines(){
-        return xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdRedefine.parseList(n,this));
+        if( redefines!=null )return redefines;
+        redefines = xmlDoc.getDocumentElement().getChildren().flatMap(n -> XsdRedefine.parseList(n,this));
+        return redefines;
     }
 }

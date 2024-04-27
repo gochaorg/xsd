@@ -83,4 +83,12 @@ public final class XsdChoice implements Xsd,
         this.elem = elem;
         this.parent = Optional.ofNullable(parent);
     }
+
+    private ImList<ElementsLayout> nested;
+    @Override
+    public ImList<ElementsLayout> getNested() {
+        if( nested!=null )return nested;
+        nested = NestedHolder.super.getNested();
+        return nested;
+    }
 }

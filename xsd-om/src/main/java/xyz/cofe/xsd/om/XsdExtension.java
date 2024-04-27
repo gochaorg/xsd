@@ -37,6 +37,7 @@ import java.util.Optional;
 &lt;/extension&gt;
  </pre>
  */
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
 public final class XsdExtension implements Xsd,
                                            XsdComplexContent.Nested,
                                            IDAttribute,
@@ -90,19 +91,31 @@ public final class XsdExtension implements Xsd,
         }
     }
 
+    private Optional<NestedEl> nested;
     public Optional<NestedEl> getNested(){
-        return elem().getChildren().flatMap(n -> NestedEl.parseList(n,this)).head();
+        if( nested!=null )return nested;
+        nested = elem().getChildren().flatMap(n -> NestedEl.parseList(n,this)).head();
+        return nested;
     }
 
+    private Optional<XsdAnyAttribute> anyAttribute;
     public Optional<XsdAnyAttribute> getAnyAttribute(){
-        return elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
+        if( anyAttribute!=null )return anyAttribute;
+        anyAttribute = elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
+        return anyAttribute;
     }
 
+    private ImList<XsdAttribute> attributes;
     public ImList<XsdAttribute> getAttributes(){
-        return elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        if( attributes!=null )return attributes;
+        attributes = elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        return attributes;
     }
 
+    private ImList<XsdAttributeGroup> attributeGroups;
     public ImList<XsdAttributeGroup> getAttributeGroups(){
-        return elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        if( attributeGroups!=null )return attributeGroups;
+        attributeGroups = elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        return attributeGroups;
     }
 }
