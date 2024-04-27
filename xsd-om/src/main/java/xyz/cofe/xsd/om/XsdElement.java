@@ -173,10 +173,15 @@ any attributes
 
  </table>
  */
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "OptionalAssignedToNull"})
 public final class XsdElement implements Xsd,
                                          IDAttribute,
                                          XsdAnnotation.AnnotationProperty,
-                                         ElementsLayout {
+                                         ElementsLayout,
+                                         MinOccursAttribute,
+                                         MaxOccursAttribute,
+                                         NamespaceAttribute
+{
     public static final String Name = "element";
 
     public static boolean isMatch(XmlNode node) {
@@ -213,22 +218,34 @@ public final class XsdElement implements Xsd,
         this.parent = Optional.ofNullable(parent);
     }
 
+    private ImList<XsdUnique> uniques;
     public ImList<XsdUnique> getUniques() {
-        return elem.getChildren().flatMap(n -> XsdUnique.parseList(n, this));
+        if( uniques!=null )return uniques;
+        uniques = elem.getChildren().flatMap(n -> XsdUnique.parseList(n, this));
+        return uniques;
     }
 
+    private ImList<XsdKey> keys;
     public ImList<XsdKey> getKeys() {
-        return elem.getChildren().flatMap(n -> XsdKey.parseList(n, this));
+        if( keys!=null )return keys;
+        keys = elem.getChildren().flatMap(n -> XsdKey.parseList(n, this));
+        return keys;
     }
 
+    private ImList<XsdKeyref> keyrefs;
     public ImList<XsdKeyref> getKeyrefs() {
-        return elem.getChildren().flatMap(n -> XsdKeyref.parseList(n,this));
+        if( keyrefs!=null )return keyrefs;
+        keyrefs = elem.getChildren().flatMap(n -> XsdKeyref.parseList(n,this));
+        return keyrefs;
     }
 
+    private Optional<TypeDef> typeDef;
     public Optional<TypeDef> getTypeDef() {
+        if( typeDef!=null )return typeDef;
         Optional<TypeDef> simple = elem.getChildren().flatMap(n -> XsdSimpleType.parseList(n, this)).head().map(a -> (TypeDef) a);
         Optional<TypeDef> complex = elem.getChildren().flatMap(n -> XsdComplexType.parseList(n, this)).head().map(a -> (TypeDef) a);
-        return simple.or(() -> complex);
+        typeDef = simple.or(() -> complex);
+        return typeDef;
     }
 
     public Result<NCNAME, String> getName() {
@@ -264,22 +281,6 @@ public final class XsdElement implements Xsd,
     public Result<String, String> getFixed() {
         return Result.of(elem.attrib("fixed")
             .map(XmlAttr::getValue).head(), "fixed");
-    }
-
-    public Result<Either<NON_NEGATIVE_INTEGER, Unbounded>, String> getMaxOccurs() {
-        return Result.of(elem.attrib("maxOccurs")
-                .map(XmlAttr::getValue).head(), "maxOccurs")
-            .flatMap(s -> {
-                if (s.equalsIgnoreCase("unbounded"))
-                    return Result.ok(Either.right(Unbounded.instance));
-                return NON_NEGATIVE_INTEGER.parse(s).map(Either::left);
-            });
-    }
-
-    public Result<NON_NEGATIVE_INTEGER, String> getMinOccurs() {
-        return Result.of(elem.attrib("minOccurs")
-                .map(XmlAttr::getValue).head(), "minOccurs")
-            .flatMap(NON_NEGATIVE_INTEGER::parse);
     }
 
     public Result<BOOLEAN, String> getNillable() {

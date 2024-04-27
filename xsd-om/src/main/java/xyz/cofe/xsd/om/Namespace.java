@@ -13,15 +13,33 @@ public class Namespace {
         this.name = name;
     }
 
+    private ImList<XsdElement> elements;
     public ImList<XsdElement> getElements() {
-        return xsdDocs.flatMap(XsdSchema::getElements);
+        if( elements!=null )return elements;
+        elements = xsdDocs.flatMap(XsdSchema::getElements);
+        return elements;
     }
 
+    private ImList<XsdComplexType> complexTypes;
     public ImList<XsdComplexType> getComplexTypes(){
-        return xsdDocs.flatMap(XsdSchema::getComplexTypes);
+        if( complexTypes!=null )return complexTypes;
+        complexTypes = xsdDocs.flatMap(XsdSchema::getComplexTypes);
+        return complexTypes;
     }
 
+    private ImList<XsdSimpleType> simpleType;
     public ImList<XsdSimpleType> getSimpleType(){
-        return xsdDocs.flatMap(XsdSchema::getSimpleTypes);
+        if( simpleType!=null )return simpleType;
+        simpleType = xsdDocs.flatMap(XsdSchema::getSimpleTypes);
+        return simpleType;
+    }
+
+    private ImList<TypeDef> typeDefs;
+    public ImList<TypeDef> getTypeDefs(){
+        if( typeDefs!=null )return typeDefs;
+        ImList<TypeDef> ct = getComplexTypes().map(a -> a);
+        ImList<TypeDef> st = getSimpleType().map(a -> a);
+        typeDefs = ct.join(st);
+        return typeDefs;
     }
 }
