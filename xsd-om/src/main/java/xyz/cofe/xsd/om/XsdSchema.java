@@ -176,6 +176,12 @@ public final class XsdSchema implements Xsd, IDAttribute {
         this.namespacePrefixes = namespacePrefixes;
         return this.namespacePrefixes;
     }
+
+    public Result<Namespace, String> findNamespaceByPrefix( String prefix ){
+        if( prefix==null ) throw new IllegalArgumentException("prefix==null");
+        var nsPrefix = Result.of( getNsPrefixes().filter( pref -> prefix.equalsIgnoreCase(pref.getPrefix()) ).head(), "namespace prefix not found "+prefix );
+        return nsPrefix.flatMap( pref -> getNamespaces().find(pref.getNamespace()));
+    }
     //endregion
     //region namespaces : Namespaces
     private Namespaces namespaces;
@@ -185,6 +191,14 @@ public final class XsdSchema implements Xsd, IDAttribute {
         return namespaces;
     }
     //endregion
+
+    private Result<Namespace,String> namespace;
+    public Result<Namespace,String> getSelfNamespace(){
+        if( namespace!=null )return namespace;
+        return Result
+            .of( getTargetNamespace(), "attribute targetNamespace not found")
+            .map( ns -> new Namespace(ns, ImList.first(this)) );
+    }
 
     private ImList<NsPrefix> nsPrefixes;
     public ImList<NsPrefix> getNsPrefixes(){

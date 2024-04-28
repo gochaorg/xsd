@@ -35,7 +35,7 @@ import java.util.Optional;
 public final class XsdComplexContent implements Xsd,
                                                 ContentDef,
                                                 XsdAnnotation.AnnotationProperty {
-    public static final String Name = "complexType";
+    public static final String Name = "complexContent";
 
     public static boolean isMatch(XmlNode node) {
         return

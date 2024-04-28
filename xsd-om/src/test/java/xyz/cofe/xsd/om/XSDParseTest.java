@@ -12,5 +12,14 @@ public class XSDParseTest {
         xsd.getNamespaces().getNamespaceMap().forEach( (name,ns) -> {
             System.out.println("name "+name);
         });
+
+        var el = xsd.getElements().head().get();
+        var refType = el.getRefType().toOptional().get();
+
+        System.out.println(refType);
+
+        XsdComplexType ct = (XsdComplexType) refType;
+        var extendRes = ct.getExtensionTypeDef();
+        System.out.println(extendRes);
     }
 }

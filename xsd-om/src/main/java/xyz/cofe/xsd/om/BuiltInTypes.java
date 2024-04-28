@@ -25,7 +25,7 @@ public sealed interface BuiltInTypes {
 
     private static boolean isNCName(String text){
         if(text==null || text.isEmpty())return false;
-        if( !Const.isLetter(text.charAt(0)) || !(text.charAt(0)=='_') )return false;
+        if( !(Const.isLetter(text.charAt(0)) || (text.charAt(0)=='_')) )return false;
         for( int i=1;i<text.length();i++ ){
             if( !isNCNameChar(text.charAt(i)))return false;
         }
@@ -65,7 +65,7 @@ public sealed interface BuiltInTypes {
             if( offset>=value.length() ) return Optional.empty();
 
             var ptr = offset;
-            if( !Const.isLetter(value.charAt(ptr)) || !(value.charAt(ptr)=='_') )return Optional.empty();
+            if( !(Const.isLetter(value.charAt(ptr)) || (value.charAt(ptr)=='_')) )return Optional.empty();
 
             ptr++;
             while (ptr < value.length()){

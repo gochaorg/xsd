@@ -180,8 +180,7 @@ public final class XsdElement implements Xsd,
                                          ElementsLayout,
                                          MinOccursAttribute,
                                          MaxOccursAttribute,
-                                         NamespaceAttribute
-{
+                                         NamespaceAttribute {
     public static final String Name = "element";
 
     public static boolean isMatch(XmlNode node) {
@@ -191,7 +190,7 @@ public final class XsdElement implements Xsd,
                 Objects.equals(el.getLocalName(), Name);
     }
 
-    public static ImList<XsdElement> parseList(XmlNode el,Xsd parent) {
+    public static ImList<XsdElement> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
             ? ImList.first(new XsdElement((XmlElem) el, parent))
@@ -212,42 +211,55 @@ public final class XsdElement implements Xsd,
         return elem;
     }
 
-    public XsdElement(XmlElem elem,Xsd parent) {
+    public XsdElement(XmlElem elem, Xsd parent) {
         if (elem == null) throw new IllegalArgumentException("elem==null");
         this.elem = elem;
         this.parent = Optional.ofNullable(parent);
     }
 
+    //region uniques : ImList<XsdUnique>
     private ImList<XsdUnique> uniques;
+
     public ImList<XsdUnique> getUniques() {
-        if( uniques!=null )return uniques;
+        if (uniques != null) return uniques;
         uniques = elem.getChildren().flatMap(n -> XsdUnique.parseList(n, this));
         return uniques;
     }
 
+    //endregion
+    //region keys : ImList<XsdKey>
     private ImList<XsdKey> keys;
+
     public ImList<XsdKey> getKeys() {
-        if( keys!=null )return keys;
+        if (keys != null) return keys;
         keys = elem.getChildren().flatMap(n -> XsdKey.parseList(n, this));
         return keys;
     }
 
+    //endregion
+    //region keyrefs : ImList<XsdKeyref>
     private ImList<XsdKeyref> keyrefs;
+
     public ImList<XsdKeyref> getKeyrefs() {
-        if( keyrefs!=null )return keyrefs;
-        keyrefs = elem.getChildren().flatMap(n -> XsdKeyref.parseList(n,this));
+        if (keyrefs != null) return keyrefs;
+        keyrefs = elem.getChildren().flatMap(n -> XsdKeyref.parseList(n, this));
         return keyrefs;
     }
 
+    //endregion
+    //region typeDef : Optional<TypeDef>
     private Optional<TypeDef> typeDef;
+
     public Optional<TypeDef> getTypeDef() {
-        if( typeDef!=null )return typeDef;
+        if (typeDef != null) return typeDef;
         Optional<TypeDef> simple = elem.getChildren().flatMap(n -> XsdSimpleType.parseList(n, this)).head().map(a -> (TypeDef) a);
         Optional<TypeDef> complex = elem.getChildren().flatMap(n -> XsdComplexType.parseList(n, this)).head().map(a -> (TypeDef) a);
         typeDef = simple.or(() -> complex);
         return typeDef;
     }
 
+    //endregion
+    //region name : Result<NCNAME, String>
     public Result<NCNAME, String> getName() {
         return Result.of(
             elem.attrib("name").map(XmlAttr::getValue).head(),
@@ -255,52 +267,82 @@ public final class XsdElement implements Xsd,
         ).flatMap(NCNAME::parse);
     }
 
+    //endregion
+    //region ref : Result<QName, String>
     public Result<QName, String> getRef() {
         return Result.of(elem.attrib("ref")
                 .map(XmlAttr::getValue).head(), "ref")
             .flatMap(QName::parse);
     }
 
+    //endregion
+    //region type : Result<QName, String>
     public Result<QName, String> getType() {
         return Result.of(elem.attrib("type")
                 .map(XmlAttr::getValue).head(), "type")
             .flatMap(QName::parse);
     }
 
+    //endregion
+    //region substitutionGroup : Result<QName, String>
     public Result<QName, String> getSubstitutionGroup() {
         return Result.of(elem.attrib("substitutionGroup")
                 .map(XmlAttr::getValue).head(), "substitutionGroup")
             .flatMap(QName::parse);
     }
 
+    //endregion
+    //region default : Result<String, String>
     public Result<String, String> getDefault() {
         return Result.of(elem.attrib("default")
             .map(XmlAttr::getValue).head(), "default");
     }
 
+    //endregion
+    //region fixed : Result<String, String>
     public Result<String, String> getFixed() {
         return Result.of(elem.attrib("fixed")
             .map(XmlAttr::getValue).head(), "fixed");
     }
 
+    //endregion
+    //region nillable : Result<BOOLEAN, String>
     public Result<BOOLEAN, String> getNillable() {
         return Result.of(elem.attrib("nillable")
                 .map(XmlAttr::getValue).head(), "nillable")
             .flatMap(BOOLEAN::parse);
     }
 
+    //endregion
+    //region abstract : Result<String, String>
     public Result<String, String> getAbstract() {
         return Result.of(elem.attrib("abstract")
             .map(XmlAttr::getValue).head(), "abstract");
     }
 
+    //endregion
+    //region block : Result<String, String>
     public Result<String, String> getBlock() {
         return Result.of(elem.attrib("block")
             .map(XmlAttr::getValue).head(), "block");
     }
 
+    //endregion
+    //region final : Result<String, String>
     public Result<String, String> getFinal() {
         return Result.of(elem.attrib("final")
             .map(XmlAttr::getValue).head(), "final");
+    }
+    //endregion
+
+    private Result<ImList<TypeDef>, String> refTypes;
+    public Result<ImList<TypeDef>, String> getRefTypes() {
+        if( refTypes!=null )return refTypes;
+        refTypes = getType().flatMap( typeQName -> TypeDef.resolveTypeDefs(typeQName, this) );
+        return refTypes;
+    }
+
+    public Result<TypeDef,String> getRefType(){
+        return getRefTypes().flatMap( types -> types.size()==1 ? Result.of(types.head(), "expect one ref types") : Result.err("expect one ref types") );
     }
 }

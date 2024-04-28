@@ -48,7 +48,7 @@ import java.util.Optional;
  
  </pre>
  */
-public final class XsdSimpleType implements Xsd, TypeDef, IDAttribute, NamespaceAttribute, XsdAnnotation.AnnotationProperty {
+public final class XsdSimpleType implements Xsd, TypeDef, IDAttribute, NameAttribute, XsdAnnotation.AnnotationProperty {
     public static final String Name = "simpleType";
 
     public static boolean isMatch(XmlNode node) {

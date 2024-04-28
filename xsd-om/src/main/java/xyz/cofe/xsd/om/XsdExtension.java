@@ -1,6 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -118,4 +119,16 @@ public final class XsdExtension implements Xsd,
         attributeGroups = elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
         return attributeGroups;
     }
+
+    private Result<ImList<TypeDef>, String> refTypes;
+    public Result<ImList<TypeDef>, String> getRefTypes() {
+        if( refTypes!=null )return refTypes;
+        refTypes = getBase().flatMap( typeQName -> TypeDef.resolveTypeDefs(typeQName, this) );
+        return refTypes;
+    }
+
+    public Result<TypeDef,String> getRefType(){
+        return getRefTypes().flatMap( types -> types.size()==1 ? Result.of(types.head(), "expect one ref types") : Result.err("expect one ref types") );
+    }
+
 }

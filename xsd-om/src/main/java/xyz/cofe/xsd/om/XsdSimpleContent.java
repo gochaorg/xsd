@@ -1,6 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.xml.XmlElem;
 import xyz.cofe.xsd.om.xml.XmlNode;
 
@@ -70,12 +71,13 @@ public final class XsdSimpleContent implements Xsd,
     public sealed interface Nested permits XsdRestriction,
                                            XsdExtension {}
 
-    private Optional<Nested> nested;
-    public Optional<Nested> getNested() {
+    private Result<Nested,String> nested;
+    public Result<Nested,String> getNested() {
         if( nested!=null )return nested;
         Optional<Nested> r1 = elem().getChildren().flatMap(n -> XsdRestriction.parseList(n,this)).head().map(a -> a);
         Optional<Nested> r2 = elem().getChildren().flatMap(n -> XsdExtension.parseList(n, this)).head().map(a -> a);
-        nested = r1.or(() -> r2);
+        Optional<Nested> r3 = r1.or(() -> r2);
+        nested = Result.of(r3, "nested restriction | extension");
         return nested;
     }
 }
