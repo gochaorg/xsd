@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.xsd.om.xml.XmlElem;
-import xyz.cofe.xsd.om.xml.XmlNode;
+import xyz.cofe.xml.XmlElem;
+import xyz.cofe.xml.XmlNode;
 
 import java.util.Objects;
 

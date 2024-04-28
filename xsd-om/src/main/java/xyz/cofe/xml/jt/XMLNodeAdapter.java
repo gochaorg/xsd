@@ -1,7 +1,7 @@
-package xyz.cofe.xsd.om.xml.jt;
+package xyz.cofe.xml.jt;
 
 import org.w3c.dom.Node;
-import xyz.cofe.xsd.om.xml.XmlNode;
+import xyz.cofe.xml.XmlNode;
 
 public class XMLNodeAdapter implements XmlNode {
     private final Node node;

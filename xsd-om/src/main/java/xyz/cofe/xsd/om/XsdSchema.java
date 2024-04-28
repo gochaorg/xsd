@@ -3,9 +3,9 @@ package xyz.cofe.xsd.om;
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Result;
 import xyz.cofe.im.struct.Tuple2;
-import xyz.cofe.xsd.om.xml.XmlAttr;
-import xyz.cofe.xsd.om.xml.XmlDoc;
-import xyz.cofe.xsd.om.xml.XmlElem;
+import xyz.cofe.xml.XmlAttr;
+import xyz.cofe.xml.XmlDoc;
+import xyz.cofe.xml.XmlElem;
 
 import java.util.ArrayList;
 import java.util.Collections;

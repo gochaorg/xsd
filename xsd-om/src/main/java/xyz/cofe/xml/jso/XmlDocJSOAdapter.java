@@ -1,9 +1,9 @@
-package xyz.cofe.xsd.om.xml.jso;
+package xyz.cofe.xml.jso;
 
 import org.teavm.jso.dom.xml.DOMParser;
 import org.teavm.jso.dom.xml.Document;
-import xyz.cofe.xsd.om.xml.XmlDoc;
-import xyz.cofe.xsd.om.xml.XmlElem;
+import xyz.cofe.xml.XmlDoc;
+import xyz.cofe.xml.XmlElem;
 
 public class XmlDocJSOAdapter implements XmlDoc {
     private final Document document;

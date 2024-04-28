@@ -8,8 +8,8 @@ import org.teavm.jso.ajax.XMLHttpRequest;
 import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.om.XsdSchema;
 import xyz.cofe.xsd.om.ldr.XsdLoader;
-import xyz.cofe.xsd.om.xml.print.XmlPrinter;
-import xyz.cofe.xsd.om.xml.jso.XmlDocJSOAdapter;
+import xyz.cofe.xml.print.XmlPrinter;
+import xyz.cofe.xml.jso.XmlDocJSOAdapter;
 
 import java.net.URI;
 import java.util.Optional;

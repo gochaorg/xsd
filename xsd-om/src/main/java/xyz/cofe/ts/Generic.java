@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.ts;
+package xyz.cofe.ts;
 
 import xyz.cofe.im.struct.ImList;
 

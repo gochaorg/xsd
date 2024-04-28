@@ -1,7 +1,7 @@
-package xyz.cofe.xsd.om.xml.jt;
+package xyz.cofe.xml.jt;
 
 import org.w3c.dom.CharacterData;
-import xyz.cofe.xsd.om.xml.XmlCData;
+import xyz.cofe.xml.XmlCData;
 
 public class XMLCDataAdapter extends XMLNodeAdapter implements XmlCData {
     public XMLCDataAdapter(CharacterData node) {

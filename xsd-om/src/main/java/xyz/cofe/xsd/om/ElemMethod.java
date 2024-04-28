@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.xsd.om.xml.XmlElem;
+import xyz.cofe.xml.XmlElem;
 
 public interface ElemMethod {
     XmlElem elem();

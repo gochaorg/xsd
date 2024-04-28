@@ -1,16 +1,13 @@
-package xyz.cofe.xsd.om.xml.jt;
+package xyz.cofe.xml.jt;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import xyz.cofe.im.struct.ImList;
-import xyz.cofe.xsd.om.xml.XmlAttr;
-import xyz.cofe.xsd.om.xml.XmlElem;
-import xyz.cofe.xsd.om.xml.XmlNode;
-
-import java.util.ArrayList;
-import java.util.List;
+import xyz.cofe.xml.XmlAttr;
+import xyz.cofe.xml.XmlElem;
+import xyz.cofe.xml.XmlNode;
 
 public class XMLElemAdapter extends XMLNodeAdapter implements XmlElem {
     private final Element element;

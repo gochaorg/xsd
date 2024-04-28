@@ -2,7 +2,7 @@ package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.Either;
 import xyz.cofe.im.struct.Result;
-import xyz.cofe.xsd.om.xml.XmlAttr;
+import xyz.cofe.xml.XmlAttr;
 
 public interface MaxOccursAttribute extends ElemMethod {
     public default Result<Either<BuiltInTypes.NON_NEGATIVE_INTEGER,Unbounded>,String> getMaxOccurs() {

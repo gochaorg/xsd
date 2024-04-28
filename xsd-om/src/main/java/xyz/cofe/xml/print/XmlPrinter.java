@@ -1,10 +1,10 @@
-package xyz.cofe.xsd.om.xml.print;
+package xyz.cofe.xml.print;
 
-import xyz.cofe.xsd.om.xml.XmlCData;
-import xyz.cofe.xsd.om.xml.XmlDoc;
-import xyz.cofe.xsd.om.xml.XmlElem;
-import xyz.cofe.xsd.om.xml.XmlNode;
-import xyz.cofe.xsd.om.xml.XmlText;
+import xyz.cofe.xml.XmlCData;
+import xyz.cofe.xml.XmlDoc;
+import xyz.cofe.xml.XmlElem;
+import xyz.cofe.xml.XmlNode;
+import xyz.cofe.xml.XmlText;
 
 import java.io.IOException;
 

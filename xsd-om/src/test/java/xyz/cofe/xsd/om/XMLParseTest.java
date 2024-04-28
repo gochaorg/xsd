@@ -1,9 +1,9 @@
 package xyz.cofe.xsd.om;
 
 import org.junit.jupiter.api.Test;
-import xyz.cofe.xsd.om.xml.XmlDoc;
-import xyz.cofe.xsd.om.xml.jt.XMLDocAdapter;
-import xyz.cofe.xsd.om.xml.print.XmlPrinter;
+import xyz.cofe.xml.XmlDoc;
+import xyz.cofe.xml.jt.XMLDocAdapter;
+import xyz.cofe.xml.print.XmlPrinter;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

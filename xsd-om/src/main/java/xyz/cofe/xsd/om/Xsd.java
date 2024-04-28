@@ -1,7 +1,5 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.xsd.om.xml.XmlElem;
-
 import java.util.Optional;
 
 public sealed interface Xsd extends ElemMethod permits ElementsLayout.NestedProperty,

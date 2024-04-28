@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.ts;
+package xyz.cofe.ts;
 
 /**
  * Примитивный тип

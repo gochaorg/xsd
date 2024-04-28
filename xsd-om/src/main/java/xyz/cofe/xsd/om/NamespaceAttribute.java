@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.Result;
-import xyz.cofe.xsd.om.xml.XmlAttr;
+import xyz.cofe.xml.XmlAttr;
 
 public interface NamespaceAttribute extends ElemMethod {
     public default Result<String, String> getNamespace() {

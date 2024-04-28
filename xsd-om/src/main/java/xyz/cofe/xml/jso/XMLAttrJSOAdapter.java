@@ -1,12 +1,12 @@
-package xyz.cofe.xsd.om.xml.jt;
+package xyz.cofe.xml.jso;
 
-import org.w3c.dom.Attr;
-import xyz.cofe.xsd.om.xml.XmlAttr;
+import org.teavm.jso.dom.xml.Attr;
+import xyz.cofe.xml.XmlAttr;
 
-public class XMLAttrAdapter implements XmlAttr {
+public class XMLAttrJSOAdapter implements XmlAttr {
     private final Attr attr;
 
-    public XMLAttrAdapter(Attr attr) {
+    public XMLAttrJSOAdapter(Attr attr) {
         this.attr = attr;
     }
 

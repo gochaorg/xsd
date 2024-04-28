@@ -1,7 +1,7 @@
-package xyz.cofe.xsd.om.xml.jt;
+package xyz.cofe.xml.jt;
 
 import org.w3c.dom.Text;
-import xyz.cofe.xsd.om.xml.XmlText;
+import xyz.cofe.xml.XmlText;
 
 public class XMLTextAdapter extends XMLNodeAdapter implements XmlText {
     public XMLTextAdapter(Text node) {

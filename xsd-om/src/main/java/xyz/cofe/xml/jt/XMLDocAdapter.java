@@ -1,11 +1,10 @@
-package xyz.cofe.xsd.om.xml.jt;
+package xyz.cofe.xml.jt;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import xyz.cofe.xsd.om.xml.XmlDoc;
-import xyz.cofe.xsd.om.xml.XmlElem;
-import xyz.cofe.xsd.om.xml.print.XmlPrinter;
+import xyz.cofe.xml.XmlDoc;
+import xyz.cofe.xml.XmlElem;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

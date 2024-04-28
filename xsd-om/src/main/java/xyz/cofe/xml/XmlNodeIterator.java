@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.om.xml;
+package xyz.cofe.xml;
 
 import xyz.cofe.im.struct.ImList;
 

@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.Result;
-import xyz.cofe.xsd.om.xml.XmlAttr;
+import xyz.cofe.xml.XmlAttr;
 
 public interface IDAttribute extends ElemMethod {
     public default Result<BuiltInTypes.ID, String> getId() {

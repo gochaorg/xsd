@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
-import xyz.cofe.xsd.om.xml.XmlNode;
+import xyz.cofe.xml.XmlNode;
 
 public sealed interface ElementsLayout permits XsdAll,
                                                XsdAny,

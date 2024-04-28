@@ -1,7 +1,7 @@
-package xyz.cofe.xsd.om.xml.jso;
+package xyz.cofe.xml.jso;
 
 import org.teavm.jso.dom.xml.Node;
-import xyz.cofe.xsd.om.xml.XmlNode;
+import xyz.cofe.xml.XmlNode;
 
 public class XmlNodeJSOAdapter implements XmlNode {
     private final Node node;

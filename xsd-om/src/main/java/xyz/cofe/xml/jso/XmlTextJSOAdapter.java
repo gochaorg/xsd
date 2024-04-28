@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.om.xml.jso;
+package xyz.cofe.xml.jso;
 
 import org.teavm.jso.dom.xml.Node;
 

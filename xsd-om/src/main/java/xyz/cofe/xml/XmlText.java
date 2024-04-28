@@ -1,4 +1,4 @@
-package xyz.cofe.xsd.om.xml;
+package xyz.cofe.xml;
 
 public interface XmlText extends XmlNode {
 }

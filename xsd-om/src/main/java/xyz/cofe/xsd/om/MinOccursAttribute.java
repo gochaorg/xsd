@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.Result;
-import xyz.cofe.xsd.om.xml.XmlAttr;
+import xyz.cofe.xml.XmlAttr;
 
 public interface MinOccursAttribute extends ElemMethod {
     public default Result<BuiltInTypes.NON_NEGATIVE_INTEGER,String> getMinOccurs() {

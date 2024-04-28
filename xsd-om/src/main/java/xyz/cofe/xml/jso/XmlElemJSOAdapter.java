@@ -1,14 +1,11 @@
-package xyz.cofe.xsd.om.xml.jso;
+package xyz.cofe.xml.jso;
 
 import org.teavm.jso.dom.xml.Element;
 import org.teavm.jso.dom.xml.Node;
 import xyz.cofe.im.struct.ImList;
-import xyz.cofe.xsd.om.xml.XmlAttr;
-import xyz.cofe.xsd.om.xml.XmlElem;
-import xyz.cofe.xsd.om.xml.XmlNode;
-
-import java.util.ArrayList;
-import java.util.List;
+import xyz.cofe.xml.XmlAttr;
+import xyz.cofe.xml.XmlElem;
+import xyz.cofe.xml.XmlNode;
 
 public class XmlElemJSOAdapter extends XmlNodeJSOAdapter implements XmlElem {
     private final Element element;

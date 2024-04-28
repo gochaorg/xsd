@@ -1,9 +1,6 @@
-package xyz.cofe.xsd.om.xml;
+package xyz.cofe.xml;
 
 import xyz.cofe.im.struct.ImList;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface XmlElem extends XmlNode {
     String getTagName();

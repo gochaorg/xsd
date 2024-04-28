@@ -2,7 +2,7 @@ package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Result;
-import xyz.cofe.xsd.om.xml.XmlAttr;
+import xyz.cofe.xml.XmlAttr;
 
 @Deprecated
 public final class NsPrefix {
