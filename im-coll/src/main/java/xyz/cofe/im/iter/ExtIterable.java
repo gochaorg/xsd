@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface ExtIterable<E> extends Iterable<E>, EachToMap<E> {
+public interface ExtIterable<E> extends Iterable<E>, EachToMap<E>, EachToEnum<E> {
     default <B> ExtIterable<B> flatMap(Function<E, Iterator<B>> map) {
         return () -> {
             return new FMapIterator<E,B>( iterator(), map );

@@ -1,7 +1,20 @@
 package xyz.cofe.ts;
 
+import java.util.Objects;
+
 /**
- * Примитивный тип
+ * Базовая реализация
+ *
+ * @param name имя типа
  */
-public interface Primitive extends Type {
+public record Primitive(String name) implements PrimitiveType,
+                                                NamedType {
+    public Primitive {
+        Objects.requireNonNull(name);
+    }
+
+    @Override
+    public String getTypeName() {
+        return name;
+    }
 }
