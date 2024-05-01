@@ -5,6 +5,5 @@ import xyz.cofe.im.struct.ImList;
 /**
  * Тип - "сумма", т.е. либо один тип, либо другой
  */
-public interface EitherType extends Type {
-    ImList<Type> eitherTypes();
+public record EitherType(ImList<Type> eitherTypes) implements Type {
 }

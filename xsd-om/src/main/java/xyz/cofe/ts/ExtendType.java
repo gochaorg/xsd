@@ -10,20 +10,21 @@ import java.util.Set;
 /**
  * Унаследованный тип
  */
-public interface ExtendType extends Type {
+public sealed interface ExtendType extends Type permits Struct {
     /**
      * Возвращает базовый тип/типы
      * @return базовый тип/типы
      */
     ImList<Type> baseTypes();
 
-    default boolean isAssignableFrom(Type t){
-        if( t==null ) throw new IllegalArgumentException("t==null");
-        if( t==this )return true;
-        if( !(t instanceof ExtendType) ){
+    @Override
+    default boolean isAssignableFrom(Type type){
+        if( type ==null ) throw new IllegalArgumentException("t==null");
+        if( type ==this )return true;
+        if( !(type instanceof ExtendType) ){
             return false;
         }
-        ExtendType et = (ExtendType) t;
+        ExtendType et = (ExtendType) type;
         var baseType = et.baseTypes();
 
         Set<Type> visited = new HashSet<>();

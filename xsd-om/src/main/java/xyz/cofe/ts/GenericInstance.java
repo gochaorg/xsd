@@ -1,6 +1,7 @@
 package xyz.cofe.ts;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 
 import java.util.Objects;
 
@@ -35,9 +36,41 @@ public record GenericInstance(GenericType type, ImList<Type> typeValues)
     implements Type,
                NamedType.NamedWithContext,
                NamedType {
+
     public GenericInstance {
         Objects.requireNonNull(type);
         Objects.requireNonNull(typeValues);
+    }
+
+    public static Result<Void,String> validate(GenericType type, ImList<Type> typeValues){
+        if( type==null ) throw new IllegalArgumentException("type==null");
+        if( typeValues==null ) throw new IllegalArgumentException("typeValues==null");
+
+        if( type.typeParams().size() != typeValues.size() )
+            return Result.err("typeValues count not match typeParameters count");
+
+        Void noErr = Void.TYPE.cast(GenericInstance.class);
+
+        type.typeParams().enumerate().zip(typeValues).map( ze -> {
+            int tparamIdx = ze.left().index();
+            TypeParam tparamConsumer = ze.left().value();
+            Type tvalue = ze.right();
+
+            if( tvalue instanceof TypeVar tv ){
+                var prduce = tv.typeParam();
+            }
+
+//            if( tparamConsumer.constraints().isEmpty() )return Result.ok(noErr);
+//
+//            tparamConsumer.constraints().map( constraintType -> {
+//            });
+
+            // TODO !!!
+
+            return Result.ok(noErr);
+        });
+
+        return Result.ok(Void.TYPE.cast(GenericInstance.class));
     }
 
     @Override

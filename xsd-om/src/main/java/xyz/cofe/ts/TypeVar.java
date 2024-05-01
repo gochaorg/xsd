@@ -11,7 +11,8 @@ public record TypeVar(
     TypeParam typeParam
 ) implements Type,
              NamedType.NamedWithContext,
-             NamedType {
+             NamedType,
+             TypeValue {
     @Override
     public String getTypeName(NamedType.TypeParamsName names) {
         if (names == null) throw new IllegalArgumentException("names==null");

@@ -3,13 +3,22 @@ package xyz.cofe.ts;
 /**
  * Тип данных
  */
-public interface Type {
-//    /**
-//     * Проверка допустимости присвоения типы
-//     * @param type тип
-//     * @return true данные совместимы
-//     */
-//    boolean assignable( Type type );
+public sealed interface Type extends TypeValue permits EitherType,
+                                                       ExtendType,
+                                                       GenericInstance,
+                                                       GenericType,
+                                                       PrimitiveType,
+                                                       Type.SelfStruct,
+                                                       TypeVar {
+    /**
+     * Проверка допустимости присвоения типы
+     * @param type тип
+     * @return true данные совместимы
+     */
+    default boolean isAssignableFrom(Type type){
+        if( type==null ) throw new IllegalArgumentException("type==null");
+        return this == type;
+    }
 
     /**
      * Специальный тип, для рекурсивной ссылки из field в struct:

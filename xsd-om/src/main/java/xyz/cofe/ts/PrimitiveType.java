@@ -3,10 +3,14 @@ package xyz.cofe.ts;
 /**
  * Примитивный тип
  */
-public interface PrimitiveType extends Type {
+public record PrimitiveType(String name) implements Type, NamedType {
 
-    static Primitive of(String name){
-        return new Primitive(name);
+    public static PrimitiveType of(String name){
+        return new PrimitiveType(name);
     }
 
+    @Override
+    public String getTypeName() {
+        return name;
+    }
 }

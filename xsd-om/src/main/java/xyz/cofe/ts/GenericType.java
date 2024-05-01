@@ -80,7 +80,7 @@ import java.util.Optional;
  * </pre>
  *
  */
-public interface GenericType extends Type {
+public sealed interface GenericType extends Type permits Struct {
     ImList<TypeParam> typeParams();
 
     default Optional<String> baseName(){ return Optional.empty(); }

@@ -33,4 +33,8 @@ public final class TypeParam {
     public CoPos coPos(){
         return coPos;
     }
+
+    public boolean isAssignableFrom(Type type){
+        return false;
+    }
 }

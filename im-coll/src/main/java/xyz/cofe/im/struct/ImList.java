@@ -237,4 +237,21 @@ public interface ImList<E> extends Iterable<E>,
         });
         return lst;
     }
+
+    record ZipEntry<A,B>( A left, B right ) {}
+
+    default <B> ImList<ZipEntry<E,B>> zip(Iterable<B> iter){
+        if( iter==null ) throw new IllegalArgumentException("iter==null");
+        var it1 = iterator();
+        var it2 = iter.iterator();
+        var res = ImList.<ZipEntry<E,B>>empty();
+        while (true){
+            if( !it1.hasNext() )break;
+            if( !it2.hasNext() )break;
+            var a = it1.next();
+            var b = it2.next();
+            res = res.prepend(new ZipEntry<>(a,b));
+        }
+        return res.reverse();
+    }
 }

@@ -3,6 +3,7 @@ package xyz.cofe.ts;
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Tuple2;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,8 +44,7 @@ import java.util.Optional;
  *
  * @see Type.SelfStruct
  */
-public final class Struct implements StructType,
-                                     ExtendType,
+public final class Struct implements ExtendType,
                                      GenericType,
                                      NamedType {
     public static class Builder {
@@ -81,6 +81,12 @@ public final class Struct implements StructType,
             return b;
         }
 
+        public Builder typeParams(TypeParam ... typeParams){
+            if( typeParams==null ) throw new IllegalArgumentException("typeParams==null");
+            var b = clone();
+            b.typeParams = ImList.from(Arrays.asList(typeParams));
+            return b;
+        }
         //endregion
         //region baseTypes : ImList<Type>
         private ImList<Type> baseTypes = ImList.empty();
@@ -175,8 +181,6 @@ public final class Struct implements StructType,
     //endregion
     //region fields : ImList<Field>
     private final ImList<Field> fields;
-
-    @Override
     public ImList<Field> fields() {
         return fields;
     }
