@@ -1,6 +1,9 @@
 package xyz.cofe.ts;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Tuple2;
+
+import java.util.Map;
 
 /**
  * Объявление параметра типа

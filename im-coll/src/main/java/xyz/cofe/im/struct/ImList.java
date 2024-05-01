@@ -75,10 +75,24 @@ public interface ImList<E> extends Iterable<E>,
         return new Cons<>(elem, this, size() + 1);
     }
 
+    default ImList<E> prepend(Iterable<E> elems){
+        if( elems instanceof ImList<E> l ){
+            return l.join(this);
+        }
+        return ImList.from(elems).join(this);
+    }
+
     default ImList<E> append(E elem) {
         var lst = toList();
         lst.add(elem);
         return from(lst);
+    }
+
+    default ImList<E> append(Iterable<E> elems){
+        if( elems instanceof ImList<E> l ){
+            return join(l);
+        }
+        return join(ImList.from(elems));
     }
 
     default Optional<E> get(int index) {

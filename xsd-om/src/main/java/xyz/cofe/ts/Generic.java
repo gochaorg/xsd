@@ -34,7 +34,7 @@ public record Generic(
                 TypeParam tp = eidx.value();
 
                 var constraints = tp.constraints()
-                    .map( ctype -> ctype instanceof NamedType nt ? nt.getTypeName() : "")
+                    .map( ctype -> ctype instanceof NamedType nt ? nt.getTypeName() : "?")
                     .foldLeft( "", (acc,it) -> acc.isEmpty() ? it : acc+"+"+it );
                 constraints = constraints.isBlank() ? "" : ":"+ constraints;
 

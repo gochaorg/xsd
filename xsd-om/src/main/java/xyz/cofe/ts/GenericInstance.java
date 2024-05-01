@@ -2,6 +2,8 @@ package xyz.cofe.ts;
 
 import xyz.cofe.im.struct.ImList;
 
+import java.util.Objects;
+
 /**
  * Тип экземпляра Generic.
  *
@@ -29,4 +31,45 @@ import xyz.cofe.im.struct.ImList;
  * @param type       Какой Generic тип в качества основы
  * @param typeValues Последовательное значения параметров типа type
  */
-public record GenericInstance(GenericType type, ImList<Type> typeValues) implements Type {}
+public record GenericInstance(GenericType type, ImList<Type> typeValues)
+    implements Type,
+               NamedType.NamedWithContext,
+               NamedType {
+    public GenericInstance {
+        Objects.requireNonNull(type);
+        Objects.requireNonNull(typeValues);
+    }
+
+    @Override
+    public String getTypeName() {
+        if (typeValues.isEmpty()) {
+            return type.baseName().orElse("?");
+        }
+
+        String baseName = type.baseName().orElse("?");
+        String params = typeValues.map(tv ->
+                tv instanceof NamedType nt
+                    ? nt.getTypeName() : "?"
+            )
+            .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + ", " + it);
+
+        return baseName + "<" + params + ">";
+    }
+
+    @Override
+    public String getTypeName(TypeParamsName names) {
+        if (names == null) throw new IllegalArgumentException("names==null");
+
+        String baseName = type.baseName().orElse("?");
+        String params = typeValues.map(tv ->
+                tv instanceof NamedWithContext nwCtx
+                    ? nwCtx.getTypeName(names)
+                    : tv instanceof NamedType nt
+                    ? nt.getTypeName()
+                    : "?"
+            )
+            .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + ", " + it);
+
+        return baseName + "<" + params + ">";
+    }
+}
