@@ -14,6 +14,16 @@ public final class TypeParam {
         this.coPos = coPos;
     }
 
+    public static TypeParam createParam(Type constraint){
+        if( constraint==null ) throw new IllegalArgumentException("constraint==null");
+        return new TypeParam(ImList.first(constraint), CoPos.Param);
+    }
+
+    public static TypeParam createResult(Type constraint){
+        if( constraint==null ) throw new IllegalArgumentException("constraint==null");
+        return new TypeParam(ImList.first(constraint), CoPos.Result);
+    }
+
     private final ImList<Type> constraints;
 
     /**

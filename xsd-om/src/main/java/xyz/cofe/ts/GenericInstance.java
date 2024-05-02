@@ -2,7 +2,9 @@ package xyz.cofe.ts;
 
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Result;
+import xyz.cofe.im.struct.Result.NoValue;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -35,42 +37,51 @@ import java.util.Objects;
 public record GenericInstance(GenericType type, ImList<TypeValue> typeValues)
     implements Type,
                NamedType.NamedWithContext,
-               NamedType {
+               NamedType
+{
+    public GenericInstance(GenericType type, TypeValue ... typeValues ){
+        this(type, ImList.from(Arrays.asList(typeValues)));
+    }
 
     public GenericInstance {
         Objects.requireNonNull(type);
         Objects.requireNonNull(typeValues);
+
+        var errOpt = validate(type, typeValues).toErrOptional();
+        if( errOpt.isPresent() ){
+            throw new RuntimeException(errOpt.get());
+        }
     }
 
-    public static Result<Void,String> validate(GenericType type, ImList<Type> typeValues){
+    public static Result<NoValue,String> validate(GenericType type, TypeValue ... typeValues){
+        return validate(type, ImList.from(Arrays.asList(typeValues)));
+    }
+
+    public static Result<NoValue,String> validate(GenericType type, ImList<TypeValue> typeValues){
         if( type==null ) throw new IllegalArgumentException("type==null");
         if( typeValues==null ) throw new IllegalArgumentException("typeValues==null");
 
         if( type.typeParams().size() != typeValues.size() )
             return Result.err("typeValues count not match typeParameters count");
 
-        Void noErr = Void.TYPE.cast(GenericInstance.class);
-
-        type.typeParams().enumerate().zip(typeValues).map( ze -> {
+        ImList<Result<NoValue, String>> checkParams1 = type.typeParams().enumerate().zip(typeValues).map(ze -> {
             int tparamIdx = ze.left().index();
             TypeParam tparamConsumer = ze.left().value();
-            Type tvalue = ze.right();
+            TypeValue tvalue = ze.right();
 
-            if( tvalue instanceof TypeVar tv ){
-                var prduce = tv.typeParam();
-            }
-
-//            if( tparamConsumer.constraints().isEmpty() )return Result.ok(noErr);
-//
-//            tparamConsumer.constraints().map( constraintType -> {
-//            });
-
-            // TODO !!!
-
-            return Result.ok(noErr);
+            return tparamConsumer.isAssignableFrom(tvalue).errMap(err -> "type param#"+tparamIdx+"\n"+ err);
         });
 
-        return Result.ok(Void.TYPE.cast(GenericInstance.class));
+        return checkParams1.foldLeft( Result.<String>ok(),
+            (acc,it) ->
+                acc.fold(
+                    suc1 -> it,
+                    err1 -> it.fold(
+                        suc2 -> Result.err(err1),
+                        err2 -> Result.err(err1 + "\n" + err2)
+                    )
+                )
+        );
     }
 
     @Override
