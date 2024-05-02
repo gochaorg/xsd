@@ -6,11 +6,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public sealed interface Result<A, B> extends Iterable<A> {
+    public static final class NoValue {
+        private NoValue(){}
+        public final static NoValue instance = new NoValue();
+
+        @Override
+        public String toString(){
+            return "NoValue";
+        }
+    }
+
     record Ok<A, B>(A value) implements Result<A, B> {}
     record Err<A, B>(B error) implements Result<A, B> {}
 
     public static <A, B> Result<A, B> ok(A a) {
         return new Ok<>(a);
+    }
+
+    public static <B> Result<NoValue, B> ok() {
+        return new Ok<>(NoValue.instance);
     }
 
     public static <A, B> Result<A, B> err(B b) {
@@ -92,6 +106,7 @@ public sealed interface Result<A, B> extends Iterable<A> {
                 return !reads[0] && value.isPresent();
             }
 
+            @SuppressWarnings("OptionalGetWithoutIsPresent")
             @Override
             public A next() {
                 if (!hasNext()) return null;

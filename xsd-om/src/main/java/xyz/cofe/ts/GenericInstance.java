@@ -32,7 +32,7 @@ import java.util.Objects;
  * @param type       Какой Generic тип в качества основы
  * @param typeValues Последовательное значения параметров типа type
  */
-public record GenericInstance(GenericType type, ImList<Type> typeValues)
+public record GenericInstance(GenericType type, ImList<TypeValue> typeValues)
     implements Type,
                NamedType.NamedWithContext,
                NamedType {
