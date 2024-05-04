@@ -42,6 +42,27 @@ import java.util.Optional;
  *
  * </pre>
  *
+ * <h2>Ограничения и подводные камни</h2>
+ *
+ * <ul>
+ *     <li>
+ *         Параметры типа {@link TypeParam} должны быть распределены по: базовым типам и/или полям
+ *     </li>
+ *     <li>
+ *         Ограничения на {@link TypeParam} должны удовлетворять ограничениям в {@link GenericInstance}, в {@link #baseTypes()}
+ *         - есть проверка в Run Time
+ *     </li>
+ *     <li>
+ *         Можно запутаться между {@link TypeParam} конструируемого типа {@link Struct} и базового типа {@link #baseTypes()}
+ *     </li>
+ *     <li>
+ *         В случае наследования одноименного поля {@link Field} необходимо смотреть на совместимость типа
+ *     </li>
+ *     <li>
+ *         Нельзя допустить наличие двух или более одноименных полей в рамках одной структуры
+ *     </li>
+ * </ul>
+ *
  * @see Type.SelfStruct
  */
 public final class Struct implements ExtendType,

@@ -81,7 +81,7 @@ public class ExtendTypeTest {
         var gi = new GenericInstance(U, tv1, tv2);
 
         var V = Struct.name("V")
-            .typeParams(ImList.first(v_tp1).append(v_tp2))
+            .typeParams(v_tp1,v_tp2)
             .baseType(gi)
             .build();
 
