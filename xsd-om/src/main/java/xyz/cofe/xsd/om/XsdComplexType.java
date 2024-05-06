@@ -232,6 +232,8 @@ public final class XsdComplexType implements Xsd,
         );
     }
 
+    public ImList<XsdAttribute> getAttributes(){ return elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this)); }
+
     @Override
     public String toString() {
         return "ComplexType " + getName().fold(BuiltInTypes.NCNAME::value, err -> "err!"+err);

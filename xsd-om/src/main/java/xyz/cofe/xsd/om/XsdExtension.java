@@ -92,6 +92,17 @@ public final class XsdExtension implements Xsd,
         }
     }
 
+    public Optional<TypeDef> getParentTypeDef(){
+        Optional<Xsd> prnt = getParent();
+        while (prnt.isPresent()){
+            var p = prnt.get();
+            if( p instanceof TypeDef t)return Optional.of(t);
+
+            prnt = p.getParent();
+        }
+        return Optional.empty();
+    }
+
     private Optional<NestedEl> nested;
     public Optional<NestedEl> getNested(){
         if( nested!=null )return nested;

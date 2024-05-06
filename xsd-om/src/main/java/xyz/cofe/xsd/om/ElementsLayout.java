@@ -26,6 +26,7 @@ public sealed interface ElementsLayout permits XsdAll,
                 : XsdChoice.isMatch(n) ? XsdChoice.parseList(n, parent).map(a -> (ElementsLayout) a)
                 : XsdGroup.isMatch(n) ? XsdGroup.parseList(n, parent).map(a -> (ElementsLayout) a)
                 : XsdSequence.isMatch(n) ? XsdSequence.parseList(n, parent).map(a -> (ElementsLayout) a)
+                : XsdElement.isMatch(n) ? XsdElement.parseList(n, parent).map(a -> (ElementsLayout) a)
                 : ImList.<ElementsLayout>empty()
         );
     }

@@ -35,6 +35,13 @@ public class MountUrlPredicate {
         var target = nixPath.isEmpty() ? source : nixPath.resolve(source);
         if (!Files.exists(target)) return Optional.empty();
 
-        return Optional.of(new MatchedPath(baseUrl, source, nixPath, target));
+        var accept = request.getHeaders().get("Accept");
+        var encode = MatchedPath.Encode.Html;
+
+        if( accept!=null && accept.matches("(?is)(application|text)/json") ){
+            encode = MatchedPath.Encode.Json;
+        }
+
+        return Optional.of(new MatchedPath(baseUrl, source, nixPath, target, encode));
     }
 }

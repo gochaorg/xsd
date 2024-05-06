@@ -15,6 +15,7 @@ public record Mime(String name) {
     public static final Mime imageJpeg = new Mime("image/jpeg");
     public static final Mime imageSvg = new Mime("image/svg+xml");
     public static final Mime applicationOctetStream = new Mime("application/octet-stream");
+    public static final Mime applicationJson = new Mime("application/json");
 
     public static Mime of(FileExtension extension){
         if( extension==null ) throw new IllegalArgumentException("extension==null");

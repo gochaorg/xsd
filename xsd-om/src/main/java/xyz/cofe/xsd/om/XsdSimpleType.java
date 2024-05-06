@@ -1,6 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
