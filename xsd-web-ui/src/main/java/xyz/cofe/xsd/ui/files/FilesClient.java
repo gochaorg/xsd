@@ -16,6 +16,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FilesClient {
     public sealed interface PathObj {
+        String name();
+        default boolean isDirectory(){ return this instanceof Directory; }
+
         public record Directory(String name, String path) implements PathObj {}
         public record File(String name, String path) implements PathObj {}
     }
@@ -40,10 +43,20 @@ public class FilesClient {
 
         var xhr = XMLHttpRequest.create();
 
-        xhr.onComplete(() -> {
-            complete.set(xhr.getResponseText());
+        // не работает в teavm 0.10.0
+//        xhr.onComplete(() -> {
+//            complete.set(xhr.getResponseText());
+//        });
+//        xhr.onError(err->{
+//            System.out.println("xhr.onError");
+//        });
+
+        xhr.addEventListener("readystatechange", evt -> {
+            if(xhr.getReadyState() == XMLHttpRequest.DONE){
+                complete.set(xhr.getResponseText());
+            }
         });
-        xhr.onError(err->{
+        xhr.addEventListener("error", evt -> {
             System.out.println("xhr.onError");
         });
 

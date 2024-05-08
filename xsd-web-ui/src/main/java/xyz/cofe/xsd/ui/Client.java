@@ -1,5 +1,6 @@
 package xyz.cofe.xsd.ui;
 
+import org.teavm.jso.ajax.ProgressEvent;
 import org.teavm.jso.dom.html.HTMLButtonElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
@@ -7,13 +8,12 @@ import org.teavm.jso.dom.html.HTMLInputElement;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import xyz.cofe.im.struct.Result;
 import xyz.cofe.xsd.cmpl.XsdCompile;
-import xyz.cofe.xsd.om.XsdElement;
 import xyz.cofe.xsd.om.XsdSchema;
 import xyz.cofe.xsd.om.ldr.XsdLoader;
-import xyz.cofe.xml.print.XmlPrinter;
 import xyz.cofe.xml.jso.XmlDocJSOAdapter;
 import xyz.cofe.xsd.ui.files.FilesClient;
 import xyz.cofe.xsd.ui.tbl.Table;
+import xyz.cofe.xsd.ui.tbl.TableColumn;
 
 import java.net.URI;
 import java.util.Optional;
@@ -75,7 +75,11 @@ public class Client {
             but.setInnerText("close");
             tcont.appendChild(but);
 
-            Table table = new Table();
+            Table<FilesClient.PathObj> table = new Table<>();
+            table.getDataColumns().insert( new TableColumn<>( "name", FilesClient.PathObj::name));
+            table.getDataColumns().insert( new TableColumn<>("dir", FilesClient.PathObj::isDirectory) );
+
+            var tbody = table.getTable().querySelector("tbody");
 
             tcont.appendChild(table.getTable());
             div.appendChild(tcont);
@@ -85,32 +89,34 @@ public class Client {
             });
 
             var fc = new FilesClient();
+
             fc.listFiles(urlAddr.getValue()).each(po -> {
-                Table.TR row = new Table.TR();
-                Table.TD name, type;
-                if (po instanceof FilesClient.PathObj.Directory d) {
+                table.getDataRows().insert(po);
 
-                    name = new Table.TD();
-                    name.getCell().setInnerText(d.name());
-
-                    type = new Table.TD();
-                    type.getCell().setInnerText("dir");
-
-                    row.add(name);
-                    row.add(type);
-
-                } else if (po instanceof FilesClient.PathObj.File f) {
-                    name = new Table.TD();
-                    name.getCell().setInnerText(f.name());
-
-                    type = new Table.TD();
-                    type.getCell().setInnerText("file");
-
-                    row.add(name);
-                    row.add(type);
-                }
-
-                table.getRows().add(row);
+//                Table.TD name, type;
+//                if (po instanceof FilesClient.PathObj.Directory d) {
+//
+//                    name = new Table.TD();
+//                    name.getCell().setInnerText(d.name());
+//
+//                    type = new Table.TD();
+//                    type.getCell().setInnerText("dir");
+//
+//                    row.add(name);
+//                    row.add(type);
+//
+//                } else if (po instanceof FilesClient.PathObj.File f) {
+//                    name = new Table.TD();
+//                    name.getCell().setInnerText(f.name());
+//
+//                    type = new Table.TD();
+//                    type.getCell().setInnerText("file");
+//
+//                    row.add(name);
+//                    row.add(type);
+//                }
+//
+//                table.getTableRows().add(row);
             });
         });
     }
@@ -121,14 +127,16 @@ public class Client {
         var complete = new AtomicBoolean(false);
 
         var xhr = XMLHttpRequest.create();
-        xhr.onComplete(() -> {
-            System.out.println("xhr.onComplete");
-            var str = xhr.getResponseText();
-            res.set(str);
-            complete.set(true);
-            ready.set(true);
+        xhr.addEventListener("readystatechange", evt -> {
+            if(xhr.getReadyState() == XMLHttpRequest.DONE){
+                System.out.println("xhr.onComplete");
+                var str = xhr.getResponseText();
+                res.set(str);
+                complete.set(true);
+                ready.set(true);
+            }
         });
-        xhr.onError(err -> {
+        xhr.addEventListener("error", evt -> {
             System.out.println("xhr.onError");
             ready.set(true);
         });

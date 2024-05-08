@@ -4,6 +4,7 @@ import xyz.cofe.im.iter.EachToEnum;
 import xyz.cofe.im.iter.EachToMap;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * Иммутабельный список
+ * @param <E> тип элемента
+ */
 public interface ImList<E> extends Iterable<E>,
                                    EachToMap<E> {
     int size();
@@ -253,5 +258,11 @@ public interface ImList<E> extends Iterable<E>,
             res = res.prepend(new ZipEntry<>(a,b));
         }
         return res.reverse();
+    }
+
+    default ImList<E> sort(Comparator<? super E> cmp){
+        var lst = toList();
+        lst.sort(cmp);
+        return ImList.from(lst);
     }
 }

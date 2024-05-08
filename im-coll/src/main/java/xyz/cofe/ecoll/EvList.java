@@ -1,11 +1,13 @@
 package xyz.cofe.ecoll;
 
+import xyz.cofe.im.iter.ExtIterable;
 import xyz.cofe.im.struct.Consumer3;
 import xyz.cofe.im.struct.ImList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -13,7 +15,7 @@ import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class EvList<A> {
+public class EvList<A> implements ExtIterable<A> {
     private final List<A> list;
 
     public EvList(List<A> list) {
@@ -172,5 +174,10 @@ public class EvList<A> {
 
     public ImList<A> toImList(){
         return ImList.from(list);
+    }
+
+    @Override
+    public Iterator<A> iterator() {
+        return new ArrayList<>(list).iterator();
     }
 }

@@ -1,6 +1,8 @@
 package xyz.cofe.ecoll;
 
 import xyz.cofe.im.struct.Consumer3;
+import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Tuple2;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -11,6 +13,11 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 
+/**
+ * Мутируюшая карта с поддержкой уведомлений
+ * @param <K> Ключ
+ * @param <V> Значение
+ */
 public class EvMap<K, V> {
     private final Map<K, V> map;
 
@@ -23,6 +30,10 @@ public class EvMap<K, V> {
         this.map = new HashMap<>();
     }
 
+    /**
+     * КОл-во пар
+     * @return пары
+     */
     public int size() {return map.size();}
 
     private final WeakHashMap<EvMapListener<K, V>, Boolean> weakListeners = new WeakHashMap<>();
@@ -151,8 +162,28 @@ public class EvMap<K, V> {
         return Optional.empty();
     }
 
+    /**
+     * Удаляет все элементы.
+     *
+     * Сообщает {@link EvMapEvent.FullyChanged} событие подписчикам
+     */
     public void clear(){
         map.clear();
         fireFullyChanged();
+    }
+
+    public ImList<Tuple2<K,V>> toImList(){
+        ImList<Tuple2<K,V>> lst = ImList.empty();
+        for( var e : map.entrySet() ){
+            lst = lst.prepend(Tuple2.of(e.getKey(), e.getValue()));
+        }
+        return lst.reverse();
+    }
+
+    public void each( BiConsumer<K,V> keyValueConsumer ){
+        if( keyValueConsumer==null ) throw new IllegalArgumentException("keyValueConsumer==null");
+        for( var e : map.entrySet() ){
+            keyValueConsumer.accept(e.getKey(), e.getValue());
+        }
     }
 }
