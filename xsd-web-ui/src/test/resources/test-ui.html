@@ -3,151 +3,133 @@
 <head>
     <title>Main page</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <style>
+        .splt {
+            width: 5px;
+            display: block;
+            height: 100%;
+            float: right;
+            background-color: #0f0;
+            cursor: e-resize;
+        }
+    </style>
+    <script>      
+        document.addEventListener('DOMContentLoaded', ()=>{
+          let drag = {
+            enable: false,
+            startX: 0,
+            startY: 0,
+            startWidth: 0,
+            splitter: null,
+            columnIndex: 0,
+            parent: null,
+          }
+
+          function rebuildColumnsWidth(columnIndex, targetWidth) {
+            console.log('rebuildColumnsWidth',columnIndex,targetWidth)
+
+            let arr = Array.from(document.querySelectorAll('.hdr')).map( hdr => hdr.clientWidth );
+            if( columnIndex>=0 && columnIndex<arr.length ){
+              arr[columnIndex] = targetWidth
+            }
+
+            console.log('arr ',arr)
+
+            let widthStr = ""
+            arr.forEach( l => { widthStr = widthStr + l + "px " } )
+
+            console.log('widthStr ',widthStr)
+
+            document.querySelectorAll('#header').forEach( h => { h.style.gridTemplateColumns = widthStr; })
+            document.querySelectorAll('#content').forEach( h => { h.style.gridTemplateColumns = widthStr; })
+          }
+
+          let idx = -1
+
+          document.querySelectorAll('#table1').forEach( tbl => {
+            tbl.addEventListener('mouseup', downEvent => {
+              if( drag.enable ){
+                drag.enable = false
+              }
+            })
+
+            tbl.addEventListener('mousemove', moveEvent => {
+              if( drag.enable && drag.parent ){
+                rebuildColumnsWidth( drag.columnIndex, drag.startWidth + (moveEvent.screenX - drag.startX) )
+              }
+            })
+          })
+
+          document.querySelectorAll('.splt').forEach( splt => {
+            idx++;
+            let i2 = idx
+
+            let prnt = splt.parentElement
+
+            splt.addEventListener('mousedown', downEvent => {
+              if( downEvent.button == 0 /* left */ && !downEvent.ctrlKey && !downEvent.shiftKey && !downEvent.altKey && !drag.enable ){
+                drag.enable = true
+                drag.splitter = splt
+                drag.parent = prnt
+                drag.startWidth = prnt.clientWidth
+                drag.startX = downEvent.screenX
+                drag.startY = downEvent.screenY
+                drag.columnIndex = i2
+              }
+            })
+            //splt.addEventListener('mouseup', upEvent => {
+            //})
+          })
+        });
+    </script>
 </head>
 <body>
 
-<div style="
-    height: 115px;
-    overflow: auto;
-    border-style: solid;
-    width: 120px;
-    padding-top: 22px;
+<div id="table1" style="
+    /* width: 400px; */
 ">
-    <div style="
-    background-color: black;
-    color: white;
-    position: fixed;
-    width: 120px;
-    /* height: 22px; */
-    /* top: 0; */
-    /* vertical-align: sub; */
-    margin-top: -22px;
-">header</div>
-    <div>value 1</div>
-    <div>value 2</div>
-    <div>value 3</div>
-    <div>value 4</div>
-    <div>value 5</div>
-    <div>value 6</div>
-    <div>value 6</div>
-    <div>value 6</div>
-    <div>value 6</div>
-    <div>value 6</div>
-    <div>value 6</div>
-</div>
+    <div id="header" style="
+    display: grid;
+    grid-template-columns: 100px 200px 100px;
+    background-color: #666;
+    color: #fff;
+    ">
 
-<div style="
-    width: 120px;
-    border-style: solid;
-">
-    <div style="
-    background-color: black;
-    color: white;
-">header</div>
-    <div style="
-    height: 120px;
-    overflow: auto;
-">
-        <div>value 1</div>
-        <div>value 2</div>
-        <div>value 3</div>
-        <div>value 4</div>
-        <div>value 5</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
-        <div>value 6</div>
+        <div class="hdr">
+            <div>hdr 1 abc def ght</div>
+            <div class="splt"></div>
+        </div>
+        <div class="hdr" style="background-color: #888;">
+            hdr 2
+            <div class="splt"></div>
+        </div>
+        <div class="hdr">
+            hdr 3
+            <div class="splt"></div>
+        </div>
+    </div>
+
+    <div id="content" style="
+    display: grid;
+    grid-template-columns: 100px 200px 100px;
+    ">
+        <div>a1</div> <div>a2</div> <div>a3</div>
+        <div>b1</div> <div>b2</div> <div>b3</div>
+        <div>c1</div> <div>c2</div> <div>c3</div>
+        <div>d1</div> <div>d2</div> <div>d3</div>
+        <div>e1</div> <div>e2</div> <div>e3</div>
+        <div>f1</div> <div>f2</div> <div>f3</div>
+        <div>g1</div> <div>g2</div> <div>g3</div>
+        <div>h1</div> <div>h2</div> <div>h3</div>
+        <div>i1</div> <div>i2</div> <div>i3</div>
+        <div>j1</div> <div>j2</div> <div>j3</div>
+        <div>k1</div> <div>k2</div> <div>k3</div>
+        <div>l1</div> <div>l2</div> <div>l3</div>
+        <div>m1</div> <div>m2</div> <div>m3</div>
+        <div>n1</div> <div>n2</div> <div>n3</div>
+        <div>o1</div> <div>o2</div> <div>o3</div>
     </div>
 </div>
-
-<table style="
-    height: 120px;
-    overflow: auto;
-">
-    <thead style="
-    width: 300px;
-    display: block;
-">
-    <tr><th style="
-    width: 100px;
-">Head1</th>
-        <th style="
-    width: 100px;
-">Head2</th>
-        <th style="
-    width: 100px;
-">Head3</th>
-    </tr></thead>
-    <tbody style="
-    height: 120px;
-    overflow: auto;
-    display: block;
-    /* width: 200px; */
-">
-    <tr>
-        <tableDataCell style="
-    width: 100px;
-">Value</tableDataCell>
-        <tableDataCell style="
-    width: 100px;
-">Value</tableDataCell>
-        <tableDataCell style="
-    width: 100px;
-">Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    <tr>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-        <tableDataCell>Value</tableDataCell>
-    </tr>
-    </tbody>
-</table>
 
 </body>
 </html>

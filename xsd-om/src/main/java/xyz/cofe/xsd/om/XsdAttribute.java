@@ -79,7 +79,9 @@ public final class XsdAttribute implements Xsd,
                                            IDAttribute,
                                            TypeAttribute,
                                            RefAttribute,
-                                           NameAttribute {
+                                           NameAttribute,
+                                           XsdAnnotation.AnnotationProperty
+{
     public static final String Name = "attribute";
 
     public static boolean isMatch(XmlNode node) {

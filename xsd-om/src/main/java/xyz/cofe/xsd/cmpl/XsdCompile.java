@@ -75,16 +75,16 @@ public class XsdCompile {
             return "??";
         }).orElse("");
 
-        var ctName = ct.getName().map(BuiltInTypes.NCNAME::value).fold(a->a, b->b);
+        var ctName = ct.getName().map(BuiltInTypes.NCNAME::value).fold(a -> a, b -> b);
         var attr = compileAttributes(ct.getAttributes());
 
         var ann = ct.getAnnotations().flatMap(XsdAnnotation::getDocumentations).map(XsdDocumentation::getText)
             .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
 
-        var str = "XsdComplexType "+ctName;
-        if( !ann.isBlank() ) str = str + "\nann {\n" + indent("  ",ann) + "\n}";
-        if( !attr.isBlank() ) str = str + "\nattr {\n" + indent("  ",attr) + "\n}";
-        if( !content.isBlank() ) str = str + "\ncontent {\n" + indent("  ",content) + "\n}";
+        var str = "XsdComplexType " + ctName;
+        if (!ann.isBlank()) str = str + "\n" + indent("// ", ann);
+        if (!attr.isBlank()) str = str + "\nattr {\n" + indent("  ", attr) + "\n}";
+        if (!content.isBlank()) str = str + "\ncontent {\n" + indent("  ", content) + "\n}";
 
         return str;
     }
@@ -93,7 +93,7 @@ public class XsdCompile {
         var attrs = compileAttributes(ec.getAttributes());
 
         return "ElementContent {\n" +
-            indent("  ",attrs)+"\n" +
+            indent("  ", attrs) + "\n" +
             "}";
     }
 
@@ -108,17 +108,17 @@ public class XsdCompile {
         }, err -> "!! XsdComplexContent getNested: " + err);
     }
 
-    private String compile( TypeDef td ){
-        if( td instanceof XsdSimpleType st )return compile(st);
-        if( td instanceof XsdComplexType ct )return compile(ct);
+    private String compile(TypeDef td) {
+        if (td instanceof XsdSimpleType st) return compile(st);
+        if (td instanceof XsdComplexType ct) return compile(ct);
         return "??? compile( TypeDef td )";
     }
 
     private String compile(XsdExtension ext) {
-        var extend = Result.of(ext.getBaseAttribute(),"")
-            .flatMap( ignore -> ext.getRefType() )
+        var extend = Result.of(ext.getBaseAttribute(), "")
+            .flatMap(ignore -> ext.getRefType())
             .map(this::compile)
-            .fold( a -> a, b -> b);
+            .fold(a -> a, b -> b);
 
         var nested = ext.getNested().map(nst -> {
             if (nst instanceof XsdGroup g) {
@@ -136,14 +136,14 @@ public class XsdCompile {
         var attrs = compileAttributes(ext.getAttributes());
 
         var body =
-            "body of XsdExtension("+ext.getParentTypeDef().map(td -> td.getName().fold(n -> n.value(), b -> b)).orElse("?")+") {\n" +
+            "body of XsdExtension(" + ext.getParentTypeDef().map(td -> td.getName().fold(n -> n.value(), b -> b)).orElse("?") + ") {\n" +
                 indent("  ", nested) + "\n" +
                 indent("  ", attrs) + "\n" +
                 "}";
 
-        if( !extend.isBlank() ) {
-            return "extend from "+ext.getRefType().flatMap(rt -> rt.getName().map(BuiltInTypes.NCNAME::value)).fold(a->a, b->b)+" {\n" +
-                indent("  ",extend)+"\n" +
+        if (!extend.isBlank()) {
+            return "extend from " + ext.getRefType().flatMap(rt -> rt.getName().map(BuiltInTypes.NCNAME::value)).fold(a -> a, b -> b) + " {\n" +
+                indent("  ", extend) + "\n" +
                 "}\n" +
                 body;
         }
@@ -152,17 +152,34 @@ public class XsdCompile {
     }
 
     private static String compileAttributes(ImList<XsdAttribute> attrs) {
-        return attrs
-            .map(attr ->
-                attr.getName().map(BuiltInTypes.NCNAME::value)
-                    .fold(n -> n, e -> e) +
+        var fieldDef = attrs
+            .map(attr -> {
+                    var doc = attr.getAnnotations()
+                        .flatMap(XsdAnnotation::getDocumentations)
+                        .map(XsdDocumentation::getText)
+                        .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
 
-                    " : " +
 
-                    attr.getType().map(qName -> qName.prefix().map(p -> p + "::").orElse("") + qName.localPart())
-                        .fold(n -> n, e -> e)
+                    var defenition = attr.getName().map(BuiltInTypes.NCNAME::value)
+                        .fold(n -> n, e -> e) +
+
+                        " : " +
+
+                        attr.getType().map(qName -> qName.prefix().map(p -> p + "::").orElse("") + qName.localPart())
+                            .fold(n -> n, e -> e);
+
+                    if (!doc.isBlank()) {
+                        return
+                            indent("// ", doc) + "\n" +
+                                defenition + "\n";
+                    }
+
+                    return defenition;
+                }
             )
             .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
+
+        return fieldDef;
     }
 
     private String compile(XsdGroup rst) {
@@ -182,11 +199,39 @@ public class XsdCompile {
             } else if (ell instanceof XsdSequence a) {
                 return compile(a);
             } else if (ell instanceof XsdElement el) {
-                return el.getName().map(BuiltInTypes.NCNAME::value).fold(a->a, b->b) +
+                var fieldDef = el.getName().map(BuiltInTypes.NCNAME::value).fold(a -> a, b -> b) +
                     " : " +
                     el.getType()
-                        .map(qn -> qn.prefix().map(s->s+"::").orElse("")+ qn.localPart())
-                        .fold(a->a,b->b);
+                        .map(qn -> {
+                            var typeName = qn.prefix().map(s -> s + "::").orElse("") + qn.localPart();
+
+                            var minOcc = el.getMinOccurs().fold(v -> v.value().intValue(), ignore -> 1);
+
+                            // maxOcc = -1 - максимальная граница не задана
+                            var maxOcc = el.getMaxOccurs().fold(v -> v.fold(i -> i.value().intValue(), ingore2 -> -1), ignore -> 1);
+
+                            if (minOcc == 1 && maxOcc == 1) return typeName;
+                            if (minOcc == 0 && maxOcc == 1) return "Optional<" + typeName + ">";
+
+                            if (maxOcc < 0) {
+                                return typeName + "+List{" + minOcc + "..*}";
+                            }
+
+                            return typeName + "+List{" + minOcc + ".." + maxOcc + "}";
+                        })
+                        .fold(a -> a, b -> b);
+
+                var doc = el.getAnnotations()
+                    .flatMap(XsdAnnotation::getDocumentations)
+                    .map(XsdDocumentation::getText)
+                    .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
+
+                if (!doc.isBlank())
+                    return
+                        indent("// ", doc) + "\n" +
+                            fieldDef + "\n";
+
+                return fieldDef;
             }
             return "?";
         }).foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);

@@ -33,13 +33,10 @@ public class Table<A> {
     protected HTMLElement getThead(){
         if( thead!=null )return thead;
 
-        System.out.println("create thead");
         thead = HTMLDocument.current().createElement("thead").cast();
         if( getTable().getChildren().getLength()<1 ) {
-            System.out.println("append thead to last");
             getTable().appendChild(thead);
         }else {
-            System.out.println("append thead to begin");
             getTable().insertBefore(thead, getTable().getFirstChild());
         }
 
@@ -188,10 +185,8 @@ public class Table<A> {
     }
 
     private void rebuildTableHeader(){
-        System.out.println("rebuildTableHeader");
         for( var tc : getDataColumns() ){
             var th = buildHeaderCell(tc);
-            System.out.println("append header cell");
             getThead().appendChild(th);
         }
     }
