@@ -9,29 +9,61 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.BiConsumer;
 
+/**
+ * Свойство с уведомлением
+ * @param <A> тип свойства
+ */
 public class EvProp<A> {
     private A value;
 
+    /**
+     * Конструктор
+     */
     public EvProp(){
     }
 
+    /**
+     * Конструктор с начальным значением
+     * @param initial начальное значение
+     */
     public EvProp(A initial){
         this.value = initial;
     }
 
+    /**
+     * Подписчики
+     */
     private final WeakHashMap<EvPropListener<A>,Boolean> weakListeners = new WeakHashMap<>();
+
+    /**
+     * Подписчики
+     */
     private final Set<EvPropListener<A>> strongListeners = new HashSet<>();
 
+    /**
+     * Удаление подписчиков
+     */
     public void clearListeners(){
         weakListeners.clear();
         strongListeners.clear();
     }
 
+    /**
+     * Добавление подписчика
+     * @param listener подписчик
+     * @return отписка от уведомлений
+     */
     public Runnable addListener(EvPropListener<A> listener) {
         if( listener==null ) throw new IllegalArgumentException("listener==null");
         return addListener(false,listener);
     }
 
+    /**
+     * Добавление подписчика
+     * @param weak true - добавить как weak ссылку
+     * @param listener подписчик
+     * @return отписка от уведомлений
+     */
     public Runnable addListener(boolean weak, EvPropListener<A> listener){
         if( listener==null ) throw new IllegalArgumentException("listener==null");
         if( weak ){
@@ -51,6 +83,11 @@ public class EvProp<A> {
         }
     }
 
+    /**
+     * Уведомление об изменении свойства
+     * @param listener подписчик: fn(старое значение, новое значение)
+     * @return отписка от уведомлений
+     */
     public Runnable onChanged(BiConsumer<A,A> listener){
         if( listener==null ) throw new IllegalArgumentException("listener==null");
         return addListener(false, event -> {
@@ -60,10 +97,19 @@ public class EvProp<A> {
         });
     }
 
+    /**
+     * Уведомление об изменении
+     * @param from старое значение
+     * @param to новое значение
+     */
     protected void fireChanged(A from, A to){
         fire(new EvPropEvent.Changed<>(from, to));
     }
 
+    /**
+     * Рассылка уведомлений
+     * @param ev уведомление
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected void fire(EvPropEvent<A> ev){
         // унифицировать до for( var ls : strongListeners ) - нельзя ошибка teavm
@@ -78,6 +124,10 @@ public class EvProp<A> {
         }
     }
 
+    /**
+     * Установка новое значения
+     * @param value новое значение
+     */
     public void setValue(A value){
         A from = this.value;
         this.value = value;
@@ -85,6 +135,10 @@ public class EvProp<A> {
         fireChanged(from, to);
     }
 
+    /**
+     * Чтение значения
+     * @return значение
+     */
     public A getValue(){
         return this.value;
     }
