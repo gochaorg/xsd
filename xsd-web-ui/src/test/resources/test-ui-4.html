@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main page</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <style>
+      .tbl {
+        display: grid;
+        grid-template-columns: 4em repeat(4, auto);
+
+        height: 150px;
+        overflow: auto;
+      }
+      .row-0 { grid-row-start: 1; }
+      .row-1 { grid-row-start: 2; }
+      .row-2 { grid-row-start: 3; }
+      .row-3 { grid-row-start: 4; }
+      .row-4 { grid-row-start: 5; }
+      .row-5 { grid-row-start: 6; }
+      .row-6 { grid-row-start: 7; }
+      .row-7 { grid-row-start: 8; }
+      .row-8 { grid-row-start: 9; }
+      .row-9 { grid-row-start: 10; }
+      .row-10 { grid-row-start: 11; }
+      .row-11 { grid-row-start: 12; }
+      .row-12 { grid-row-start: 13; }
+      .row-13 { grid-row-start: 14; }
+      .row-14 { grid-row-start: 15; }
+      .row-15 { grid-row-start: 16; }
+      .row-16 { grid-row-start: 17; }
+      .row-17 { grid-row-start: 18; }
+      .row-18 { grid-row-start: 19; }
+      .row-19 { grid-row-start: 20; }
+      .row-20 { grid-row-start: 21; }
+      .row-21 { grid-row-start: 22; }
+
+      .col-0 { grid-column-start: 1; }
+      .col-1 { grid-column-start: 2; }
+      .col-2 { grid-column-start: 3; }
+      .col-3 { grid-column-start: 4; }
+      .col-4 { grid-column-start: 5; }
+
+      .t-hdr {
+        position: sticky;
+        top: 0;
+      }
+
+      .t-hdr, .l-hdr { background-color: #bfbe9f;}
+
+      .l-hdr { 
+        border-right-style: solid; 
+        border-right-width: 1.5mm;
+      }
+      .t-hdr {
+        border-bottom-style: solid;
+        border-bottom-width: 1.5mm;
+      }
+      .col-1, .col-2, .col-3, .col-4 {
+        border-right-style: dashed;
+        border-right-width: 2px;
+      }
+      .data.row-2, 
+      .data.row-4,
+      .data.row-6,
+      .data.row-8,
+      .data.row-10,
+      .data.row-12,
+      .data.row-14,
+      .data.row-16,
+      .data.row-18,
+      .data.row-20
+      {
+        background-color: #cee2ea;
+      }
+    </style>
+</head>
+<body>
+
+<div class="tbl">
+  <div class="t-hdr row-0 col-1">header 1</div>
+  <div class="t-hdr row-0 col-2">header 2</div>
+  <div class="t-hdr row-0 col-3">header 3</div>
+  <div class="t-hdr row-0 col-4">header 4</div>
+
+  <div class="l-hdr row-1 col-0">#1</div>
+  <div class="l-hdr row-2 col-0">#2</div>
+  <div class="l-hdr row-3 col-0">#3</div>
+  <div class="l-hdr row-4 col-0">#4</div>
+
+  <div class="data col-1 row-1">a1</div>
+  <div class="data col-2 row-1">a2</div>
+  <div class="data col-3 row-1">a3</div>
+  <div class="data col-4 row-1">a4</div>
+
+  <div class="data col-1 row-2">b1</div>
+  <div class="data col-2 row-2">b2</div>
+  <div class="data col-3 row-2">b3</div>
+  <div class="data col-4 row-2">b4</div>
+
+  <div class="data col-1 row-3">c1</div>
+  <div class="data col-2 row-3">c2</div>
+  <div class="data col-3 row-3">c3</div>
+  <div class="data col-4 row-3">c4</div>
+
+  <div class="data col-1 row-4">d1</div>
+  <div class="data col-2 row-4">d2</div>
+  <div class="data col-3 row-4">d3</div>
+  <div class="data col-4 row-4">d4</div>
+
+  <div class="data col-1 row-5">e1</div>
+  <div class="data col-2 row-5">e2</div>
+  <div class="data col-3 row-5">e3</div>
+  <div class="data col-4 row-5">e4</div>
+
+  <div class="data col-1 row-6">f1</div>
+  <div class="data col-2 row-6">f2</div>
+  <div class="data col-3 row-6">f3</div>
+  <div class="data col-4 row-6">f4</div>
+
+  <div class="data col-1 row-7">g1</div>
+  <div class="data col-2 row-7">g2</div>
+  <div class="data col-3 row-7">g3</div>
+  <div class="data col-4 row-7">g4</div>
+
+  <div class="data col-1 row-8">h1</div>
+  <div class="data col-2 row-8">h2</div>
+  <div class="data col-3 row-8">h3</div>
+  <div class="data col-4 row-8">h4</div>
+
+  <div class="data col-1 row-9">i1</div>
+  <div class="data col-2 row-9">i2</div>
+  <div class="data col-3 row-9">i3</div>
+  <div class="data col-4 row-9">i4</div>
+
+  <div class="data col-1 row-10">j1</div>
+  <div class="data col-2 row-10">j2</div>
+  <div class="data col-3 row-10">j3</div>
+  <div class="data col-4 row-10">j4</div>
+
+  <div class="data col-1 row-11">k1</div>
+  <div class="data col-2 row-11">k2</div>
+  <div class="data col-3 row-11">k3</div>
+  <div class="data col-4 row-11">k4</div>
+
+  <div class="data col-1 row-12">l1</div>
+  <div class="data col-2 row-12">l2</div>
+  <div class="data col-3 row-12">l3</div>
+  <div class="data col-4 row-12">l4</div>
+
+  <div class="data col-1 row-13">m1</div>
+  <div class="data col-2 row-13">m2</div>
+  <div class="data col-3 row-13">m3</div>
+  <div class="data col-4 row-13">m4</div>
+
+  <div class="data col-1 row-14">n1</div>
+  <div class="data col-2 row-14">n2</div>
+  <div class="data col-3 row-14">n3</div>
+  <div class="data col-4 row-14">n4</div>
+
+  <div class="data col-1 row-15">o1</div>
+  <div class="data col-2 row-15">o2</div>
+  <div class="data col-3 row-15">o3</div>
+  <div class="data col-4 row-15">o4</div>
+
+  <div class="data col-1 row-16">p1</div>
+  <div class="data col-2 row-16">p2</div>
+  <div class="data col-3 row-16">p3</div>
+  <div class="data col-4 row-16">p4</div>
+
+  <div class="data col-1 row-17">q1</div>
+  <div class="data col-2 row-17">q2</div>
+  <div class="data col-3 row-17">q3</div>
+  <div class="data col-4 row-17">q4</div>
+
+  <div class="data col-1 row-18">r1</div>
+  <div class="data col-2 row-18">r2</div>
+  <div class="data col-3 row-18">r3</div>
+  <div class="data col-4 row-18">r4</div>
+
+  <div class="data col-1 row-19">s1</div>
+  <div class="data col-2 row-19">s2</div>
+  <div class="data col-3 row-19">s3</div>
+  <div class="data col-4 row-19">s4</div>
+
+  <div class="data col-1 row-20">t1</div>
+  <div class="data col-2 row-20">t2</div>
+  <div class="data col-3 row-20">t3</div>
+  <div class="data col-4 row-20">t4</div>
+
+  <div class="data col-1 row-21">u1</div>
+  <div class="data col-2 row-21">u2</div>
+  <div class="data col-3 row-21">u3</div>
+  <div class="data col-4 row-21">u4</div>
+</div>
+
+</body>
+</html>

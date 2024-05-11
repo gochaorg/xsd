@@ -69,32 +69,35 @@ public class Client {
         listFilesBut.setInnerText("files");
 
         listFilesBut.addEventListener("click", evt -> {
-            System.out.println("list files click");
-
             HTMLElement gridContainer = HTMLDocument.current().createElement("div");
+            gridContainer.getStyle().setProperty("width","400px");
+            gridContainer.getStyle().setProperty("border-style","solid");
+            gridContainer.getStyle().setProperty("border-width","0.75mm");
+            gridContainer.getStyle().setProperty("border-radius","4mm");
+            gridContainer.getStyle().setProperty("padding","2mm");
+            gridContainer.getStyle().setProperty("margin-bottom","2mm");
 
             HTMLButtonElement closeButton = HTMLDocument.current().createElement("button").cast();
-            closeButton.setInnerText("close");
+            closeButton.setInnerText("[x]");
+            closeButton.getStyle().setProperty("float","right");
+            closeButton.getStyle().setProperty("margin-left","1mm");
             gridContainer.appendChild(closeButton);
 
-            System.out.println("create grid");
             DataGrid<FilesClient.PathObj> grid = new DataGrid<>();
 
-            System.out.println("add column");
             grid.getDataColumns().insert( new DataColumn<>( "name", FilesClient.PathObj::name));
             grid.getDataColumns().insert( new DataColumn<>("dir", FilesClient.PathObj::isDirectory) );
 
-            System.out.println("insert grid");
             gridContainer.appendChild(grid.getRoot());
+            grid.getRoot().getStyle().setProperty("height", "175px");
+            //grid.getRoot().getStyle().setProperty("width","300px");
             div.appendChild(gridContainer);
 
             closeButton.addEventListener("click",ev -> {
                 div.removeChild(gridContainer);
             });
 
-            System.out.println("list files");
             new FilesClient().listFiles(urlAddr.getValue()).each(po -> {
-                System.out.println("insert file");
                 grid.getDataRows().insert(po);
             });
         });

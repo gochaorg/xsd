@@ -23,6 +23,7 @@ public class DataGrid<A> {
         root = HTMLDocument.current().createElement("div").cast();
         root.getStyle().setProperty("display", "grid");
         root.getStyle().setProperty("gridTemplateColumns", gridTemplateColumns());
+        root.getStyle().setProperty("overflow","auto");
         getDataColumns().onChanged(() -> {
             root.getStyle().setProperty("gridTemplateColumns", gridTemplateColumns());
         });

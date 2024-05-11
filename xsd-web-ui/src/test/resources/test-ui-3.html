@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main page</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+
+    <style>
+      .tbl {
+        display: grid;
+        grid-template-columns: 4em repeat(4, auto);
+      }
+      .row-0 { grid-row-start: 1; }
+      .row-1 { grid-row-start: 2; }
+      .row-2 { grid-row-start: 3; }
+      .row-3 { grid-row-start: 4; }
+      .row-4 { grid-row-start: 5; }
+
+      .col-0 { grid-column-start: 1; }
+      .col-1 { grid-column-start: 2; }
+      .col-2 { grid-column-start: 3; }
+      .col-3 { grid-column-start: 4; }
+      .col-4 { grid-column-start: 5; }
+
+      .t-hdr, .l-hdr { background-color: #bfbe9f;}
+
+      .l-hdr { 
+        border-right-style: solid; 
+        border-right-width: 1.5mm;
+      }
+      .t-hdr {
+        border-bottom-style: solid;
+        border-bottom-width: 1.5mm;
+      }
+      .col-1, .col-2, .col-3, .col-4 {
+        border-right-style: dashed;
+        border-right-width: 2px;
+      }
+      .data.row-2, .data.row-4 {
+        background-color: #cee2ea;
+      }
+    </style>
+</head>
+<body>
+
+<div class="tbl">
+  <div class="t-hdr row-0 col-1">header 1</div>
+  <div class="t-hdr row-0 col-2">header 2</div>
+  <div class="t-hdr row-0 col-3">header 3</div>
+  <div class="t-hdr row-0 col-4">header 4</div>
+
+  <div class="l-hdr row-1 col-0">#1</div>
+  <div class="l-hdr row-2 col-0">#2</div>
+  <div class="l-hdr row-3 col-0">#3</div>
+  <div class="l-hdr row-4 col-0">#4</div>
+
+  <div class="data col-1 row-1">a1</div>
+  <div class="data col-2 row-1">a2</div>
+  <div class="data col-3 row-1">a3</div>
+  <div class="data col-4 row-1">a4</div>
+
+  <div class="data col-1 row-2">b1</div>
+  <div class="data col-2 row-2">b2</div>
+  <div class="data col-3 row-2">b3</div>
+  <div class="data col-4 row-2">b4</div>
+
+  <div class="data col-1 row-3">c1</div>
+  <div class="data col-2 row-3">c2</div>
+  <div class="data col-3 row-3">c3</div>
+  <div class="data col-4 row-3">c4</div>
+
+  <div class="data col-1 row-4">d1</div>
+  <div class="data col-2 row-4">d2</div>
+  <div class="data col-3 row-4">d3</div>
+  <div class="data col-4 row-4">d4</div>
+</div>
+
+</body>
+</html>
