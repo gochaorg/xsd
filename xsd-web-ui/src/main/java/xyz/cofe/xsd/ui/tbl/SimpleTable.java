@@ -8,6 +8,7 @@ import xyz.cofe.ecoll.EvList;
 import xyz.cofe.im.iter.ExtIterable;
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.xsd.ui.render.RenderedValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -338,9 +339,9 @@ public class SimpleTable<A> {
 
                 Function render = col.getValueRender().getValue();
                 if (render != null) {
-                    HTMLElement cell = (HTMLElement) render.apply(data);
+                    RenderedValue cell = (RenderedValue) render.apply(data);
                     if(cell!=null){
-                        tableDataCell.getCell().appendChild(cell);
+                        tableDataCell.getCell().appendChild(cell.element());
                     }
                 }
             }

@@ -5,6 +5,7 @@ import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import xyz.cofe.ecoll.EvList;
 import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.xsd.ui.render.RenderedValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,6 +163,7 @@ public class DataGrid<A> {
         public final DataColumn<A, ?> column;
         public final int columnIndex;
         public final HTMLElement cell;
+        //private List<Runnable> cell
 
         @SuppressWarnings({"unchecked", "rawtypes"})
         public DataCellContainer(DataRowContainer row, int rowIndex, DataColumn<A, ?> column, int columnIndex) {
@@ -184,8 +186,8 @@ public class DataGrid<A> {
                 if( value!=null ){
                     Function valueRender = column.getValueRender().getValue();
                     if( valueRender!=null ){
-                        var htmlEl = (HTMLElement)valueRender.apply(value);
-                        cell.appendChild(htmlEl);
+                        RenderedValue renderedValue = (RenderedValue)valueRender.apply(value);
+                        cell.appendChild(renderedValue.element());
                     }
                 }
             }
