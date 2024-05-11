@@ -5,6 +5,7 @@ import org.teavm.jso.dom.html.HTMLElement;
 import xyz.cofe.xsd.ui.ev.EvProp;
 import xyz.cofe.xsd.ui.render.RenderedValue;
 import xyz.cofe.xsd.ui.render.ValueRender;
+import xyz.cofe.xsd.ui.render.ValueRenderProp;
 
 import java.util.function.Function;
 
@@ -74,11 +75,26 @@ public class DataColumn<A, B> {
     }
     //endregion
 
-    //region valueRender : EvProp<Function<B, HTMLElement>> - рендер значения
-    private final EvProp<ValueRender<B>> valueRender = new EvProp<>(ValueRender.toStringRender("div"));
+    //region valueRender : ValueRenderProp<B> - рендер значения
+    private final ValueRenderProp<B> valueRender = new ValueRenderProp<>(ValueRender.toStringRender("div"));
 
-    public EvProp<ValueRender<B>> getValueRender() {
+    /**
+     * Рендер значения
+     * @return рендер значения
+     */
+    public ValueRenderProp<B> getValueRender() {
         return valueRender;
+    }
+
+    /**
+     * Указывает рендер значения
+     * @param render рендер
+     * @return self указатель
+     */
+    public DataColumn<A,B> valueRender(ValueRender<B> render){
+        if( render==null ) throw new IllegalArgumentException("render==null");
+        valueRender.setValue(render);
+        return this;
     }
     //endregion
 }

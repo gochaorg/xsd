@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FilesClient {
     public sealed interface PathObj {
         String name();
+        String path();
+
         default boolean isDirectory(){ return this instanceof Directory; }
 
         public record Directory(String name, String path) implements PathObj {}

@@ -11,6 +11,7 @@ import xyz.cofe.xsd.om.XsdSchema;
 import xyz.cofe.xsd.om.ldr.XsdLoader;
 import xyz.cofe.xml.jso.XmlDocJSOAdapter;
 import xyz.cofe.xsd.ui.files.FilesClient;
+import xyz.cofe.xsd.ui.render.RenderedValue;
 import xyz.cofe.xsd.ui.tbl.DataGrid;
 import xyz.cofe.xsd.ui.tbl.SimpleTable;
 import xyz.cofe.xsd.ui.tbl.DataColumn;
@@ -70,30 +71,37 @@ public class Client {
 
         listFilesBut.addEventListener("click", evt -> {
             HTMLElement gridContainer = HTMLDocument.current().createElement("div");
-            gridContainer.getStyle().setProperty("width","400px");
-            gridContainer.getStyle().setProperty("border-style","solid");
-            gridContainer.getStyle().setProperty("border-width","0.75mm");
-            gridContainer.getStyle().setProperty("border-radius","4mm");
-            gridContainer.getStyle().setProperty("padding","2mm");
-            gridContainer.getStyle().setProperty("margin-bottom","2mm");
+            gridContainer.getStyle().setProperty("width", "400px");
+            gridContainer.getStyle().setProperty("border-style", "solid");
+            gridContainer.getStyle().setProperty("border-width", "0.75mm");
+            gridContainer.getStyle().setProperty("border-radius", "4mm");
+            gridContainer.getStyle().setProperty("padding", "2mm");
+            gridContainer.getStyle().setProperty("margin-bottom", "2mm");
 
             HTMLButtonElement closeButton = HTMLDocument.current().createElement("button").cast();
             closeButton.setInnerText("[x]");
-            closeButton.getStyle().setProperty("float","right");
-            closeButton.getStyle().setProperty("margin-left","1mm");
+            closeButton.getStyle().setProperty("float", "right");
+            closeButton.getStyle().setProperty("margin-left", "1mm");
             gridContainer.appendChild(closeButton);
 
             DataGrid<FilesClient.PathObj> grid = new DataGrid<>();
 
-            grid.getDataColumns().insert( new DataColumn<>( "name", FilesClient.PathObj::name));
-            grid.getDataColumns().insert( new DataColumn<>("dir", FilesClient.PathObj::isDirectory) );
+            grid.getDataColumns().insert(new DataColumn<>("name", (FilesClient.PathObj a) -> a).valueRender(po -> {
+                var a = HTMLDocument.current().createElement("span");
+                a.setInnerText(po.name());
+                a.onClick(evt1 -> {
+                    urlAddr.setValue(po.path().replaceAll("^(.*)/+$","$1") + "/" + po.name());
+                });
+                return new RenderedValue(a, Optional.empty());
+            }));
+            grid.getDataColumns().insert(new DataColumn<>("dir", FilesClient.PathObj::isDirectory));
 
             gridContainer.appendChild(grid.getRoot());
             grid.getRoot().getStyle().setProperty("height", "175px");
             //grid.getRoot().getStyle().setProperty("width","300px");
             div.appendChild(gridContainer);
 
-            closeButton.addEventListener("click",ev -> {
+            closeButton.addEventListener("click", ev -> {
                 div.removeChild(gridContainer);
             });
 
@@ -110,7 +118,7 @@ public class Client {
 
         var xhr = XMLHttpRequest.create();
         xhr.addEventListener("readystatechange", evt -> {
-            if(xhr.getReadyState() == XMLHttpRequest.DONE){
+            if (xhr.getReadyState() == XMLHttpRequest.DONE) {
                 System.out.println("xhr.onComplete");
                 var str = xhr.getResponseText();
                 res.set(str);
