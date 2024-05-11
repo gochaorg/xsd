@@ -1,5 +1,7 @@
 package xyz.cofe.ts;
 
+import xyz.cofe.im.struct.Result;
+
 /**
  * Тип данных
  */
@@ -15,9 +17,9 @@ public sealed interface Type extends TypeValue permits EitherType,
      * @param type тип
      * @return true данные совместимы
      */
-    default boolean isAssignableFrom(Type type){
+    default Result<Boolean,String> isAssignableFrom(Type type){
         if( type==null ) throw new IllegalArgumentException("type==null");
-        return this == type;
+        return Result.ok(this == type);
     }
 
     /**

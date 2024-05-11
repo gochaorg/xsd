@@ -3,9 +3,12 @@ package xyz.cofe.ts;
 import xyz.cofe.im.iter.Tree;
 import xyz.cofe.im.iter.TreePath;
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+
+import static xyz.cofe.im.struct.Result.ok;
 
 /**
  * Унаследованный тип
@@ -15,38 +18,50 @@ public sealed interface ExtendType extends Type permits Struct {
      * Возвращает базовый тип/типы
      * @return базовый тип/типы
      */
-    ImList<Type> baseTypes();
+    ImList<Result<Type,String>> baseTypes();
 
     @Override
-    default boolean isAssignableFrom(Type type){
+    default Result<Boolean,String> isAssignableFrom(Type type){
         if( type ==null ) throw new IllegalArgumentException("t==null");
-        if( type ==this )return true;
+        if( type ==this )return ok(true);
         if( !(type instanceof ExtendType) ){
-            return false;
+            return ok(false);
         }
-        ExtendType et = (ExtendType) type;
-        var baseType = et.baseTypes();
 
-        Set<Type> visited = new HashSet<>();
+        var root = new ExtendVisitNode(ok(type));
+        var tPathIter = Tree.root(root).pathFollow( tpath -> {
+            if( hasCycle(tpath))return ImList.empty();
+            return follow(tpath.node());
+        });
 
-        for(TreePath<Type> implType : Tree.root(baseType).pathFollow(p -> this.follow(p, visited)) ){
-            if( implType.node() == this ){
-                return true;
+        for( var tpNode : tPathIter ){
+            Result<Type,String> tRes = tpNode.node().type();
+            if( tRes.toOptional().map( t -> t==this ).orElse(false) ){
+                return ok(true);
             }
         }
 
-        return false;
+        return ok(false);
     }
 
-    private ImList<Type> follow(TreePath<Type> tpath, Set<Type> visited){
-        if( visited.contains(tpath.node()) )return ImList.empty();
-        visited.add(tpath.node());
-
-        var type = tpath.node();
-        if( type instanceof ExtendType et ){
-            return et.baseTypes();
+    private boolean hasCycle(TreePath<ExtendVisitNode> path){
+        Map<Type,Integer> cntr = new HashMap<>();
+        for( var r : path.reversePath() ){
+            r.type().each( t -> {
+                cntr.put( t, cntr.getOrDefault(t,0)+1 );
+            });
         }
+        return cntr.values().stream().anyMatch(n -> n > 1);
+    }
 
+    private ImList<ExtendVisitNode> follow(ExtendVisitNode type){
+        if( type.type().isOk() ){
+            //noinspection OptionalGetWithoutIsPresent
+            var typ = type.type().toOptional().get();
+            if( typ instanceof ExtendType et ){
+                return et.baseTypes().map(ExtendVisitNode::new);
+            }
+        }
         return ImList.empty();
     }
 }

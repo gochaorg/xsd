@@ -1,11 +1,14 @@
 package xyz.cofe.ts;
 
 import xyz.cofe.im.struct.ImList;
+import xyz.cofe.im.struct.Result;
 import xyz.cofe.im.struct.Tuple2;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+
+import static xyz.cofe.im.struct.Result.ok;
 
 /**
  * Структурный тип
@@ -102,19 +105,20 @@ public final class Struct implements ExtendType,
             return b;
         }
 
-        public Builder typeParams(TypeParam ... typeParams){
-            if( typeParams==null ) throw new IllegalArgumentException("typeParams==null");
+        public Builder typeParams(TypeParam... typeParams) {
+            if (typeParams == null) throw new IllegalArgumentException("typeParams==null");
             var b = clone();
             b.typeParams = ImList.from(Arrays.asList(typeParams));
             return b;
         }
+
         //endregion
         //region baseTypes : ImList<Type>
-        private ImList<Type> baseTypes = ImList.empty();
+        private ImList<Result<Type, String>> baseTypes = ImList.empty();
 
-        public ImList<Type> baseTypes() {return baseTypes;}
+        public ImList<Result<Type, String>> baseTypes() {return baseTypes;}
 
-        public Builder baseTypes(ImList<Type> baseTypes) {
+        public Builder baseTypes(ImList<Result<Type, String>> baseTypes) {
             if (baseTypes == null) throw new IllegalArgumentException("baseTypes==null");
             var b = clone();
             b.baseTypes = baseTypes;
@@ -124,7 +128,7 @@ public final class Struct implements ExtendType,
         public Builder baseType(Type baseType) {
             if (baseType == null) throw new IllegalArgumentException("baseType==null");
             var b = clone();
-            b.baseTypes = ImList.first(baseType);
+            b.baseTypes = ImList.first(ok(baseType));
             return b;
         }
 
@@ -157,7 +161,7 @@ public final class Struct implements ExtendType,
         return new Builder(name);
     }
 
-    public Struct(String name, ImList<TypeParam> typeParams, ImList<Type> baseTypes, ImList<Field> fields) {
+    public Struct(String name, ImList<TypeParam> typeParams, ImList<Result<Type, String>> baseTypes, ImList<Field> fields) {
         if (fields == null) throw new IllegalArgumentException("fields==null");
         this.fields = fields;
 
@@ -182,6 +186,7 @@ public final class Struct implements ExtendType,
     public Optional<String> baseName() {
         return Optional.of(name);
     }
+
     //endregion
     //region typeParams : ImList<TypeParam>
     private final ImList<TypeParam> typeParams;
@@ -190,18 +195,20 @@ public final class Struct implements ExtendType,
     public ImList<TypeParam> typeParams() {
         return typeParams;
     }
+
     //endregion
     //region baseTypes : ImList<Type>
-    private final ImList<Type> baseTypes;
+    private final ImList<Result<Type, String>> baseTypes;
 
     @Override
-    public ImList<Type> baseTypes() {
+    public ImList<Result<Type, String>> baseTypes() {
         return baseTypes;
     }
 
     //endregion
     //region fields : ImList<Field>
     private final ImList<Field> fields;
+
     public ImList<Field> fields() {
         return fields;
     }
@@ -218,16 +225,15 @@ public final class Struct implements ExtendType,
         }
 
         var baseTypes = baseTypes()
-            .map(bt ->
-                bt instanceof NamedWithContext nwCtx
+            .map(bt0 -> bt0.fold(bt -> bt instanceof NamedWithContext nwCtx
                     ? nwCtx.getTypeName(typeParamNames)
                     : bt instanceof NamedType nt
-                    ? nt.getTypeName() : "?"
+                    ? nt.getTypeName() : "?",
+                err -> "!base type err {" + err + "}")
             )
-            .foldLeft("", (acc, it) -> !acc.isEmpty() ? acc + ", " + it : it)
-        ;
+            .foldLeft("", (acc, it) -> !acc.isEmpty() ? acc + ", " + it : it);
 
-        if( !baseTypes.isBlank() ){
+        if (!baseTypes.isBlank()) {
             sb.append(" : ").append(baseTypes);
         }
 

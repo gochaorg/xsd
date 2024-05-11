@@ -12,17 +12,17 @@ public class ExtendTypeTest {
         var s2 = Struct.name("S2").baseType(s1).build();
         var s3 = Struct.name("S3").baseType(s2).build();
 
-        assertTrue(s1.isAssignableFrom(s1));
-        assertTrue(s1.isAssignableFrom(s2));
-        assertTrue(s1.isAssignableFrom(s3));
+        assertTrue(s1.isAssignableFrom(s1).toOptional().orElse(false) );
+        assertTrue(s1.isAssignableFrom(s2).toOptional().orElse(false));
+        assertTrue(s1.isAssignableFrom(s3).toOptional().orElse(false));
 
-        assertTrue(!s2.isAssignableFrom(s1));
-        assertTrue(s2.isAssignableFrom(s2));
-        assertTrue(s2.isAssignableFrom(s3));
+        assertTrue(!s2.isAssignableFrom(s1).toOptional().orElse(false));
+        assertTrue(s2.isAssignableFrom(s2).toOptional().orElse(false));
+        assertTrue(s2.isAssignableFrom(s3).toOptional().orElse(false));
 
-        assertTrue(!s3.isAssignableFrom(s1));
-        assertTrue(!s3.isAssignableFrom(s2));
-        assertTrue(s3.isAssignableFrom(s3));
+        assertTrue(!s3.isAssignableFrom(s1).toOptional().orElse(false));
+        assertTrue(!s3.isAssignableFrom(s2).toOptional().orElse(false));
+        assertTrue(s3.isAssignableFrom(s3).toOptional().orElse(false));
     }
 
     @Test

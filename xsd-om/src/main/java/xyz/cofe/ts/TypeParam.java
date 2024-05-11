@@ -1,9 +1,10 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.iter.EachToEnum;
 import xyz.cofe.im.struct.ImList;
 import xyz.cofe.im.struct.Result;
 import xyz.cofe.im.struct.Result.NoValue;
+
+import static xyz.cofe.im.struct.Result.ok;
 
 /**
  * Объявление параметра типа
@@ -64,7 +65,7 @@ public final class TypeParam {
             return Result.err("CoVaraint position not match, expect " + coPos + ", found " + typeVar.typeParam().coPos());
         }
 
-        if (constraints.isEmpty()) return Result.ok(NoValue.instance);
+        if (constraints.isEmpty()) return ok(NoValue.instance);
 
         ImList<Result<NoValue, String>> constraintCheck =
             constraints.enumerate().map(en -> {
@@ -83,7 +84,7 @@ public final class TypeParam {
                 if (prodTypes.filter(Result::isOk).isEmpty()) {
                     return Result.err(
                         "constraint#" + constrIdx +
-                            "\n  expect type: " + expectType + ", but varType has not valid constaints:" +
+                            "\n  expect type: " + expectType + ", but varType has not valid constraints:" +
                             prodTypes.foldLeft(
                                 "",
                                 (acc, it) -> acc.isBlank()
@@ -92,14 +93,14 @@ public final class TypeParam {
                     );
                 }
 
-                return Result.ok();
+                return ok();
             });
 
         return foldErr(constraintCheck);
     }
 
     private Result<NoValue, String> isAssignableFrom(Type type) {
-        if (constraints.isEmpty()) return Result.ok(NoValue.instance);
+        if (constraints.isEmpty()) return ok(NoValue.instance);
 
         ImList<Result<NoValue, String>> contraintCheck = constraints.enumerate().map(en ->
             checkConstraint(en.index(), en.value(), type)
@@ -122,30 +123,30 @@ public final class TypeParam {
     }
 
     private Result<NoValue, String> checkConstraint(int constrIdx, Type expectType, Type type) {
-        var co = expectType.isAssignableFrom(type);
-        var contr = type.isAssignableFrom(expectType);
+        Result<Boolean, String> coRes = expectType.isAssignableFrom(type);
+        Result<Boolean, String> contrRes = type.isAssignableFrom(expectType);
 
         if (coPos == CoPos.InVariant) {
-            if (co && contr) return Result.ok();
+            if (coRes.fold(v->v,i->false) && contrRes.fold(v->v,i->false)) return ok();
             return Result.<NoValue, String>err(
                 "constraint#" + constrIdx +
                     "\n  expect invaraint:" +
-                    "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + co +
-                    "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contr
+                    "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + coRes +
+                    "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contrRes
             );
-        } else if (coPos == CoPos.Param && !co) {
+        } else if (coPos == CoPos.Param && !coRes.fold(v->v,i->false)) {
             return Result.<NoValue, String>err(
                 "constraint#" + constrIdx +
                     "\n  expect Param(CoVariant):" +
-                    "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + co +
-                    "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contr
+                    "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + coRes +
+                    "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contrRes
             );
-        } else if (coPos == CoPos.Result && !contr) {
+        } else if (coPos == CoPos.Result && !contrRes.fold(v->v,i->false)) {
             return Result.<NoValue, String>err(
                 "constraint#" + constrIdx +
                     "\n  expect Result(ContrVaraint):" +
-                    "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + co +
-                    "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contr
+                    "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + coRes +
+                    "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contrRes
             );
         }
 
