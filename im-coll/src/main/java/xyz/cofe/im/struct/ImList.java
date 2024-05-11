@@ -15,27 +15,56 @@ import java.util.function.Predicate;
 
 /**
  * Иммутабельный список
- * @param <E> тип элемента
+ * @param <E> тип элемента списка
  */
 public interface ImList<E> extends Iterable<E>,
                                    EachToMap<E> {
+    /**
+     * Возвращает кол-во элементов
+     * @return кол-во элементов
+     */
     int size();
 
+    /**
+     * Возвращает true - если список пустой
+     * @return true - если список пустой
+     */
     default boolean isEmpty() {return size() == 0;}
 
+    /**
+     * Возвращает true - если список не пустой
+     * @return true - если список не пустой
+     */
     default boolean isNonEmpty() {return size() > 0;}
 
+    /**
+     * Возвращает пустой список
+     * @return пустой список
+     * @param <E> тип элемента списка
+     */
     public static <E> ImList<E> empty() {
         //noinspection rawtypes,unchecked
         return new Empty(0);
     }
 
+    /**
+     * Создает список из одного элемента
+     * @param node первый элемент списка
+     * @return список с одним элементом
+     * @param <E> тип элемента списка
+     */
     public static <E> ImList<E> first(E node) {
         if (node == null) throw new IllegalArgumentException("node==null");
         //noinspection unchecked
         return ((ImList<E>) empty()).prepend(node);
     }
 
+    /**
+     * Возвращает список из элементов
+     * @param src исходный набор элементов
+     * @return список
+     * @param <E> тип элемента списка
+     */
     public static <E> ImList<E> from(Iterable<E> src) {
         if (src == null) throw new IllegalArgumentException("src==null");
         ImList<E> lst = empty();
