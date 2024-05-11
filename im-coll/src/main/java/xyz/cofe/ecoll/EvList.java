@@ -90,11 +90,31 @@ public class EvList<A> implements ExtIterable<A> {
         });
     }
 
+    @SuppressWarnings("UnusedReturnValue")
+    public Runnable onChanged(Runnable listener){
+        if( listener==null ) throw new IllegalArgumentException("listener==null");
+        var ins = onInserted((a,b)->listener.run());
+        var upd = onUpdated((a,b,c)->listener.run());
+        var del = onDeleted((a,b)->listener.run());
+        var fc = onFullyChanged(listener);
+        return ()->{
+            ins.run();
+            upd.run();
+            del.run();
+            fc.run();
+        };
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void fire(EvListEvent<A> ev){
-        for( var ls : strongListeners ){
+        // унифицировать до for( var ls : strongListeners ) - нельзя ошибка teavm
+        EvListListener[] listeners = strongListeners.toArray(new EvListListener[]{});
+        for(EvListListener<A> ls : listeners ){
             if( ls!=null )ls.evListEvent(ev);
         }
-        for( var ls : weakListeners.keySet() ){
+
+        listeners = weakListeners.keySet().toArray(new EvListListener[]{});
+        for( var ls : listeners ){
             if( ls!=null )ls.evListEvent(ev);
         }
     }

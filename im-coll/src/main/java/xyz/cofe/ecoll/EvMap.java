@@ -99,11 +99,16 @@ public class EvMap<K, V> {
         });
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void fire(EvMapEvent<K, V> ev) {
-        for (var ls : strongListeners) {
+        // унифицировать до for( var ls : strongListeners ) - нельзя ошибка teavm
+        EvMapListener[] listeners = strongListeners.toArray(new EvMapListener[]{});
+        for (var ls : listeners) {
             if (ls != null) ls.evMapEvent(ev);
         }
-        for (var ls : weakListeners.keySet()) {
+
+        listeners = weakListeners.keySet().toArray(new EvMapListener[]{});
+        for (var ls : listeners) {
             if (ls != null) ls.evMapEvent(ev);
         }
     }

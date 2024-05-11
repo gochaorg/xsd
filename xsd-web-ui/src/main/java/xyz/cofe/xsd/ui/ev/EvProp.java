@@ -64,11 +64,16 @@ public class EvProp<A> {
         fire(new EvPropEvent.Changed<>(from, to));
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected void fire(EvPropEvent<A> ev){
-        for( var ls : strongListeners ){
+        // унифицировать до for( var ls : strongListeners ) - нельзя ошибка teavm
+        EvPropListener[] listeners = strongListeners.toArray(new EvPropListener[]{});
+        for( var ls : listeners ){
             if( ls!=null )ls.evPropEvent(ev);
         }
-        for( var ls : weakListeners.keySet() ){
+
+        listeners = weakListeners.keySet().toArray(new EvPropListener[]{});
+        for( var ls : listeners ){
             if( ls!=null )ls.evPropEvent(ev);
         }
     }

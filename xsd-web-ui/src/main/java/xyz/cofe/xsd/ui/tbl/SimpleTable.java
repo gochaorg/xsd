@@ -18,8 +18,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Table<A> {
-    public Table(){
+public class SimpleTable<A> {
+    public SimpleTable(){
     }
 
     private HTMLElement table;
@@ -171,8 +171,8 @@ public class Table<A> {
         }
     }
 
-    private EvList<TableColumn<A,?>> dataColumns;
-    public EvList<TableColumn<A,?>> getDataColumns(){
+    private EvList<DataColumn<A,?>> dataColumns;
+    public EvList<DataColumn<A,?>> getDataColumns(){
         if( dataColumns!=null )return dataColumns;
         System.out.println("build dataColumns");
         dataColumns = new EvList<>();
@@ -191,9 +191,9 @@ public class Table<A> {
         }
     }
 
-    private final Map<TableColumn<A,?>, List<Runnable>> tcListeners = new HashMap<>();
+    private final Map<DataColumn<A,?>, List<Runnable>> tcListeners = new HashMap<>();
 
-    private HTMLElement buildHeaderCell(TableColumn<A,?> tableColumn){
+    private HTMLElement buildHeaderCell(DataColumn<A,?> tableColumn){
         HTMLElement cell = HTMLDocument.current().createElement("th").cast();
         if( tableColumn!=null ) {
             HTMLElement hdrCont = HTMLDocument.current().createElement("div").cast();
@@ -236,14 +236,14 @@ public class Table<A> {
         return cell;
     }
 
-    private void onInsertColumn(int index, TableColumn<A,?> tableColumn){
+    private void onInsertColumn(int index, DataColumn<A,?> tableColumn){
         var th = buildHeaderCell(tableColumn);
         getThead().appendChild(th);
     }
 
-    private void onUpdateColumn(int index, TableColumn<A,?> oldTableColumn, TableColumn<A,?> newTableColumn){}
+    private void onUpdateColumn(int index, DataColumn<A,?> oldTableColumn, DataColumn<A,?> newTableColumn){}
 
-    private void onDeleteColumn(int index, TableColumn<A,?> oldTableColumn){
+    private void onDeleteColumn(int index, DataColumn<A,?> oldTableColumn){
         if(oldTableColumn!=null){
             var ls = tcListeners.remove(oldTableColumn);
             if( ls!=null ){

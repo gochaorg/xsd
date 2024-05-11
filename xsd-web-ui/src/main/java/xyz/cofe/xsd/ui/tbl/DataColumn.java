@@ -6,11 +6,11 @@ import xyz.cofe.xsd.ui.ev.EvProp;
 
 import java.util.function.Function;
 
-public class TableColumn<A, B> {
-    public TableColumn(){
+public class DataColumn<A, B> {
+    public DataColumn(){
     }
 
-    public TableColumn(String name, Function<A, B> extract){
+    public DataColumn(String name, Function<A, B> extract){
         if( name==null ) throw new IllegalArgumentException("name==null");
         this.name.setValue(name);
 
@@ -33,7 +33,7 @@ public class TableColumn<A, B> {
     //endregion
 
     //region headerRender : EvProp<Function<TableColumn<A, ?>, HTMLElement>>
-    private final EvProp<Function<TableColumn<A, ?>, HTMLElement>> headerRender = new EvProp<>( tc -> {
+    private final EvProp<Function<DataColumn<A, ?>, HTMLElement>> headerRender = new EvProp<>(tc -> {
         HTMLElement el = HTMLDocument.current().createElement("div");
 
         var curName = tc.getName().getValue();
@@ -46,7 +46,7 @@ public class TableColumn<A, B> {
         return el;
     });
 
-    public EvProp<Function<TableColumn<A, ?>, HTMLElement>> getHeaderRender() {
+    public EvProp<Function<DataColumn<A, ?>, HTMLElement>> getHeaderRender() {
         return headerRender;
     }
     //endregion

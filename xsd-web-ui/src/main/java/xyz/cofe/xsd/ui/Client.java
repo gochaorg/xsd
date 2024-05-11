@@ -1,6 +1,5 @@
 package xyz.cofe.xsd.ui;
 
-import org.teavm.jso.ajax.ProgressEvent;
 import org.teavm.jso.dom.html.HTMLButtonElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
@@ -12,8 +11,9 @@ import xyz.cofe.xsd.om.XsdSchema;
 import xyz.cofe.xsd.om.ldr.XsdLoader;
 import xyz.cofe.xml.jso.XmlDocJSOAdapter;
 import xyz.cofe.xsd.ui.files.FilesClient;
-import xyz.cofe.xsd.ui.tbl.Table;
-import xyz.cofe.xsd.ui.tbl.TableColumn;
+import xyz.cofe.xsd.ui.tbl.DataGrid;
+import xyz.cofe.xsd.ui.tbl.SimpleTable;
+import xyz.cofe.xsd.ui.tbl.DataColumn;
 
 import java.net.URI;
 import java.util.Optional;
@@ -69,54 +69,33 @@ public class Client {
         listFilesBut.setInnerText("files");
 
         listFilesBut.addEventListener("click", evt -> {
-            HTMLElement tcont = HTMLDocument.current().createElement("div");
+            System.out.println("list files click");
 
-            HTMLButtonElement but = HTMLDocument.current().createElement("button").cast();
-            but.setInnerText("close");
-            tcont.appendChild(but);
+            HTMLElement gridContainer = HTMLDocument.current().createElement("div");
 
-            Table<FilesClient.PathObj> table = new Table<>();
-            table.getDataColumns().insert( new TableColumn<>( "name", FilesClient.PathObj::name));
-            table.getDataColumns().insert( new TableColumn<>("dir", FilesClient.PathObj::isDirectory) );
+            HTMLButtonElement closeButton = HTMLDocument.current().createElement("button").cast();
+            closeButton.setInnerText("close");
+            gridContainer.appendChild(closeButton);
 
-            var tbody = table.getTable().querySelector("tbody");
+            System.out.println("create grid");
+            DataGrid<FilesClient.PathObj> grid = new DataGrid<>();
 
-            tcont.appendChild(table.getTable());
-            div.appendChild(tcont);
+            System.out.println("add column");
+            grid.getDataColumns().insert( new DataColumn<>( "name", FilesClient.PathObj::name));
+            grid.getDataColumns().insert( new DataColumn<>("dir", FilesClient.PathObj::isDirectory) );
 
-            but.addEventListener("click",ev -> {
-                div.removeChild(tcont);
+            System.out.println("insert grid");
+            gridContainer.appendChild(grid.getRoot());
+            div.appendChild(gridContainer);
+
+            closeButton.addEventListener("click",ev -> {
+                div.removeChild(gridContainer);
             });
 
-            var fc = new FilesClient();
-
-            fc.listFiles(urlAddr.getValue()).each(po -> {
-                table.getDataRows().insert(po);
-
-//                Table.TD name, type;
-//                if (po instanceof FilesClient.PathObj.Directory d) {
-//
-//                    name = new Table.TD();
-//                    name.getCell().setInnerText(d.name());
-//
-//                    type = new Table.TD();
-//                    type.getCell().setInnerText("dir");
-//
-//                    row.add(name);
-//                    row.add(type);
-//
-//                } else if (po instanceof FilesClient.PathObj.File f) {
-//                    name = new Table.TD();
-//                    name.getCell().setInnerText(f.name());
-//
-//                    type = new Table.TD();
-//                    type.getCell().setInnerText("file");
-//
-//                    row.add(name);
-//                    row.add(type);
-//                }
-//
-//                table.getTableRows().add(row);
+            System.out.println("list files");
+            new FilesClient().listFiles(urlAddr.getValue()).each(po -> {
+                System.out.println("insert file");
+                grid.getDataRows().insert(po);
             });
         });
     }
