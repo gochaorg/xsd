@@ -1,3 +1,5 @@
 package xyz.cofe.ts;
 
-public record Field(String name, Type type) {}
+import xyz.cofe.im.struct.Result;
+
+public record Field(String name, Result<Type,String> type) {}

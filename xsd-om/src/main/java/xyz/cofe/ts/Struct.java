@@ -7,6 +7,7 @@ import xyz.cofe.im.struct.Tuple2;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static xyz.cofe.im.struct.Result.ok;
 
@@ -84,7 +85,7 @@ public final class Struct implements ExtendType,
             this.name = sample.name;
             this.typeParams = sample.typeParams;
             this.baseTypes = sample.baseTypes;
-            this.fields = sample.fields;
+            this.fieldsProducer = sample.fieldsProducer;
         }
 
         @SuppressWarnings("MethodDoesntCallSuperMethod")
@@ -94,8 +95,6 @@ public final class Struct implements ExtendType,
 
         //region typeParams : ImList<TypeParam>
         private ImList<TypeParam> typeParams = ImList.empty();
-
-        public ImList<TypeParam> typeParams() {return typeParams;}
 
         public Builder typeParams(ImList<TypeParam> typeParams) {
             if (typeParams == null) throw new IllegalArgumentException("typeParams==null");
@@ -114,11 +113,9 @@ public final class Struct implements ExtendType,
 
         //endregion
         //region baseTypes : ImList<Type>
-        private ImList<Result<Type, String>> baseTypes = ImList.empty();
+        private Supplier<ImList<Result<Type, String>>> baseTypes = ImList::empty;
 
-        public ImList<Result<Type, String>> baseTypes() {return baseTypes;}
-
-        public Builder baseTypes(ImList<Result<Type, String>> baseTypes) {
+        public Builder baseTypes(Supplier<ImList<Result<Type, String>>> baseTypes) {
             if (baseTypes == null) throw new IllegalArgumentException("baseTypes==null");
             var b = clone();
             b.baseTypes = baseTypes;
@@ -128,20 +125,18 @@ public final class Struct implements ExtendType,
         public Builder baseType(Type baseType) {
             if (baseType == null) throw new IllegalArgumentException("baseType==null");
             var b = clone();
-            b.baseTypes = ImList.first(ok(baseType));
+            b.baseTypes = () -> ImList.first(ok(baseType));
             return b;
         }
 
         //endregion
-        //region fields : ImList<Field>
-        private ImList<Field> fields = ImList.empty();
-
-        public ImList<Field> fields() {return this.fields;}
+        //region fields : Supplier<ImList<Field>>
+        private Supplier<ImList<Field>> fieldsProducer = ImList::empty;
 
         public Builder fields(ImList<Field> fields) {
             if (fields == null) throw new IllegalArgumentException("fields==null");
             var b = clone();
-            b.fields = fields;
+            b.fieldsProducer = ()->fields;
             return b;
         }
         //endregion
@@ -151,7 +146,7 @@ public final class Struct implements ExtendType,
                 name,
                 typeParams,
                 baseTypes,
-                fields
+                fieldsProducer
             );
         }
     }
@@ -161,12 +156,12 @@ public final class Struct implements ExtendType,
         return new Builder(name);
     }
 
-    public Struct(String name, ImList<TypeParam> typeParams, ImList<Result<Type, String>> baseTypes, ImList<Field> fields) {
-        if (fields == null) throw new IllegalArgumentException("fields==null");
-        this.fields = fields;
+    public Struct(String name, ImList<TypeParam> typeParams, Supplier<ImList<Result<Type, String>>> baseProducer, Supplier<ImList<Field>> fieldsProducer) {
+        if (fieldsProducer == null) throw new IllegalArgumentException("fields==null");
+        this.fieldsProducer = fieldsProducer;
 
-        if (baseTypes == null) throw new IllegalArgumentException("baseTypes==null");
-        this.baseTypes = baseTypes;
+        if (baseProducer == null) throw new IllegalArgumentException("baseProducer==null");
+        this.baseProducer = baseProducer;
 
         if (name == null) throw new IllegalArgumentException("name==null");
         this.name = name;
@@ -198,18 +193,24 @@ public final class Struct implements ExtendType,
 
     //endregion
     //region baseTypes : ImList<Type>
-    private final ImList<Result<Type, String>> baseTypes;
+    private ImList<Result<Type, String>> baseTypes;
+    private final Supplier<ImList<Result<Type, String>>> baseProducer;
 
     @Override
     public ImList<Result<Type, String>> baseTypes() {
+        if( baseTypes!=null )return baseTypes;
+        baseTypes = baseProducer.get();
         return baseTypes;
     }
 
     //endregion
     //region fields : ImList<Field>
-    private final ImList<Field> fields;
+    private ImList<Field> fields;
+    private final Supplier<ImList<Field>> fieldsProducer;
 
     public ImList<Field> fields() {
+        if( fields!=null )return fields;
+        fields = fieldsProducer.get();
         return fields;
     }
     //endregion
