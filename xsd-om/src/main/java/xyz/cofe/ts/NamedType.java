@@ -1,7 +1,7 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Tuple2;
 
 import java.util.HashMap;
 import java.util.Map;

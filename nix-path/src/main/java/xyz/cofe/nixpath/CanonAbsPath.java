@@ -1,6 +1,6 @@
 package xyz.cofe.nixpath;
 
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.Result;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,17 +50,17 @@ public final class CanonAbsPath implements NixPath {
 
     public static Result<CanonAbsPath,String> parse(NixPath path){
         if( path==null ) throw new IllegalArgumentException("path==null");
-        if( path.isEmpty() )return Result.err("path is empty");
-        if( !path.isAbsolute() )return Result.err("path not absolute");
+        if( path.isEmpty() )return Result.error("path is empty");
+        if( !path.isAbsolute() )return Result.error("path not absolute");
 
         var names = new ArrayList<Name.Regular>();
         for( Name name : path.getPathComponents() ){
             if( name instanceof Name.Regular r ){
                 names.add(r);
             }else if( name instanceof Name.ParentDir p ){
-                return Result.err("contains Name.ParentDir (..)");
+                return Result.error("contains Name.ParentDir (..)");
             }else if( name instanceof Name.ThisDir p ){
-                return Result.err("contains Name.ThisDir (..)");
+                return Result.error("contains Name.ThisDir (..)");
             }
         }
 
@@ -69,11 +69,11 @@ public final class CanonAbsPath implements NixPath {
 
     public static Result<CanonAbsPath,String> parse(String str){
         if( str==null ) throw new IllegalArgumentException("str==null");
-        return UnixPath.parse(str).flatMap(CanonAbsPath::parse);
+        return UnixPath.parse(str).fmap(CanonAbsPath::parse);
     }
 
     public Result<CanonAbsPath,String> parent(){
-        if( pathComponents.isEmpty() )return Result.err("root not contains parent");
+        if( pathComponents.isEmpty() )return Result.error("root not contains parent");
         if( pathComponents.size()==1 )return Result.ok(root);
 
         List<Name.Regular> names = new ArrayList<>(pathComponents);
@@ -87,7 +87,7 @@ public final class CanonAbsPath implements NixPath {
         if( path.isEmpty() )return Result.ok(this);
 
         if( path.isAbsolute() && path.isEscapeOfRoot() ){
-            return Result.err("path("+path+") is escape of root");
+            return Result.error("path("+path+") is escape of root");
         }
 
         var res = path.isAbsolute() ? root : this;
@@ -99,7 +99,7 @@ public final class CanonAbsPath implements NixPath {
                 res = res.addName(rname, false);
             }else if( name instanceof Name.ParentDir pname ){
                 var prnt = res.parent();
-                if(prnt.isErr()) return prnt;
+                if(prnt.isError()) return prnt;
                 res = prnt.fold( a -> a, b -> {throw new RuntimeException("!");});
             }
         }
@@ -109,7 +109,7 @@ public final class CanonAbsPath implements NixPath {
 
     public Result<CanonAbsPath,String> resolve(String path){
         if( path==null ) throw new IllegalArgumentException("path==null");
-        return UnixPath.parse(path).flatMap(this::resolve);
+        return UnixPath.parse(path).fmap(this::resolve);
     }
 
     @SuppressWarnings("SameParameterValue")

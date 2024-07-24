@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -60,8 +60,8 @@ public final class XsdSimpleType implements Xsd, TypeDef, IDAttribute, NameAttri
     public static ImList<XsdSimpleType> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdSimpleType((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdSimpleType((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -86,9 +86,9 @@ public final class XsdSimpleType implements Xsd, TypeDef, IDAttribute, NameAttri
     }
 
     public Optional<SimpleTypeContent> getRestriction() {
-        Optional<SimpleTypeContent> c1 = elem.getChildren().flatMap(n -> XsdRestriction.parseList(n,this)).head().map( a->a );
-        Optional<SimpleTypeContent> c2 = elem.getChildren().flatMap(n -> XsdList.parseList(n,this)).head().map( a->a );
-        Optional<SimpleTypeContent> c3 = elem.getChildren().flatMap(n -> XsdUnion.parseList(n,this)).head().map( a->a );
+        Optional<SimpleTypeContent> c1 = elem.getChildren().fmap(n -> XsdRestriction.parseList(n,this)).head().map( a->a );
+        Optional<SimpleTypeContent> c2 = elem.getChildren().fmap(n -> XsdList.parseList(n,this)).head().map( a->a );
+        Optional<SimpleTypeContent> c3 = elem.getChildren().fmap(n -> XsdUnion.parseList(n,this)).head().map( a->a );
         return c1.or(()->c2).or(()->c3);
     }
 }

@@ -4,11 +4,11 @@ import org.teavm.jso.JSBody;
 import org.teavm.jso.JSObject;
 import org.teavm.jso.core.JSArray;
 import org.teavm.jso.core.JSString;
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 
-import static xyz.cofe.im.struct.Result.err;
-import static xyz.cofe.im.struct.Result.ok;
+import static xyz.cofe.coll.im.Result.error;
+import static xyz.cofe.coll.im.Result.ok;
 
 public final class ObjectAdapter implements JSAdapter {
     public final Object jsObject;
@@ -32,12 +32,12 @@ public final class ObjectAdapter implements JSAdapter {
     }
 
     public static Result<ObjectAdapter,String> tryParse(Object obj){
-        if( obj==null )return err("obj is null");
-        return Result.of(TypeOf.of(obj),"can't determinate from TypeOf.of")
-            .flatMap( typeOf ->
+        if( obj==null )return error("obj is null");
+        return Result.from(TypeOf.of(obj),()->"can't determinate from TypeOf.of")
+            .fmap( typeOf ->
                 typeOf == TypeOf.OBJECT && !ArrayAdapter.isArray(obj)
                 ? ok(new ObjectAdapter(obj))
-                : err("expect object and not array")
+                : error("expect object and not array")
             );
     }
 
@@ -58,7 +58,7 @@ public final class ObjectAdapter implements JSAdapter {
 
     public ImList<String> getKeys(){
         var keys = keys(jsObject);
-        var res = ImList.<String>empty();
+        var res = ImList.<String>of();
         for( var i=0; i<keys.getLength(); i++ ){
             var k = keys.get(i);
             res = res.prepend(k.stringValue());
@@ -70,26 +70,26 @@ public final class ObjectAdapter implements JSAdapter {
         if( key==null ) throw new IllegalArgumentException("key==null");
 
         var v = getValue(jsObject, JSString.valueOf(key));
-        if( v==null )return err("null reference");
+        if( v==null )return error("null reference");
 
         var tOpt = TypeOf.of(v);
-        if( tOpt.isEmpty() )return err("can't determinate");
+        if( tOpt.isEmpty() )return error("can't determinate");
 
         var t = tOpt.get();
-        if( t==TypeOf.UNDEF )return err("undefined");
+        if( t==TypeOf.UNDEF )return error("undefined");
 
         return JSAdapter.of(v);
     }
 
     public Result<String,String> getString(String key){
         return get(key)
-            .flatMap(n -> n instanceof StringAdapter s ? Result.ok(s) : Result.err("not str"))
+            .fmap(n -> n instanceof StringAdapter s ? Result.ok(s) : Result.error("not str"))
             .map(StringAdapter::toString);
     }
 
     public Result<Boolean,String> getBoolean(String key){
         return get(key)
-            .flatMap(n -> n instanceof BooleanAdapter s ? Result.ok(s) : Result.err("not boolean"))
+            .fmap(n -> n instanceof BooleanAdapter s ? Result.ok(s) : Result.error("not boolean"))
             .map(BooleanAdapter::toBoolean);
     }
 

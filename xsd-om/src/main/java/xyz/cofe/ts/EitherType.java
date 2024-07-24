@@ -1,6 +1,6 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 /**
  * Тип - "сумма", т.е. либо один тип, либо другой

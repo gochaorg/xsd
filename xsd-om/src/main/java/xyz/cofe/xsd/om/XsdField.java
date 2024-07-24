@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -45,8 +45,8 @@ public final class XsdField implements Xsd,
     public static ImList<XsdField> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdField((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdField((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -71,16 +71,16 @@ public final class XsdField implements Xsd,
     }
 
     public Result<BuiltInTypes.ID, String> getId() {
-        return Result.of(
+        return Result.from(
             elem.attrib("id").map(XmlAttr::getValue).head(),
-            "id not found"
-        ).flatMap(BuiltInTypes.ID::parse);
+            ()->"id not found"
+        ).fmap(BuiltInTypes.ID::parse);
     }
 
     public Result<String, String> getXPath() {
-        return Result.of(
+        return Result.from(
             elem.attrib("xpath").map(XmlAttr::getValue).head(),
-            "xpath not found"
+            ()->"xpath not found"
         );
     }
 }

@@ -1,8 +1,8 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
-import xyz.cofe.im.struct.Result.NoValue;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
+import xyz.cofe.coll.im.Result.NoValue;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -47,7 +47,7 @@ public record GenericInstance(GenericType type, ImList<TypeValue> typeValues)
         Objects.requireNonNull(type);
         Objects.requireNonNull(typeValues);
 
-        var errOpt = validate(type, typeValues).toErrOptional();
+        var errOpt = validate(type, typeValues).getError();
         if( errOpt.isPresent() ){
             throw new RuntimeException(errOpt.get());
         }
@@ -62,14 +62,14 @@ public record GenericInstance(GenericType type, ImList<TypeValue> typeValues)
         if( typeValues==null ) throw new IllegalArgumentException("typeValues==null");
 
         if( type.typeParams().size() != typeValues.size() )
-            return Result.err("typeValues count not match typeParameters count");
+            return Result.error("typeValues count not match typeParameters count");
 
         ImList<Result<NoValue, String>> checkParams1 = type.typeParams().enumerate().zip(typeValues).map(ze -> {
-            int tparamIdx = ze.left().index();
-            TypeParam tparamConsumer = ze.left().value();
-            TypeValue tvalue = ze.right();
+            int tparamIdx = (int)ze._1().index();
+            TypeParam tparamConsumer = ze._1().value();
+            TypeValue tvalue = ze._2();
 
-            return tparamConsumer.isAssignableFrom(tvalue).errMap(err -> "type param#"+tparamIdx+"\n"+ err);
+            return tparamConsumer.isAssignableFrom(tvalue).mapErr(err -> "type param#"+tparamIdx+"\n"+ err);
         });
 
         return checkParams1.foldLeft( Result.<String>ok(),
@@ -77,8 +77,8 @@ public record GenericInstance(GenericType type, ImList<TypeValue> typeValues)
                 acc.fold(
                     suc1 -> it,
                     err1 -> it.fold(
-                        suc2 -> Result.err(err1),
-                        err2 -> Result.err(err1 + "\n" + err2)
+                        suc2 -> Result.error(err1),
+                        err2 -> Result.error(err1 + "\n" + err2)
                     )
                 )
         );

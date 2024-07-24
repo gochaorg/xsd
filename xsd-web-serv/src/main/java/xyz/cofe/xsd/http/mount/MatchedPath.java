@@ -7,8 +7,8 @@ import org.eclipse.jetty.http.MimeTypes;
 import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.nixpath.UnixPath;
 import xyz.cofe.xsd.http.HtmlBuilder;
 
@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static xyz.cofe.im.struct.Result.err;
-import static xyz.cofe.im.struct.Result.ok;
+import static xyz.cofe.coll.im.Result.error;
+import static xyz.cofe.coll.im.Result.ok;
 
 public record MatchedPath(String baseUrl, Path source, UnixPath unixPath, Path path, Encode encode) {
     public enum Encode {
@@ -160,7 +160,7 @@ public record MatchedPath(String baseUrl, Path source, UnixPath unixPath, Path p
         try {
             return ok(om.writeValueAsString(lst));
         } catch (JsonProcessingException e) {
-            return err(e.toString());
+            return error(e.toString());
         }
     }
 }

@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -68,8 +68,8 @@ public final class XsdGroup implements Xsd,
     public static ImList<XsdGroup> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdGroup((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdGroup((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -100,14 +100,14 @@ public final class XsdGroup implements Xsd,
             ImList<Nested> r1 = XsdAll.parseList(node, parent).map(a -> a);
             ImList<Nested> r2 = XsdChoice.parseList(node, parent).map(a -> a);
             ImList<Nested> r3 = XsdSequence.parseList(node, parent).map(a -> a);
-            return r1.join(r2).join(r3);
+            return r1.append(r2).append(r3);
         }
     }
 
     private Optional<Nested> nested;
     public Optional<Nested> getNested() {
         if( nested!=null )return nested;
-        nested = elem().getChildren().flatMap(n -> Nested.parseList(n,this)).head();
+        nested = elem().getChildren().fmap(n -> Nested.parseList(n,this)).head();
         return nested;
     }
 }

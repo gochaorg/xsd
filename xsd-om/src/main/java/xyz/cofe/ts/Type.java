@@ -1,6 +1,6 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.Result;
 
 /**
  * Тип данных

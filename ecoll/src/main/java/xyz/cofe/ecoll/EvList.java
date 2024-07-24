@@ -1,8 +1,8 @@
 package xyz.cofe.ecoll;
 
-import xyz.cofe.im.iter.ExtIterable;
-import xyz.cofe.im.struct.Consumer3;
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.iter.ExtIterable;
+import xyz.cofe.coll.im.Consumer3;
+import xyz.cofe.coll.im.ImList;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

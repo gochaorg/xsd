@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -57,11 +57,11 @@ public sealed interface Restriction {
         ImList<Restriction> r15 = Attribute.parseList(elem).map(a->a);
         ImList<Restriction> r16 = AttributeGroup.parseList(elem).map(a->a);
         ImList<Restriction> r17 = AnyAttribute.parseList(elem).map(a->a);
-        return r1.join(r2).join(r3).join(r4)
-            .join(r5).join(r6).join(r7).join(r8)
-            .join(r9).join(r10).join(r11).join(r12)
-            .join(r13).join(r14).join(r15).join(r16)
-            .join(r17).join(r18).join(r19);
+        return r1.append(r2).append(r3).append(r4)
+            .append(r5).append(r6).append(r7).append(r8)
+            .append(r9).append(r10).append(r11).append(r12)
+            .append(r13).append(r14).append(r15).append(r16)
+            .append(r17).append(r18).append(r19);
     }
 
     public final class MinExclusive implements Restriction {
@@ -77,8 +77,8 @@ public sealed interface Restriction {
         public static ImList<MinExclusive> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new MinExclusive((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new MinExclusive((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -102,8 +102,8 @@ public sealed interface Restriction {
         public static ImList<MinInclusive> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new MinInclusive((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new MinInclusive((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -127,8 +127,8 @@ public sealed interface Restriction {
         public static ImList<MaxExclusive> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new MaxExclusive((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new MaxExclusive((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -152,8 +152,8 @@ public sealed interface Restriction {
         public static ImList<MaxInclusive> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new MaxInclusive((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new MaxInclusive((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -177,8 +177,8 @@ public sealed interface Restriction {
         public static ImList<TotalDigits> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new TotalDigits((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new TotalDigits((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -202,8 +202,8 @@ public sealed interface Restriction {
         public static ImList<FractionDigits> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new FractionDigits((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new FractionDigits((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -227,8 +227,8 @@ public sealed interface Restriction {
         public static ImList<Length> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new Length((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new Length((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -252,8 +252,8 @@ public sealed interface Restriction {
         public static ImList<MinLength> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new MinLength((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new MinLength((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -277,8 +277,8 @@ public sealed interface Restriction {
         public static ImList<MaxLength> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new MaxLength((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new MaxLength((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -302,8 +302,8 @@ public sealed interface Restriction {
         public static ImList<Enumeration> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new Enumeration((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new Enumeration((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -327,8 +327,8 @@ public sealed interface Restriction {
         public static ImList<WhiteSpace> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new WhiteSpace((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new WhiteSpace((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -352,8 +352,8 @@ public sealed interface Restriction {
         public static ImList<Pattern> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new Pattern((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new Pattern((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -377,8 +377,8 @@ public sealed interface Restriction {
         public static ImList<Group> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new Group((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new Group((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -402,8 +402,8 @@ public sealed interface Restriction {
         public static ImList<All> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new All((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new All((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -427,8 +427,8 @@ public sealed interface Restriction {
         public static ImList<Choice> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new Choice((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new Choice((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -452,8 +452,8 @@ public sealed interface Restriction {
         public static ImList<Sequence> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new Sequence((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new Sequence((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -477,8 +477,8 @@ public sealed interface Restriction {
         public static ImList<Attribute> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new Attribute((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new Attribute((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -502,8 +502,8 @@ public sealed interface Restriction {
         public static ImList<AttributeGroup> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new AttributeGroup((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new AttributeGroup((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;
@@ -527,8 +527,8 @@ public sealed interface Restriction {
         public static ImList<AnyAttribute> parseList(XmlNode el ){
             if( el==null ) throw new IllegalArgumentException("el==null");
             return isMatch(el)
-                ? ImList.first(new AnyAttribute((XmlElem) el))
-                : ImList.empty();
+                ? ImList.of(new AnyAttribute((XmlElem) el))
+                : ImList.of();
         }
 
         public final XmlElem elem;

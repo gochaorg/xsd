@@ -45,6 +45,17 @@
       <artifactId>xsd-om</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ecoll</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>xyz.cofe</groupId>
+      <artifactId>coll-im</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

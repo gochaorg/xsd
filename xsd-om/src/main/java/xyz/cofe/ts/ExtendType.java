@@ -1,14 +1,14 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.iter.Tree;
-import xyz.cofe.im.iter.TreePath;
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.iter.Tree;
+import xyz.cofe.coll.im.iter.TreePath;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static xyz.cofe.im.struct.Result.ok;
+import static xyz.cofe.coll.im.Result.ok;
 
 /**
  * Унаследованный тип
@@ -30,7 +30,7 @@ public sealed interface ExtendType extends Type permits Struct {
 
         var root = new ExtendVisitNode(ok(type));
         var tPathIter = Tree.root(root).pathFollow( tpath -> {
-            if( hasCycle(tpath))return ImList.empty();
+            if( hasCycle(tpath))return ImList.of();
             return follow(tpath.node());
         });
 
@@ -62,6 +62,6 @@ public sealed interface ExtendType extends Type permits Struct {
                 return et.baseTypes().map(ExtendVisitNode::new);
             }
         }
-        return ImList.empty();
+        return ImList.of();
     }
 }

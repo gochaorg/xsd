@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -43,8 +43,8 @@ public final class XsdSimpleContent implements Xsd,
     public static ImList<XsdSimpleContent> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdSimpleContent((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdSimpleContent((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -74,10 +74,10 @@ public final class XsdSimpleContent implements Xsd,
     private Result<Nested,String> nested;
     public Result<Nested,String> getNested() {
         if( nested!=null )return nested;
-        Optional<Nested> r1 = elem().getChildren().flatMap(n -> XsdRestriction.parseList(n,this)).head().map(a -> a);
-        Optional<Nested> r2 = elem().getChildren().flatMap(n -> XsdExtension.parseList(n, this)).head().map(a -> a);
+        Optional<Nested> r1 = elem().getChildren().fmap(n -> XsdRestriction.parseList(n,this)).head().map(a -> a);
+        Optional<Nested> r2 = elem().getChildren().fmap(n -> XsdExtension.parseList(n, this)).head().map(a -> a);
         Optional<Nested> r3 = r1.or(() -> r2);
-        nested = Result.of(r3, "nested restriction | extension");
+        nested = Result.from(r3, ()->"nested restriction | extension");
         return nested;
     }
 }

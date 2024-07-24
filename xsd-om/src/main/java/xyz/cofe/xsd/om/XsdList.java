@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -47,8 +47,8 @@ public final class XsdList implements Xsd,
     public static ImList<XsdList> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdList((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdList((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -72,6 +72,6 @@ public final class XsdList implements Xsd,
     }
 
     public Optional<XsdSimpleType> getSimpleType() {
-        return elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n, this)).head();
+        return elem().getChildren().fmap(n -> XsdSimpleType.parseList(n, this)).head();
     }
 }

@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 import java.net.URI;
 import java.util.Map;
@@ -12,7 +12,7 @@ public interface SchemaLocation {
 
     Optional<String> getSchemaLocation();
     default ImList<URI> getSchemaRefs(){
-        var refs = ImList.<URI>empty();
+        var refs = ImList.<URI>of();
         var slocOpt = getSchemaLocation();
         if(slocOpt.isPresent()){
             var locations = slocOpt.get().split("\\s+");

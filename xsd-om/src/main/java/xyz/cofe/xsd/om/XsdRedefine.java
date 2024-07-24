@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -48,8 +48,8 @@ public final class XsdRedefine implements Xsd, IDAttribute, XsdAnnotation.Annota
     public static ImList<XsdRedefine> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdRedefine((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdRedefine((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -73,14 +73,14 @@ public final class XsdRedefine implements Xsd, IDAttribute, XsdAnnotation.Annota
     }
 
     public Result<BuiltInTypes.AnyURI, String> getSchemaLocation() {
-        return Result.of(
+        return Result.from(
             elem().attrib("schemaLocation").map(XmlAttr::getValue).head(),
-            "schemaLocation not found"
-        ).flatMap(BuiltInTypes.AnyURI::parse);
+            ()->"schemaLocation not found"
+        ).fmap(BuiltInTypes.AnyURI::parse);
     }
 
-    public ImList<XsdSimpleType> getSimpleTypes(){ return elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this)); }
-    public ImList<XsdComplexType> getComplexTypes(){ return elem().getChildren().flatMap(n -> XsdComplexType.parseList(n,this)); }
-    public ImList<XsdGroup> getGroups(){ return elem().getChildren().flatMap(n -> XsdGroup.parseList(n,this)); }
-    public ImList<XsdAttributeGroup> getAttributeGroups(){ return elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this)); }
+    public ImList<XsdSimpleType> getSimpleTypes(){ return elem().getChildren().fmap(n -> XsdSimpleType.parseList(n,this)); }
+    public ImList<XsdComplexType> getComplexTypes(){ return elem().getChildren().fmap(n -> XsdComplexType.parseList(n,this)); }
+    public ImList<XsdGroup> getGroups(){ return elem().getChildren().fmap(n -> XsdGroup.parseList(n,this)); }
+    public ImList<XsdAttributeGroup> getAttributeGroups(){ return elem().getChildren().fmap(n -> XsdAttributeGroup.parseList(n,this)); }
 }

@@ -1,6 +1,7 @@
 package xyz.cofe.nixpath;
 
-import xyz.cofe.im.struct.Result;
+
+import xyz.cofe.coll.im.Result;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public final class UnixPath implements NixPath {
             if( allowEmpty ) {
                 return Result.ok( empty );
             }else{
-                return Result.err("empty path not allowed");
+                return Result.error("empty path not allowed");
             }
         }
 

@@ -6,7 +6,7 @@ import java.util.function.Function;
  * Преобразование числа в символ (0 -&gt; A, 1 -&gt; B, ...)
  */
 public interface NumToSym extends Function<Integer,String> {
-    String numToSym(int n);
+    String numToSym(long n);
 
     @Override
     default String apply(Integer n){
@@ -16,7 +16,7 @@ public interface NumToSym extends Function<Integer,String> {
     static class NumToSymBasic implements NumToSym {
         private static final String LETTERS = "abcdefghijklmnopqrstuvwxyz".toUpperCase();
 
-        private static String numToWord(int n){
+        private static String numToWord(long n){
             n = Math.abs(n);
 
             int digitCount = LETTERS.length();
@@ -24,11 +24,11 @@ public interface NumToSym extends Function<Integer,String> {
 
             while (true) {
                 if( n<digitCount ){
-                    buff.insert(0,LETTERS.charAt(n));
+                    buff.insert(0,LETTERS.charAt((int)n));
                     break;
                 }
 
-                int m = n % digitCount;
+                int m = (int)(n % digitCount);
                 buff.insert(0,LETTERS.charAt(m));
 
                 n = n / digitCount;
@@ -38,7 +38,7 @@ public interface NumToSym extends Function<Integer,String> {
         }
 
         @Override
-        public String numToSym(int n) {
+        public String numToSym(long n) {
             return numToWord(n);
         }
     }

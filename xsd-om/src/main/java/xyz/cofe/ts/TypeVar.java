@@ -1,7 +1,5 @@
 package xyz.cofe.ts;
 
-import java.util.function.Supplier;
-
 /**
  * Ссылка на параметр
  *

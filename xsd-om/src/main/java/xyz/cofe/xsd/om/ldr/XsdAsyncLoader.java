@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om.ldr;
 
-import xyz.cofe.im.struct.Result;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.Result;
+import xyz.cofe.coll.im.Tuple2;
 import xyz.cofe.xsd.om.LinkedDoc;
 import xyz.cofe.xsd.om.XsdSchema;
 import xyz.cofe.xsd.om.SchemaLocation;
@@ -56,7 +56,7 @@ public class XsdAsyncLoader {
             var logLoad = this.getLoadLog();
             if (logLoad != null) logLoad.accept(uri, res);
 
-            if (res instanceof Result.Ok<XsdSchema, String> succ) {
+            if (res.getOk().isPresent()) {
                 AtomicInteger cntTask = new AtomicInteger(0);
 
                 Runnable checkNotify = () -> {
@@ -69,8 +69,8 @@ public class XsdAsyncLoader {
                     lcl.getSchemaRefs()
                         .map(ref -> Tuple2.of(ref, resolveBaseTarget.apply(uri, ref)))
                         .each(resolvUriTup -> {
-                            var targetUri = resolvUriTup.b();
-                            var srcUri = resolvUriTup.a();
+                            var targetUri = resolvUriTup._2();
+                            var srcUri = resolvUriTup._1();
 
                             cntTask.incrementAndGet();
                             load(targetUri, refDocLoadRes -> {
@@ -81,8 +81,8 @@ public class XsdAsyncLoader {
                         });
                 };
 
-                succ.value().getIncludes().forEach(xsdLocal);
-                succ.value().getImports().forEach(xsdLocal);
+                res.getOk().get().getIncludes().forEach(xsdLocal);
+                res.getOk().get().getImports().forEach(xsdLocal);
 
                 checkNotify.run();
             } else {

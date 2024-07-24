@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -48,8 +48,8 @@ public final class XsdNotation implements Xsd, IDAttribute, NamespaceAttribute, 
     public static ImList<XsdNotation> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdNotation((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdNotation((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -74,16 +74,16 @@ public final class XsdNotation implements Xsd, IDAttribute, NamespaceAttribute, 
     }
 
     public Result<BuiltInTypes.AnyURI, String> getPublic() {
-        return Result.of(
+        return Result.from(
             elem().attrib("public").map(XmlAttr::getValue).head(),
-            "public not found"
-        ).flatMap(BuiltInTypes.AnyURI::parse);
+            ()->"public not found"
+        ).fmap(BuiltInTypes.AnyURI::parse);
     }
 
     public Result<BuiltInTypes.AnyURI, String> getSystem() {
-        return Result.of(
+        return Result.from(
             elem().attrib("system").map(XmlAttr::getValue).head(),
-            "system not found"
-        ).flatMap(BuiltInTypes.AnyURI::parse);
+            ()->"system not found"
+        ).fmap(BuiltInTypes.AnyURI::parse);
     }
 }

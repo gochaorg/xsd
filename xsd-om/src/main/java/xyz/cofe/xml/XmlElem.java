@@ -1,6 +1,6 @@
 package xyz.cofe.xml;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 public interface XmlElem extends XmlNode {
     String getTagName();

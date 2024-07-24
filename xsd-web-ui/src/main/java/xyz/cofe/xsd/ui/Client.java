@@ -5,7 +5,7 @@ import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.html.HTMLInputElement;
 import org.teavm.jso.ajax.XMLHttpRequest;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xsd.cmpl.XsdCompile;
 import xyz.cofe.xsd.om.XsdSchema;
 import xyz.cofe.xsd.om.ldr.XsdLoader;
@@ -156,7 +156,7 @@ public class Client {
                 log.accept("get " + uri + " " + (xsdTextOpt.isPresent() ? "succ" : "fail"));
                 if (xsdTextOpt.isEmpty()) {
                     log.accept("not loaded");
-                    return Result.err("not loaded from " + uri);
+                    return Result.error("not loaded from " + uri);
                 }
 
                 log.accept("loaded");

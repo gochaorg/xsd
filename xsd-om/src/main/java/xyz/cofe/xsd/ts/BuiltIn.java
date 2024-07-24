@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.ts;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Tuple2;
 import xyz.cofe.ts.PrimitiveType;
 
 import java.util.Map;
@@ -57,7 +57,7 @@ public class BuiltIn {
     public static final PrimitiveType xsUnsignedByte = PrimitiveType.of("unsignedByte");
 
     public static final ImList<PrimitiveType> primitives =
-        ImList.first(xsString).prepend(xsDuration).prepend(xsDateTime).prepend(xsTime).prepend(xsDate).prepend(xsGYearMonth).prepend(xsGYear).prepend(xsGMonthDay)
+        ImList.of(xsString).prepend(xsDuration).prepend(xsDateTime).prepend(xsTime).prepend(xsDate).prepend(xsGYearMonth).prepend(xsGYear).prepend(xsGMonthDay)
             .prepend(xsGDay).prepend(xsGMonth).prepend(xsBoolean).prepend(xsBase64Binary).prepend(xsHexBinary).prepend(xsFloat).prepend(xsDecimal).prepend(xsDouble)
             .prepend(xsAnyURI).prepend(xsQName).prepend(xsNOTATION).prepend(xsNormalizedString).prepend(xsToken).prepend(xsLanguage).prepend(xsName).prepend(xsID)
             .prepend(xsNMTOKEN).prepend(xsNMTOKENS).prepend(xsIDREF).prepend(xsIDREFS).prepend(xsENTITY).prepend(xsENTITIES).prepend(xsInteger).prepend(xsLong)

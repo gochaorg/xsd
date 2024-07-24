@@ -6,7 +6,7 @@ import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.core.JSMap;
 import org.teavm.jso.core.JSString;
 import org.teavm.jso.json.JSON;
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xsd.ui.json.ArrayAdapter;
 import xyz.cofe.xsd.ui.json.JSAdapter;
 import xyz.cofe.xsd.ui.json.ObjectAdapter;
@@ -67,7 +67,7 @@ public class FilesClient {
         xhr.send();
 
         var jsonString = complete.get();
-        if( jsonString==null )return ImList.empty();
+        if( jsonString==null )return ImList.of();
 
         var res = new ArrayList<PathObj>();
         var json = JSON.parse(jsonString);
@@ -76,7 +76,7 @@ public class FilesClient {
             if( jsn instanceof ArrayAdapter arr ){
                 for( var itm : arr ){
                     if( itm instanceof ObjectAdapter obj ) {
-                        obj.getString("name").flatMap( name -> obj.getBoolean("dir").map( dir -> {
+                        obj.getString("name").fmap( name -> obj.getBoolean("dir").map( dir -> {
                             if( dir ){
                                 res.add(new PathObj.Directory(name, directory));
                             }else{

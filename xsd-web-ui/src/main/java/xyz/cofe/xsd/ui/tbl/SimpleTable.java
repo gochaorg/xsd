@@ -5,9 +5,9 @@ import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.xml.Element;
 import xyz.cofe.ecoll.EvList;
-import xyz.cofe.im.iter.ExtIterable;
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.iter.ExtIterable;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Tuple2;
 import xyz.cofe.xsd.ui.render.RenderedValue;
 
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class SimpleTable<A> {
         private final HTMLElement tableRow;
 
         public ImList<TableRowCell> getCells(){
-            ImList<TableRowCell> cells = ImList.empty();
+            ImList<TableRowCell> cells = ImList.of();
             var coll = tableRow.getChildNodes();
             for( var i=0; i<coll.getLength(); i++ ){
                 var n = coll.item(i);
@@ -296,7 +296,7 @@ public class SimpleTable<A> {
     private void onDeleteRow(int index, A oldDataRow){
         int cnt = tbody.getChildren().getLength();
         if( index<0 || index>=cnt ){
-            find(row -> row == oldDataRow).each( t -> tbody.removeChild(t.a()));
+            find(row -> row == oldDataRow).each( t -> tbody.removeChild(t._1()));
         }else{
             var el = tbody.getChildren().item(index);
             if( el instanceof HTMLElement htmlEl ){
@@ -306,12 +306,12 @@ public class SimpleTable<A> {
                     return;
                 }
             }
-            find(row -> row == oldDataRow).each( t -> tbody.removeChild(t.a()));
+            find(row -> row == oldDataRow).each( t -> tbody.removeChild(t._1()));
         }
     }
 
     private ImList<Tuple2<HTMLElement,A>> find(Predicate<A> pred){
-        var res = ImList.<Tuple2<HTMLElement,A>>empty();
+        var res = ImList.<Tuple2<HTMLElement,A>>of();
         int cnt = tbody.getChildren().getLength();
         for( var i=0; i<cnt; i++ ){
             var el = tbody.getChildren().item(i);

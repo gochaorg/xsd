@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import org.junit.jupiter.api.Test;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.nixpath.CanonAbsPath;
 import xyz.cofe.nixpath.UnixPath;
 import xyz.cofe.xsd.om.ldr.XsdAsyncLoader;
@@ -39,7 +39,7 @@ public class XSDLoaderTest {
                         var xsd11 = new XsdSchema(xdoc1);
                         return Result.ok(xsd11);
                     },
-                    ignore -> Result.err("")
+                    ignore -> Result.error("")
                 );
             } else {
                 var resName = base + nixPath.toString();
@@ -49,7 +49,7 @@ public class XSDLoaderTest {
             }
         }
 
-        return Result.err("");
+        return Result.error("");
     }
 
     private URI resolveUri(URI base, URI ref) {
@@ -57,7 +57,7 @@ public class XSDLoaderTest {
         return base.resolve(refPath);
     }
 
-    @Test
+    //@Test
     public XsdSchema syncLoad() {
         var xsdLdr = new XsdLoader(
             this::load,
@@ -67,8 +67,8 @@ public class XSDLoaderTest {
         xsdLdr.setLoadLog(((uri, xsdDocLoadResult) -> {
             if (verbose) {
                 System.out.println(
-                    "load " + uri + " " + (xsdDocLoadResult instanceof Result.Ok<XsdSchema, ?> succ
-                        ? "success " + succ.value().getTargetNamespace()
+                    "load " + uri + " " + (xsdDocLoadResult.getOk().isPresent()
+                        ? "success " + xsdDocLoadResult.getOk().get().getTargetNamespace()
                         : "fail"));
             }
         }));
@@ -97,8 +97,8 @@ public class XSDLoaderTest {
 
         xsdLdr.setLoadLog(((uri, xsdDocLoadResult) -> {
             System.out.println(
-                "load " + uri + " " + (xsdDocLoadResult instanceof Result.Ok<XsdSchema, ?> succ
-                    ? "success " + succ.value().getTargetNamespace()
+                "load " + uri + " " + (xsdDocLoadResult.getOk().isPresent()
+                    ? "success " + xsdDocLoadResult.getOk().get().getTargetNamespace()
                     : "fail"));
         }));
 

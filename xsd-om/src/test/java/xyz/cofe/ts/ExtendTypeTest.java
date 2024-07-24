@@ -1,7 +1,7 @@
 package xyz.cofe.ts;
 
 import org.junit.jupiter.api.Test;
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,8 +40,8 @@ public class ExtendTypeTest {
 
         System.out.println(U.toString());
 
-        var v_tp1 = new TypeParam(ImList.first(Z), CoPos.Param);
-        var v_tp2 = new TypeParam(ImList.first(X), CoPos.Result);
+        var v_tp1 = new TypeParam(ImList.of(Z), CoPos.Param);
+        var v_tp2 = new TypeParam(ImList.of(X), CoPos.Result);
 
         var tv1 = new TypeVar(v_tp1);
         var tv2 = new TypeVar(v_tp2);
@@ -56,7 +56,7 @@ public class ExtendTypeTest {
 
         var validation2 = GenericInstance.validate(U, tv2, tv1);
         System.out.println(validation2);
-        assertTrue(validation2.isErr());
+        assertTrue(validation2.isError());
 
         System.out.println("-----");
 
@@ -74,7 +74,7 @@ public class ExtendTypeTest {
             new TypeVar(TypeParam.createResult(Y))
         );
         System.out.println(validation4);
-        assertTrue(validation4.isErr());
+        assertTrue(validation4.isError());
 
         System.out.println("-----");
 

@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
 import org.junit.jupiter.api.Test;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.Tuple2;
 
 import java.util.Optional;
 
@@ -12,7 +12,7 @@ public class BuiltInTest {
     public void NCName1(){
         Optional<Tuple2<BuiltInTypes.NCNAME, Integer>> res = BuiltInTypes.NCNAME.parse("ed:ED101", 0);
         assertTrue(res.isPresent());
-        assertTrue(res.map(a -> a.a().value().equals("ed")).orElse(false));
+        assertTrue(res.map(a -> a._1().value().equals("ed")).orElse(false));
     }
 
     @Test

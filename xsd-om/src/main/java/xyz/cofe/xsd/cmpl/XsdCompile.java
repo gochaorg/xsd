@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.cmpl;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xsd.om.BuiltInTypes;
 import xyz.cofe.xsd.om.ElementContent;
 import xyz.cofe.xsd.om.TypeDef;
@@ -45,7 +45,7 @@ public class XsdCompile {
         return el.getRefType().fold(td -> {
             var text = "type " + typeNameOf(td).value() + "\n";
 
-            var ann = td.getAnnotations().flatMap(XsdAnnotation::getDocumentations).map(XsdDocumentation::getText)
+            var ann = td.getAnnotations().fmap(XsdAnnotation::getDocumentations).map(XsdDocumentation::getText)
                 .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
 
             if (!ann.isBlank()) {
@@ -78,7 +78,7 @@ public class XsdCompile {
         var ctName = ct.getName().map(BuiltInTypes.NCNAME::value).fold(a -> a, b -> b);
         var attr = compileAttributes(ct.getAttributes());
 
-        var ann = ct.getAnnotations().flatMap(XsdAnnotation::getDocumentations).map(XsdDocumentation::getText)
+        var ann = ct.getAnnotations().fmap(XsdAnnotation::getDocumentations).map(XsdDocumentation::getText)
             .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
 
         var str = "XsdComplexType " + ctName;
@@ -115,8 +115,8 @@ public class XsdCompile {
     }
 
     private String compile(XsdExtension ext) {
-        var extend = Result.of(ext.getBaseAttribute(), "")
-            .flatMap(ignore -> ext.getRefType())
+        var extend = Result.from(ext.getBaseAttribute(), ()->"")
+            .fmap(ignore -> ext.getRefType())
             .map(this::compile)
             .fold(a -> a, b -> b);
 
@@ -142,7 +142,7 @@ public class XsdCompile {
                 "}";
 
         if (!extend.isBlank()) {
-            return "extend from " + ext.getRefType().flatMap(rt -> rt.getName().map(BuiltInTypes.NCNAME::value)).fold(a -> a, b -> b) + " {\n" +
+            return "extend from " + ext.getRefType().fmap(rt -> rt.getName().map(BuiltInTypes.NCNAME::value)).fold(a -> a, b -> b) + " {\n" +
                 indent("  ", extend) + "\n" +
                 "}\n" +
                 body;
@@ -155,7 +155,7 @@ public class XsdCompile {
         var fieldDef = attrs
             .map(attr -> {
                     var doc = attr.getAnnotations()
-                        .flatMap(XsdAnnotation::getDocumentations)
+                        .fmap(XsdAnnotation::getDocumentations)
                         .map(XsdDocumentation::getText)
                         .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
 
@@ -222,7 +222,7 @@ public class XsdCompile {
                         .fold(a -> a, b -> b);
 
                 var doc = el.getAnnotations()
-                    .flatMap(XsdAnnotation::getDocumentations)
+                    .fmap(XsdAnnotation::getDocumentations)
                     .map(XsdDocumentation::getText)
                     .foldLeft("", (acc, it) -> acc.isBlank() ? it : acc + "\n" + it);
 

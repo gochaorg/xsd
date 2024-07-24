@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -54,8 +54,8 @@ public final class XsdAttributeGroup implements Xsd,
     public static ImList<XsdAttributeGroup> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAttributeGroup((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdAttributeGroup((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -81,21 +81,21 @@ public final class XsdAttributeGroup implements Xsd,
     private ImList<XsdAttribute> attributes;
     public ImList<XsdAttribute> getAttributes(){
         if( attributes!=null )return attributes;
-        attributes = elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        attributes = elem().getChildren().fmap(n -> XsdAttribute.parseList(n,this));
         return attributes;
     }
 
     private ImList<XsdAttributeGroup> attributeGroups;
     public ImList<XsdAttributeGroup> getAttributeGroups(){
         if( attributeGroups!=null )return attributeGroups;
-        attributeGroups = elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        attributeGroups = elem().getChildren().fmap(n -> XsdAttributeGroup.parseList(n,this));
         return attributeGroups;
     }
 
     private Optional<XsdAnyAttribute> anyAttribute;
     public Optional<XsdAnyAttribute> getAnyAttribute(){
         if( anyAttribute!=null )return anyAttribute;
-        anyAttribute = elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
+        anyAttribute = elem().getChildren().fmap(n -> XsdAnyAttribute.parseList(n,this)).head();
         return anyAttribute;
     }
 }

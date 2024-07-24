@@ -1,10 +1,10 @@
 package xyz.cofe.xsd.ui.json;
 
 import org.teavm.jso.core.JSString;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.Result;
 
-import static xyz.cofe.im.struct.Result.err;
-import static xyz.cofe.im.struct.Result.ok;
+import static xyz.cofe.coll.im.Result.error;
+import static xyz.cofe.coll.im.Result.ok;
 
 public final class StringAdapter implements JSAdapter {
     public final Object jsString;
@@ -25,12 +25,12 @@ public final class StringAdapter implements JSAdapter {
     }
 
     public static Result<StringAdapter,String> tryParse(Object obj){
-        if( obj==null )return err("obj is null");
-        return Result.of(TypeOf.of(obj),"can't determinate from TypeOf.of")
-            .flatMap( typeOf ->
+        if( obj==null )return error("obj is null");
+        return Result.from(TypeOf.of(obj),()->"can't determinate from TypeOf.of")
+            .fmap( typeOf ->
                 typeOf == TypeOf.STRING
                     ? ok(new StringAdapter(obj))
-                    : err("expect string")
+                    : error("expect string")
             );
     }
 

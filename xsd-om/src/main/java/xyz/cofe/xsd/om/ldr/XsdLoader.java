@@ -1,8 +1,8 @@
 package xyz.cofe.xsd.om.ldr;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
+import xyz.cofe.coll.im.Tuple2;
 import xyz.cofe.xsd.om.LinkedDoc;
 import xyz.cofe.xsd.om.XsdSchema;
 
@@ -54,11 +54,11 @@ public class XsdLoader {
         var logLoad = this.getLoadLog();
         if (logLoad != null) logLoad.accept(uri, res);
 
-        if (res instanceof Result.Ok<XsdSchema,String> succ) {
-            succ.value().getIncludes().forEach(xsdInclude -> {
+        if (res.getOk().isPresent()) {
+            res.getOk().get().getIncludes().forEach(xsdInclude -> {
                 loadRef(xsdInclude.getSchemaRefs(), uri, xsdInclude.getXsdDocs());
             });
-            succ.value().getImports().forEach(xsdInclude -> {
+            res.getOk().get().getImports().forEach(xsdInclude -> {
                 loadRef(xsdInclude.getSchemaRefs(), uri, xsdInclude.getXsdDocs());
             });
         }
@@ -68,8 +68,8 @@ public class XsdLoader {
 
     private void loadRef(ImList<URI> xsdInclude, URI uri, Map<URI, LinkedDoc> xsdInclude1) {
         xsdInclude.map(ref -> Tuple2.of(ref, resolveBaseTarget.apply(uri, ref))).each(resolved -> {
-            var targetUri = resolved.b();
-            var srcUri = resolved.a();
+            var targetUri = resolved._2();
+            var srcUri = resolved._1();
 
             var res = load(targetUri);
             xsdInclude1.put(srcUri, new LinkedDoc(targetUri, res));
@@ -92,7 +92,7 @@ public class XsdLoader {
             var logLoad = this.getLoadLog();
             if (logLoad != null) logLoad.accept(uri, res);
 
-            if (res instanceof Result.Ok<XsdSchema, String> succ) {
+            if (res.getOk().isPresent()) {
                 AtomicInteger cntTask = new AtomicInteger(0);
 
                 Runnable checkNotify = () -> {
@@ -101,12 +101,12 @@ public class XsdLoader {
                     }
                 };
 
-                succ.value().getIncludes().forEach(xsdInclude -> {
+                res.getOk().get().getIncludes().forEach(xsdInclude -> {
                     xsdInclude.getSchemaRefs()
                         .map(ref -> Tuple2.of(ref, resolveBaseTarget.apply(uri, ref)))
                         .each(resolvUriTup -> {
-                            var targetUri = resolvUriTup.b();
-                            var srcUri = resolvUriTup.a();
+                            var targetUri = resolvUriTup._2();
+                            var srcUri = resolvUriTup._1();
 
                             cntTask.incrementAndGet();
                             load(targetUri, refDocLoadRes -> {

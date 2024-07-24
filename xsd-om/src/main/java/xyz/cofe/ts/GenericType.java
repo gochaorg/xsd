@@ -1,6 +1,6 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 import java.util.Optional;
 

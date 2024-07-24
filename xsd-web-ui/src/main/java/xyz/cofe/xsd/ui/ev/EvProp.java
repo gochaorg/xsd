@@ -1,8 +1,5 @@
 package xyz.cofe.xsd.ui.ev;
 
-import xyz.cofe.ecoll.EvListEvent;
-import xyz.cofe.ecoll.EvListListener;
-
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;

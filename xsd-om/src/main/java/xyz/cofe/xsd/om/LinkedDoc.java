@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.Result;
 
 import java.net.URI;
 

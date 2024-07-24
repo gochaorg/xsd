@@ -1,8 +1,8 @@
 package xyz.cofe.xsd.om;
 
 import org.junit.jupiter.api.Test;
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xsd.cmpl.XsdCompile;
 import xyz.cofe.xsd.om.BuiltInTypes.NCNAME;
 

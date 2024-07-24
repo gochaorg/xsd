@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -94,8 +94,8 @@ public final class XsdAttribute implements Xsd,
     public static ImList<XsdAttribute> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAttribute((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdAttribute((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -119,37 +119,37 @@ public final class XsdAttribute implements Xsd,
     }
 
     public Result<String, String> getDefault() {
-        return Result.of(
+        return Result.from(
             elem.attrib("default").map(XmlAttr::getValue).head(),
-            "default not found"
+            ()->"default not found"
         );
     }
 
     public Result<String, String> getFixed() {
-        return Result.of(
+        return Result.from(
             elem.attrib("fixed").map(XmlAttr::getValue).head(),
-            "fixed not found"
+            ()->"fixed not found"
         );
     }
 
     public Result<String, String> getForm() {
-        return Result.of(
+        return Result.from(
             elem.attrib("form").map(XmlAttr::getValue).head(),
-            "form not found"
+            ()->"form not found"
         );
     }
 
     public Result<String, String> getUse() {
-        return Result.of(
+        return Result.from(
             elem.attrib("use").map(XmlAttr::getValue).head(),
-            "use not found"
+            ()->"use not found"
         );
     }
 
     private Optional<XsdSimpleType> simpleType;
     public Optional<XsdSimpleType> getSimpleType(){
         if( simpleType!=null )return simpleType;
-        simpleType = elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this)).head();
+        simpleType = elem().getChildren().fmap(n -> XsdSimpleType.parseList(n,this)).head();
         return simpleType;
     }
 }

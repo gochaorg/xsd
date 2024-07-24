@@ -1,7 +1,7 @@
 package xyz.cofe.ts;
 
 import org.junit.jupiter.api.Test;
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,32 +12,32 @@ public class TypeParamTest
     Struct Z = Struct.name("Z").baseType(Y).build();
     Struct I = Struct.name("I").build();
 
-    TypeParam u_tp_y_param = new TypeParam(ImList.first(Y), CoPos.Param);
-    TypeParam u_tp_y_res = new TypeParam(ImList.first(Y), CoPos.Result);
+    TypeParam u_tp_y_param = new TypeParam(ImList.of(Y), CoPos.Param);
+    TypeParam u_tp_y_res = new TypeParam(ImList.of(Y), CoPos.Result);
 
     Struct U = Struct.name("U")
         .typeParams(u_tp_y_param,u_tp_y_res)
         .build();
 
-    TypeParam tp_z_param = new TypeParam(ImList.first(Z), CoPos.Param);
-    TypeParam tp_x_res = new TypeParam(ImList.first(X), CoPos.Result);
+    TypeParam tp_z_param = new TypeParam(ImList.of(Z), CoPos.Param);
+    TypeParam tp_x_res = new TypeParam(ImList.of(X), CoPos.Result);
 
     TypeVar tv_z_param = new TypeVar(tp_z_param);
     TypeVar tv_x_res = new TypeVar(tp_x_res);
 
-    GenericInstance gi1 = new GenericInstance(U, ImList.first(tv_z_param).append(tv_x_res).map(a -> a));
+    GenericInstance gi1 = new GenericInstance(U, ImList.of(tv_z_param).append(tv_x_res).map(a -> a));
 
     Struct V1 = Struct.name("V1")
         .typeParams(tp_z_param,tp_x_res)
         .baseType(gi1)
         .build();
 
-    TypeParam tp_zi_param = new TypeParam(ImList.first(Z).append(I).map(a->a), CoPos.Param);
+    TypeParam tp_zi_param = new TypeParam(ImList.of(Z).append(I).map(a->a), CoPos.Param);
 
     TypeVar v2_tv_zi_param = new TypeVar(tp_zi_param);
     TypeVar v2_tv_x_res = new TypeVar(tp_x_res);
 
-    GenericInstance gi2 = new GenericInstance(U, ImList.first(v2_tv_zi_param).append(v2_tv_x_res).map(a -> a));
+    GenericInstance gi2 = new GenericInstance(U, ImList.of(v2_tv_zi_param).append(v2_tv_x_res).map(a -> a));
 
     Struct V2 = Struct.name("V2")
         .typeParams(tp_zi_param,tp_x_res)
@@ -63,7 +63,7 @@ public class TypeParamTest
 
         var u_tp1_x = u_tp_y_param.isAssignableFrom(X);
         System.out.println(u_tp1_x);
-        assertTrue(u_tp1_x.isErr());
+        assertTrue(u_tp1_x.isError());
 
         var u_tp1_y = u_tp_y_param.isAssignableFrom(Y);
         System.out.println(u_tp1_y);

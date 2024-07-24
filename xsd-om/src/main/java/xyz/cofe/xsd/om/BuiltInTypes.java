@@ -1,13 +1,13 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.Result;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.Result;
+import xyz.cofe.coll.im.Tuple2;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import static xyz.cofe.im.struct.Result.*;
+import static xyz.cofe.coll.im.Result.*;
 
 // https://www.w3.org/TR/xmlschema-2/#built-in-datatypes
 public sealed interface BuiltInTypes {
@@ -34,16 +34,16 @@ public sealed interface BuiltInTypes {
 
     record STRING(String value) implements BuiltInTypes, AnySimpleType {
         public static Result<STRING,String> parse(String str){
-            if(str==null) return err("null value");
+            if(str==null) return error("null value");
             return ok(new STRING(str));
         }
     }
 
     record NORMALIZED_STRING(String value) implements BuiltInTypes {
         public static Result<NORMALIZED_STRING,String> parse(String str){
-            return STRING.parse(str).flatMap(v ->
+            return STRING.parse(str).fmap(v ->
                 v.value().contains("\r") || v.value().contains("\n") || v.value().contains("\t")
-                ? err("normalized string must do not contains \\r | \\n | \\t")
+                ? error("normalized string must do not contains \\r | \\n | \\t")
                 : ok(new NORMALIZED_STRING(v.value))
             );
         }
@@ -52,9 +52,9 @@ public sealed interface BuiltInTypes {
     record NCNAME(String value) implements BuiltInTypes {
         public static Result<NCNAME,String> parse(String value){
             return NORMALIZED_STRING.parse(value)
-                .flatMap(v ->
+                .fmap(v ->
                     BuiltInTypes.isNCName(v.value())
-                    ? ok(new NCNAME(v.value)) : err("value "+v.value+" is not NCName, see https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName")
+                    ? ok(new NCNAME(v.value)) : error("value "+v.value+" is not NCName, see https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-NCName")
                 );
         }
 
@@ -99,11 +99,11 @@ public sealed interface BuiltInTypes {
 
     record FLOAT(float value,String string) implements BuiltInTypes, AnySimpleType {
         public static Result<FLOAT,String> parse(String value){
-            if(value==null) return err("null value");
+            if(value==null) return error("null value");
             try {
                 return ok(new FLOAT(Float.parseFloat(value),value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -112,11 +112,11 @@ public sealed interface BuiltInTypes {
 
     record DOUBLE(double value,String string) implements BuiltInTypes, AnySimpleType {
         public static Result<DOUBLE,String> parse(String value){
-            if(value==null) return err("null value");
+            if(value==null) return error("null value");
             try {
                 return ok(new DOUBLE(Double.parseDouble(value),value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -125,10 +125,10 @@ public sealed interface BuiltInTypes {
 
     record BOOLEAN(boolean value) implements BuiltInTypes, AnySimpleType {
         public static Result<BOOLEAN, String> parse(String value) {
-            if (value == null) return err("null value");
+            if (value == null) return error("null value");
             if (value.equals("true") || value.equals("1")) return ok(new BOOLEAN(true));
             if (value.equals("false") || value.equals("0")) return ok(new BOOLEAN(false));
-            return err("unexpected value: " + value);
+            return error("unexpected value: " + value);
         }
     }
 
@@ -238,21 +238,21 @@ public sealed interface BuiltInTypes {
         String localPart
     ) implements BuiltInTypes, AnySimpleType {
         public static Result<QName, String> parse(String value) {
-            return STRING.parse(value).flatMap(v -> {
+            return STRING.parse(value).fmap(v -> {
                 var str = v.value();
 
                 var p1opt = NCNAME.parse(str,0);
-                if(p1opt.isEmpty())return err("can't parse NCName from \""+v.value()+"\" offset=0");
+                if(p1opt.isEmpty())return error("can't parse NCName from \""+v.value()+"\" offset=0");
 
                 var p1tup = p1opt.get();
-                var p1 = p1tup.a();
-                var off1 = p1tup.b();
+                var p1 = p1tup._1();
+                var off1 = p1tup._2();
 
                 String str2 = off1 >= str.length() ? "" : str.substring(off1);
                 if( str2.isEmpty() )return ok(new QName(Optional.empty(), p1.value()));
 
-                if( !str2.startsWith(":") )return err("expect begin ':', but found "+str2);
-                if( str2.length()<2 )return err("expect length > 2, but found '"+str2+"'");
+                if( !str2.startsWith(":") )return error("expect begin ':', but found "+str2);
+                if( str2.length()<2 )return error("expect length > 2, but found '"+str2+"'");
 
                 String str3 = str2.substring(1);
                 return NCNAME.parse(str3).map( p2 -> new QName(Optional.of(p1.value()), p2.value()));
@@ -273,11 +273,11 @@ public sealed interface BuiltInTypes {
         String string
     ) implements BuiltInTypes, Numeric {
         public static Result<Decimal, String> parse(String value) {
-            if (value == null) return err("null value");
+            if (value == null) return error("null value");
             try {
                 return ok(new Decimal(new BigDecimal(value), value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -289,11 +289,11 @@ public sealed interface BuiltInTypes {
         String string
     ) implements BuiltInTypes, IntegerNum {
         public static Result<INTEGER, String> parse(String value) {
-            if (value == null) return err("null value");
+            if (value == null) return error("null value");
             try {
                 return ok(new INTEGER(new BigInteger(value), value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -305,10 +305,10 @@ public sealed interface BuiltInTypes {
         String string
     ) implements BuiltInTypes, IntegerNum {
         public static Result<NON_POSITIVE_INTEGER, String> parse(String value) {
-            return INTEGER.parse(value).flatMap(v ->
+            return INTEGER.parse(value).fmap(v ->
                 v.value.compareTo(BigInteger.ZERO)<=0
                 ? ok( new NON_POSITIVE_INTEGER(v.value, v.string))
-                : err("value ("+v.value+") is positive")
+                : error("value ("+v.value+") is positive")
             );
         }
     }
@@ -318,10 +318,10 @@ public sealed interface BuiltInTypes {
         String string
     ) implements BuiltInTypes, IntegerNum {
         public static Result<NEGATIVE_INTEGER, String> parse(String value) {
-            return INTEGER.parse(value).flatMap(v ->
+            return INTEGER.parse(value).fmap(v ->
                 v.value.compareTo(BigInteger.ZERO)<0
                 ? ok( new NEGATIVE_INTEGER(v.value, v.string))
-                : err("value ("+v.value+") is zero or positive")
+                : error("value ("+v.value+") is zero or positive")
             );
         }
     }
@@ -331,10 +331,10 @@ public sealed interface BuiltInTypes {
         String string
     ) implements BuiltInTypes, IntegerNum {
         public static Result<NON_NEGATIVE_INTEGER, String> parse(String value) {
-            return INTEGER.parse(value).flatMap(v ->
+            return INTEGER.parse(value).fmap(v ->
                 v.value.compareTo(BigInteger.ZERO)>=0
                 ? ok( new NON_NEGATIVE_INTEGER(v.value, v.string))
-                : err("value ("+v.value+") is negative")
+                : error("value ("+v.value+") is negative")
             );
         }
     }
@@ -344,21 +344,21 @@ public sealed interface BuiltInTypes {
         String string
     ) implements BuiltInTypes, IntegerNum {
         public static Result<POSTIVE_INTEGER, String> parse(String value) {
-            return INTEGER.parse(value).flatMap(v ->
+            return INTEGER.parse(value).fmap(v ->
                 v.value.compareTo(BigInteger.ZERO)>0
                     ? ok( new POSTIVE_INTEGER(v.value, v.string))
-                    : err("value ("+v.value+") is zero or negative")
+                    : error("value ("+v.value+") is zero or negative")
             );
         }
     }
 
     record LONG(long value, String string) implements BuiltInTypes, LongNum {
         public static Result<LONG, String> parse(String value) {
-            if (value == null) return err("null value");
+            if (value == null) return error("null value");
             try {
                 return ok(new LONG(Long.parseLong(value), value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -367,11 +367,11 @@ public sealed interface BuiltInTypes {
 
     record INT(int value, String string) implements BuiltInTypes, LongNum {
         public static Result<INT, String> parse(String value) {
-            if (value == null) return err("null value");
+            if (value == null) return error("null value");
             try {
                 return ok(new INT(Integer.parseInt(value), value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -380,11 +380,11 @@ public sealed interface BuiltInTypes {
 
     record SHORT(short value, String string) implements BuiltInTypes, LongNum {
         public static Result<SHORT, String> parse(String value) {
-            if (value == null) return err("null value");
+            if (value == null) return error("null value");
             try {
                 return ok(new SHORT(Short.parseShort(value), value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -393,11 +393,11 @@ public sealed interface BuiltInTypes {
 
     record BYTE(byte value, String string) implements BuiltInTypes, LongNum {
         public static Result<BYTE, String> parse(String value) {
-            if (value == null) return err("null value");
+            if (value == null) return error("null value");
             try {
                 return ok(new BYTE(Byte.parseByte(value), value));
             } catch (NumberFormatException ex) {
-                return err("NumberFormatException:" +
+                return error("NumberFormatException:" +
                     " source:" + value +
                     " message:" + ex.getMessage());
             }
@@ -406,9 +406,9 @@ public sealed interface BuiltInTypes {
 
     record UNSIGNED_LONG(BigInteger value, String string) implements BuiltInTypes, UnsignedLongNum {
         public static Result<UNSIGNED_LONG, String> parse(String value) {
-            return NON_NEGATIVE_INTEGER.parse(value).flatMap(
+            return NON_NEGATIVE_INTEGER.parse(value).fmap(
                 v -> v.value().compareTo(new BigInteger("18446744073709551615")) > 0
-                ? err("value ("+value+") more than 18446744073709551615")
+                ? error("value ("+value+") more than 18446744073709551615")
                 : ok(new UNSIGNED_LONG(v.value, v.string))
             );
         }
@@ -416,9 +416,9 @@ public sealed interface BuiltInTypes {
 
     record UNSIGNED_INT(long value, String string) implements BuiltInTypes, UnsignedIntNum {
         public static Result<UNSIGNED_INT, String> parse(String value) {
-            return LONG.parse(value).flatMap(
+            return LONG.parse(value).fmap(
                 v -> v.value() > 4294967295L || v.value < 0
-                    ? err("value ("+value+") more than 4294967295 or less than 0")
+                    ? error("value ("+value+") more than 4294967295 or less than 0")
                     : ok(new UNSIGNED_INT(v.value, v.string))
             );
         }
@@ -426,9 +426,9 @@ public sealed interface BuiltInTypes {
 
     record UNSIGNED_SHORT(int value, String string) implements BuiltInTypes, UnsignedShortNum {
         public static Result<UNSIGNED_SHORT, String> parse(String value) {
-            return INT.parse(value).flatMap(
+            return INT.parse(value).fmap(
                 v -> v.value > 65535 || v.value < 0
-                    ? err("value ("+ v.value +") more than 65535 or less than 0")
+                    ? error("value ("+ v.value +") more than 65535 or less than 0")
                     : ok(new UNSIGNED_SHORT(v.value, v.string))
             );
         }
@@ -436,9 +436,9 @@ public sealed interface BuiltInTypes {
 
     record UNSIGNED_BYTE(int value, String string) implements BuiltInTypes, UnsignedByteNum {
         public static Result<UNSIGNED_SHORT, String> parse(String value) {
-            return INT.parse(value).flatMap(
+            return INT.parse(value).fmap(
                 v -> v.value > 255 || v.value < 0
-                    ? err("value ("+ v.value +") more than 255 or less than 0")
+                    ? error("value ("+ v.value +") more than 255 or less than 0")
                     : ok(new UNSIGNED_SHORT(v.value, v.string))
             );
         }

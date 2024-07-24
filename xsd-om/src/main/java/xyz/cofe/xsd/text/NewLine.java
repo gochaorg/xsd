@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.text;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 import java.io.IOException;
 import java.io.Writer;

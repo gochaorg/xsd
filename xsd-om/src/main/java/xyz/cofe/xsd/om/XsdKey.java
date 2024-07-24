@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -59,8 +59,8 @@ public final class XsdKey implements Xsd,
     public static ImList<XsdKey> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdKey((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdKey((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -84,13 +84,13 @@ public final class XsdKey implements Xsd,
     }
 
     public Result<XsdSelector, String> getSelectors() {
-        return Result.of(
-            elem().getChildren().flatMap(n -> XsdSelector.parseList(n,this)).head(),
-            "nested selector not found"
+        return Result.from(
+            elem().getChildren().fmap(n -> XsdSelector.parseList(n,this)).head(),
+            ()->"nested selector not found"
         );
     }
 
     public ImList<XsdField> getFields() {
-        return elem().getChildren().flatMap(n -> XsdField.parseList(n,this));
+        return elem().getChildren().fmap(n -> XsdField.parseList(n,this));
     }
 }

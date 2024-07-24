@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -57,8 +57,8 @@ public final class XsdExtension implements Xsd,
     public static ImList<XsdExtension> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdExtension((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdExtension((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -88,7 +88,7 @@ public final class XsdExtension implements Xsd,
             ImList<NestedEl> r2 = XsdAll.parseList(node, parent).map(a->a);
             ImList<NestedEl> r3 = XsdChoice.parseList(node, parent).map(a->a);
             ImList<NestedEl> r4 = XsdSequence.parseList(node, parent).map(a->a);
-            return r1.join(r2).join(r3).join(r4);
+            return r1.append(r2).append(r3).append(r4);
         }
     }
 
@@ -106,40 +106,42 @@ public final class XsdExtension implements Xsd,
     private Optional<NestedEl> nested;
     public Optional<NestedEl> getNested(){
         if( nested!=null )return nested;
-        nested = elem().getChildren().flatMap(n -> NestedEl.parseList(n,this)).head();
+        nested = elem().getChildren().fmap(n -> NestedEl.parseList(n,this)).head();
         return nested;
     }
 
     private Optional<XsdAnyAttribute> anyAttribute;
     public Optional<XsdAnyAttribute> getAnyAttribute(){
         if( anyAttribute!=null )return anyAttribute;
-        anyAttribute = elem().getChildren().flatMap(n -> XsdAnyAttribute.parseList(n,this)).head();
+        anyAttribute = elem().getChildren().fmap(n -> XsdAnyAttribute.parseList(n,this)).head();
         return anyAttribute;
     }
 
     private ImList<XsdAttribute> attributes;
     public ImList<XsdAttribute> getAttributes(){
         if( attributes!=null )return attributes;
-        attributes = elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this));
+        attributes = elem().getChildren().fmap(n -> XsdAttribute.parseList(n,this));
         return attributes;
     }
 
     private ImList<XsdAttributeGroup> attributeGroups;
     public ImList<XsdAttributeGroup> getAttributeGroups(){
         if( attributeGroups!=null )return attributeGroups;
-        attributeGroups = elem().getChildren().flatMap(n -> XsdAttributeGroup.parseList(n,this));
+        attributeGroups = elem().getChildren().fmap(n -> XsdAttributeGroup.parseList(n,this));
         return attributeGroups;
     }
 
     private Result<ImList<TypeDef>, String> refTypes;
     public Result<ImList<TypeDef>, String> getRefTypes() {
         if( refTypes!=null )return refTypes;
-        refTypes = getBase().flatMap( typeQName -> TypeDef.resolveTypeDefs(typeQName, this) );
+        refTypes = getBase().fmap( typeQName -> TypeDef.resolveTypeDefs(typeQName, this) );
         return refTypes;
     }
 
     public Result<TypeDef,String> getRefType(){
-        return getRefTypes().flatMap( types -> types.size()==1 ? Result.of(types.head(), "expect one ref types") : Result.err("expect one ref types") );
+        return getRefTypes().fmap( types -> types.size()==1 ?
+            Result.from(types.head(), ()->"expect one ref types") : Result.error("expect one ref types")
+        );
     }
 
 }

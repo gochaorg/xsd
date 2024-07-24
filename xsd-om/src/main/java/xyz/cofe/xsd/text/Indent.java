@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.text;
 
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.Tuple2;
 
 import java.io.IOError;
 import java.io.IOException;
@@ -16,8 +16,8 @@ public class Indent {
             .map(line -> ident + line)
             .foldLeft(
                 Tuple2.of("", 0),
-                (acc, it) -> Tuple2.of(acc.a() + (acc.b()>0 ? "\n" : "") + it, acc.b() + 1)
-            ).a();
+                (acc, it) -> Tuple2.of(acc._1() + (acc._2()>0 ? "\n" : "") + it, acc._2() + 1)
+            )._1();
     }
 
     public static abstract class BaseLineReWriter<SELF extends BaseLineReWriter<SELF>> extends Writer {

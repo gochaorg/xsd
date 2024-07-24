@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 import java.util.Optional;
 
@@ -26,11 +26,11 @@ public final class ElementContent implements ContentDef {
 
     private final ImList<XsdAttribute> attributes;
 
-    public ImList<XsdAttribute> getAttributes() {return ImList.empty();}
+    public ImList<XsdAttribute> getAttributes() {return ImList.of();}
 
     private final ImList<XsdAttributeGroup> attributesGroups;
 
-    public ImList<XsdAttributeGroup> getAttributesGroups() {return ImList.empty();}
+    public ImList<XsdAttributeGroup> getAttributesGroups() {return ImList.of();}
 
     private final Optional<XsdAnyAttribute> anyAttribute;
 

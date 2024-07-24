@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -69,8 +69,8 @@ public final class XsdAny implements Xsd,
     public static ImList<XsdAny> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdAny((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdAny((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -87,16 +87,16 @@ public final class XsdAny implements Xsd,
     }
 
     public Result<String, String> getNamespace() {
-        return Result.of(
+        return Result.from(
             elem.attrib("namespace").map(XmlAttr::getValue).head(),
-            "namespace not found"
+            ()->"namespace not found"
         );
     }
 
     public Result<String, String> getProcessContents() {
-        return Result.of(
+        return Result.from(
             elem.attrib("processContents").map(XmlAttr::getValue).head(),
-            "processContents not found"
+            ()->"processContents not found"
         );
     }
 

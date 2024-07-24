@@ -1,10 +1,10 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
-import xyz.cofe.im.struct.Result.NoValue;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
+import xyz.cofe.coll.im.Result.NoValue;
 
-import static xyz.cofe.im.struct.Result.ok;
+import static xyz.cofe.coll.im.Result.ok;
 
 /**
  * Объявление параметра типа
@@ -17,12 +17,12 @@ public final class TypeParam {
 
     public static TypeParam createParam(Type constraint){
         if( constraint==null ) throw new IllegalArgumentException("constraint==null");
-        return new TypeParam(ImList.first(constraint), CoPos.Param);
+        return new TypeParam(ImList.of(constraint), CoPos.Param);
     }
 
     public static TypeParam createResult(Type constraint){
         if( constraint==null ) throw new IllegalArgumentException("constraint==null");
-        return new TypeParam(ImList.first(constraint), CoPos.Result);
+        return new TypeParam(ImList.of(constraint), CoPos.Result);
     }
 
     private final ImList<Type> constraints;
@@ -57,12 +57,12 @@ public final class TypeParam {
         if (typeValue == null) throw new IllegalArgumentException("typeValue==null");
         if (typeValue instanceof TypeVar tv) return isAssignableFrom(tv);
         if (typeValue instanceof Type t) return isAssignableFrom(t);
-        return Result.err("!! bug");
+        return Result.error("!! bug");
     }
 
     private Result<NoValue, String> isAssignableFrom(TypeVar typeVar) {
         if (coPos != typeVar.typeParam().coPos()) {
-            return Result.err("CoVaraint position not match, expect " + coPos + ", found " + typeVar.typeParam().coPos());
+            return Result.error("CoVaraint position not match, expect " + coPos + ", found " + typeVar.typeParam().coPos());
         }
 
         if (constraints.isEmpty()) return ok(NoValue.instance);
@@ -74,15 +74,15 @@ public final class TypeParam {
 
                 var produceTypes = typeVar.typeParam().constraints();
                 if (produceTypes.isEmpty()) {
-                    return Result.err(
+                    return Result.error(
                         "constraint#" + constrIdx +
                             "\n  expect type: " + expectType + ", but varType has not constraints"
                     );
                 }
 
-                var prodTypes = produceTypes.map(prodType -> checkConstraint(constrIdx, expectType, prodType));
+                var prodTypes = produceTypes.map(prodType -> checkConstraint((int) constrIdx, expectType, prodType));
                 if (prodTypes.filter(Result::isOk).isEmpty()) {
-                    return Result.err(
+                    return Result.error(
                         "constraint#" + constrIdx +
                             "\n  expect type: " + expectType + ", but varType has not valid constraints:" +
                             prodTypes.foldLeft(
@@ -103,7 +103,7 @@ public final class TypeParam {
         if (constraints.isEmpty()) return ok(NoValue.instance);
 
         ImList<Result<NoValue, String>> contraintCheck = constraints.enumerate().map(en ->
-            checkConstraint(en.index(), en.value(), type)
+            checkConstraint((int)en.index(), en.value(), type)
         );
 
         return foldErr(contraintCheck);
@@ -116,7 +116,7 @@ public final class TypeParam {
                 succ1 -> it,
                 err1 -> it.fold(
                     succ2 -> acc,
-                    err2 -> Result.err(err1 + "\n" + err2)
+                    err2 -> Result.error(err1 + "\n" + err2)
                 )
             )
         );
@@ -128,21 +128,21 @@ public final class TypeParam {
 
         if (coPos == CoPos.InVariant) {
             if (coRes.fold(v->v,i->false) && contrRes.fold(v->v,i->false)) return ok();
-            return Result.<NoValue, String>err(
+            return Result.<NoValue, String>error(
                 "constraint#" + constrIdx +
                     "\n  expect invaraint:" +
                     "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + coRes +
                     "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contrRes
             );
         } else if (coPos == CoPos.Param && !coRes.fold(v->v,i->false)) {
-            return Result.<NoValue, String>err(
+            return Result.<NoValue, String>error(
                 "constraint#" + constrIdx +
                     "\n  expect Param(CoVariant):" +
                     "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + coRes +
                     "\n  Contr: " + type + " isAssignableFrom " + expectType + " = " + contrRes
             );
         } else if (coPos == CoPos.Result && !contrRes.fold(v->v,i->false)) {
-            return Result.<NoValue, String>err(
+            return Result.<NoValue, String>error(
                 "constraint#" + constrIdx +
                     "\n  expect Result(ContrVaraint):" +
                     "\n  Co: " + expectType + " isAssignableFrom " + type + " = " + coRes +

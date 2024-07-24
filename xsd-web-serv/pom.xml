@@ -21,7 +21,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>nix-path</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

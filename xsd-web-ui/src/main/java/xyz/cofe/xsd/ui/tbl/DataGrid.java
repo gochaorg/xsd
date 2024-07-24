@@ -4,7 +4,7 @@ import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import xyz.cofe.ecoll.EvList;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.Tuple2;
 import xyz.cofe.xsd.ui.render.RenderedValue;
 
 import java.util.ArrayList;
@@ -252,9 +252,9 @@ public class DataGrid<A> {
         }
 
         for (var drc3t : dccRemoveset) {
-            int ridx2 = drc3t.a();
+            int ridx2 = drc3t._1();
             dataRowContainers.remove(ridx2);
-            unmount(drc3t.b());
+            unmount(drc3t._2());
         }
     }
 

@@ -43,7 +43,7 @@ public class UnixPathTest {
 
         var rel3Res = base.resolve("../../rel");
         System.out.println(rel3Res);
-        assertTrue(rel3Res.isErr());
+        assertTrue(rel3Res.isError());
 
         var rel4Res = base.resolve("/abs");
         System.out.println(rel4Res);
@@ -78,7 +78,7 @@ public class UnixPathTest {
 
         var rel3Res = base.resolve("../../rel");
         System.out.println(rel3Res);
-        assertTrue(rel3Res.isErr());
+        assertTrue(rel3Res.isError());
 
         var rel4Res = base.resolve("/abs");
         System.out.println(rel4Res);
@@ -108,13 +108,13 @@ public class UnixPathTest {
 
         var rel2Res = base.resolve("../rel");
         System.out.println(rel2Res);
-        assertTrue(rel2Res.isErr());
+        assertTrue(rel2Res.isError());
 //        assertTrue(rel2Res.isOk());
 //        assertTrue(rel2Res.map(CanonAbsPath::toString).map("/rel"::equals).toOptional().orElse(false) );
 
         var rel3Res = base.resolve("../../rel");
         System.out.println(rel3Res);
-        assertTrue(rel3Res.isErr());
+        assertTrue(rel3Res.isError());
 
         var rel4Res = base.resolve("/abs");
         System.out.println(rel4Res);

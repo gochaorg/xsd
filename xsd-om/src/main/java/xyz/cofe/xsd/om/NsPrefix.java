@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlAttr;
 
 @Deprecated
@@ -11,12 +11,12 @@ public final class NsPrefix {
         if( attr.getPrefix()!=null && attr.getPrefix().equals("xmlns") ){
             return Result.ok(new NsPrefix(attr));
         }
-        return Result.err("expect xmlns prefix at attribute");
+        return Result.error("expect xmlns prefix at attribute");
     }
 
     public static ImList<NsPrefix> parseList(XmlAttr attr){
         if( attr==null ) throw new IllegalArgumentException("attr==null");
-        return parse(attr).fold(ImList::first, err -> ImList.empty());
+        return parse(attr).fold(ImList::of, err -> ImList.of());
     }
 
     public final XmlAttr xmlAttr;

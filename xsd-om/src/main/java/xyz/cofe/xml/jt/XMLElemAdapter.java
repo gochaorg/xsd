@@ -4,7 +4,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -48,7 +48,7 @@ public class XMLElemAdapter extends XMLNodeAdapter implements XmlElem {
     public ImList<XmlAttr> getAttributes() {
         if (attrs != null) return attrs;
         var src = element.getAttributes();
-        var attrs = ImList.<XmlAttr>empty();
+        var attrs = ImList.<XmlAttr>of();
         if (src != null) {
             for (var i = 0; i < src.getLength(); i++) {
                 var n = src.item(i);
@@ -67,7 +67,7 @@ public class XMLElemAdapter extends XMLNodeAdapter implements XmlElem {
     @Override
     public ImList<XmlNode> getChildren() {
         if (children != null) return children;
-        var children = ImList.<XmlNode>empty();
+        var children = ImList.<XmlNode>of();
         var src = element.getChildNodes();
         if (src != null) {
             for (var i = 0; i < src.getLength(); i++) {

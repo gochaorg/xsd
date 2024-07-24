@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>xyz.cofe</groupId>
-    <artifactId>im-coll</artifactId>
+    <artifactId>ecoll</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -20,6 +20,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.9.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.cofe</groupId>
+            <artifactId>coll-im</artifactId>
+            <version>3.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

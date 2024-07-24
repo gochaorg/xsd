@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -51,8 +51,8 @@ public final class XsdUnion implements Xsd,
     public static ImList<XsdUnion> parseList(XmlNode el,Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdUnion((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdUnion((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -77,15 +77,15 @@ public final class XsdUnion implements Xsd,
     }
 
     public Result<ImList<BuiltInTypes.QName>, String> getMemberTypes() {
-        return Result.of(
+        return Result.from(
             elem().attrib("memberTypes").map(XmlAttr::getValue).head(),
-            "memberTypes not found"
+            ()->"memberTypes not found"
         ).map( str ->
             ImList.from(Arrays.asList(str.split("\\s+")))
         ).map( strings ->
-            strings.flatMap( string -> BuiltInTypes.QName.parse(string).toImList())
+            strings.fmap( string -> BuiltInTypes.QName.parse(string).toImList())
         );
     }
 
-    public ImList<XsdSimpleType> getSimpleTypes(){ return elem().getChildren().flatMap(n -> XsdSimpleType.parseList(n,this)); }
+    public ImList<XsdSimpleType> getSimpleTypes(){ return elem().getChildren().fmap(n -> XsdSimpleType.parseList(n,this)); }
 }

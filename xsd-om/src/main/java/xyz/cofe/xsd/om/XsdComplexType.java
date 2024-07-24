@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xsd.om.BuiltInTypes.BOOLEAN;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
@@ -108,8 +108,8 @@ public final class XsdComplexType implements Xsd,
     public static ImList<XsdComplexType> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdComplexType((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdComplexType((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -137,24 +137,24 @@ public final class XsdComplexType implements Xsd,
     public Optional<ContentDef> getContentDef() {
         if (contentDef != null) return contentDef;
 
-        var simpleContent = elem.getChildren().flatMap(n -> XsdSimpleContent.parseList(n, this)).head();
+        var simpleContent = elem.getChildren().fmap(n -> XsdSimpleContent.parseList(n, this)).head();
         if (simpleContent.isPresent()) return simpleContent.map(a -> a);
 
-        var complexContent = elem.getChildren().flatMap(n -> XsdComplexContent.parseList(n, this)).head();
+        var complexContent = elem.getChildren().fmap(n -> XsdComplexContent.parseList(n, this)).head();
         if (complexContent.isPresent()) return complexContent.map(a -> a);
 
-        Optional<ElementsLayout> group = elem.getChildren().flatMap(n -> XsdGroup.parseList(n, this)).head().map(a -> a);
-        Optional<ElementsLayout> all = elem.getChildren().flatMap(n -> XsdAll.parseList(n, this)).head().map(a -> a);
-        Optional<ElementsLayout> choice = elem.getChildren().flatMap(n -> XsdChoice.parseList(n, this)).head().map(a -> a);
-        Optional<ElementsLayout> seq = elem.getChildren().flatMap(n -> XsdSequence.parseList(n, this)).head().map(a -> a);
+        Optional<ElementsLayout> group = elem.getChildren().fmap(n -> XsdGroup.parseList(n, this)).head().map(a -> a);
+        Optional<ElementsLayout> all = elem.getChildren().fmap(n -> XsdAll.parseList(n, this)).head().map(a -> a);
+        Optional<ElementsLayout> choice = elem.getChildren().fmap(n -> XsdChoice.parseList(n, this)).head().map(a -> a);
+        Optional<ElementsLayout> seq = elem.getChildren().fmap(n -> XsdSequence.parseList(n, this)).head().map(a -> a);
         Optional<ElementsLayout> elemLayout =
             group.or(() -> all)
                 .or(() -> choice)
                 .or(() -> seq);
 
-        ImList<XsdAttribute> attr = elem.getChildren().flatMap(n -> XsdAttribute.parseList(n, this));
-        ImList<XsdAttributeGroup> attrGroup = elem.getChildren().flatMap(n -> XsdAttributeGroup.parseList(n, this));
-        Optional<XsdAnyAttribute> anyAttr = elem.getChildren().flatMap(n -> XsdAnyAttribute.parseList(n, this)).head();
+        ImList<XsdAttribute> attr = elem.getChildren().fmap(n -> XsdAttribute.parseList(n, this));
+        ImList<XsdAttributeGroup> attrGroup = elem.getChildren().fmap(n -> XsdAttributeGroup.parseList(n, this));
+        Optional<XsdAnyAttribute> anyAttr = elem.getChildren().fmap(n -> XsdAnyAttribute.parseList(n, this)).head();
 
         contentDef = Optional.of(new ElementContent(
             elemLayout,
@@ -167,24 +167,28 @@ public final class XsdComplexType implements Xsd,
     }
 
     public Result<BOOLEAN, String> getAbstract() {
-        return Result.of(elem.attrib("abstract").head(), "abstract not found")
+        return Result.from(elem.attrib("abstract").head(),
+                ()->"abstract not found")
             .map(XmlAttr::getValue)
-            .flatMap(BOOLEAN::parse);
+            .fmap(BOOLEAN::parse);
     }
 
     public Result<BOOLEAN, String> getMixed() {
-        return Result.of(elem.attrib("mixed").head(), "mixed not found")
+        return Result.from(elem.attrib("mixed").head(),
+                ()->"mixed not found")
             .map(XmlAttr::getValue)
-            .flatMap(BOOLEAN::parse);
+            .fmap(BOOLEAN::parse);
     }
 
     public Result<String, String> getBlock() {
-        return Result.of(elem.attrib("block").head(), "block not found")
+        return Result.from(elem.attrib("block").head(),
+                ()->"block not found")
             .map(XmlAttr::getValue);
     }
 
     public Result<String, String> getFinal() {
-        return Result.of(elem.attrib("final").head(), "final not found")
+        return Result.from(elem.attrib("final").head(),
+                ()->"final not found")
             .map(XmlAttr::getValue);
     }
 
@@ -192,27 +196,27 @@ public final class XsdComplexType implements Xsd,
 
     public Optional<XsdExtension> getExtension() {
         if (extension != null) return extension;
-        Result<XsdExtension, String> r1 = Result.of(getContentDef()
-            , "no contentDef"
-        ).flatMap(cdef -> {
+        Result<XsdExtension, String> r1 = Result.from(getContentDef()
+            , ()->"no contentDef"
+        ).fmap(cdef -> {
             if (cdef instanceof XsdComplexContent cc) {
-                return cc.getNested().flatMap(ccNested -> {
+                return cc.getNested().fmap(ccNested -> {
                     if (ccNested instanceof XsdExtension ext) {
                         return Result.ok(ext);
                     } else {
-                        return Result.err("no extension in contentDef");
+                        return Result.error("no extension in contentDef");
                     }
                 });
             } else if (cdef instanceof XsdSimpleContent sc) {
-                return sc.getNested().flatMap(scNested -> {
+                return sc.getNested().fmap(scNested -> {
                     if (scNested instanceof XsdExtension ext) {
                         return Result.ok(ext);
                     } else {
-                        return Result.err("no extension in contentDef");
+                        return Result.error("no extension in contentDef");
                     }
                 });
             } else {
-                return Result.err("no extension in contentDef");
+                return Result.error("no extension in contentDef");
             }
         });
         extension = r1.toOptional();
@@ -221,18 +225,22 @@ public final class XsdComplexType implements Xsd,
 
     public Result<ImList<TypeDef>, String> getExtensionTypeDefs() {
         return Result
-            .of(getExtension(), "extension not found")
-            .flatMap(BaseAttribute::getBase)
-            .flatMap(typeQName -> TypeDef.resolveTypeDefs(typeQName, this));
+            .from(getExtension(), ()->"extension not found")
+            .fmap(BaseAttribute::getBase)
+            .fmap(typeQName -> TypeDef.resolveTypeDefs(typeQName, this));
     }
 
     public Result<TypeDef, String> getExtensionTypeDef() {
-        return getExtensionTypeDefs().flatMap(lst ->
-            lst.size() == 1 ? Result.of(lst.head(), "expect one extension type") : Result.err("expect one extension type")
+        return getExtensionTypeDefs().fmap(lst ->
+            lst.size() == 1 ?
+                Result.from(
+                    lst.head(),
+                    ()->"expect one extension type"
+                ) : Result.error("expect one extension type")
         );
     }
 
-    public ImList<XsdAttribute> getAttributes(){ return elem().getChildren().flatMap(n -> XsdAttribute.parseList(n,this)); }
+    public ImList<XsdAttribute> getAttributes(){ return elem().getChildren().fmap(n -> XsdAttribute.parseList(n,this)); }
 
     @Override
     public String toString() {

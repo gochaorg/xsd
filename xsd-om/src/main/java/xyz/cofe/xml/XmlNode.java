@@ -1,7 +1,7 @@
 package xyz.cofe.xml;
 
-import xyz.cofe.im.iter.ExtIterable;
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.iter.ExtIterable;
+import xyz.cofe.coll.im.ImList;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +19,7 @@ public interface XmlNode {
 
         public ExtIterable<ImList<XmlNode>> tree() {
             //noinspection unchecked
-            return () -> new XmlNodeIterator(ImList.first(root));
+            return () -> new XmlNodeIterator(ImList.of(root));
         }
 
         public ExtIterable<XmlNode> nodes() {
@@ -29,7 +29,7 @@ public interface XmlNode {
         }
 
         public ExtIterable<XmlElem> elems() {
-            return nodes().flatMap(
+            return nodes().fmap(
                 node -> node instanceof XmlElem e
                     ? List.of(e).iterator() : Collections.emptyIterator());
         }

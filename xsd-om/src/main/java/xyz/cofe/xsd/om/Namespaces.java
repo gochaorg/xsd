@@ -1,8 +1,8 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
+import xyz.cofe.coll.im.Tuple2;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class Namespaces {
             xsd.getTargetNamespace().ifPresent( name -> {
                 m.put(
                     name,
-                    m.getOrDefault(name, ImList.empty()).prepend(xsd)
+                    m.getOrDefault(name, ImList.of()).prepend(xsd)
                 );
             });
         }
@@ -40,7 +40,7 @@ public class Namespaces {
     public Result<Namespace, String> find(String name) {
         if( name==null ) throw new IllegalArgumentException("name==null");
         var ns = getNamespaceMap().get(name);
-        if( ns==null )return Result.err("not found");
+        if( ns==null )return Result.error("not found");
         return Result.ok(ns);
     }
 }

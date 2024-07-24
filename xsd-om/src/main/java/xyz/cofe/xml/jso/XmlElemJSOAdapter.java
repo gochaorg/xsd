@@ -2,7 +2,7 @@ package xyz.cofe.xml.jso;
 
 import org.teavm.jso.dom.xml.Element;
 import org.teavm.jso.dom.xml.Node;
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlAttr;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
@@ -45,7 +45,7 @@ public class XmlElemJSOAdapter extends XmlNodeJSOAdapter implements XmlElem {
     @Override
     public ImList<XmlAttr> getAttributes() {
         if( attributes!=null )return attributes;
-        var attributes = ImList.<XmlAttr>empty();
+        var attributes = ImList.<XmlAttr>of();
         var atts = element.getAttributes();
         for( var i=0;i<atts.getLength();i++ ){
             attributes = attributes.prepend(new XMLAttrJSOAdapter(atts.get(i)));
@@ -59,7 +59,7 @@ public class XmlElemJSOAdapter extends XmlNodeJSOAdapter implements XmlElem {
     @Override
     public ImList<XmlNode> getChildren() {
         if (children != null) return children;
-        var children = ImList.<XmlNode>empty();
+        var children = ImList.<XmlNode>of();
 
         var nodeList = element.getChildNodes();
         if (nodeList != null) {

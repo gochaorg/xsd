@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 
 public class Namespace {
     public final String name;
@@ -16,21 +16,21 @@ public class Namespace {
     private ImList<XsdElement> elements;
     public ImList<XsdElement> getElements() {
         if( elements!=null )return elements;
-        elements = xsdDocs.flatMap(XsdSchema::getElements);
+        elements = xsdDocs.fmap(XsdSchema::getElements);
         return elements;
     }
 
     private ImList<XsdComplexType> complexTypes;
     public ImList<XsdComplexType> getComplexTypes(){
         if( complexTypes!=null )return complexTypes;
-        complexTypes = xsdDocs.flatMap(XsdSchema::getComplexTypes);
+        complexTypes = xsdDocs.fmap(XsdSchema::getComplexTypes);
         return complexTypes;
     }
 
     private ImList<XsdSimpleType> simpleType;
     public ImList<XsdSimpleType> getSimpleType(){
         if( simpleType!=null )return simpleType;
-        simpleType = xsdDocs.flatMap(XsdSchema::getSimpleTypes);
+        simpleType = xsdDocs.fmap(XsdSchema::getSimpleTypes);
         return simpleType;
     }
 
@@ -39,7 +39,7 @@ public class Namespace {
         if( typeDefs!=null )return typeDefs;
         ImList<TypeDef> ct = getComplexTypes().map(a -> a);
         ImList<TypeDef> st = getSimpleType().map(a -> a);
-        typeDefs = ct.join(st);
+        typeDefs = ct.append(st);
         return typeDefs;
     }
 }

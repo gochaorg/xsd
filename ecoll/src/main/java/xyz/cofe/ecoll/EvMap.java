@@ -1,8 +1,8 @@
 package xyz.cofe.ecoll;
 
-import xyz.cofe.im.struct.Consumer3;
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.Consumer3;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Tuple2;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -178,7 +178,7 @@ public class EvMap<K, V> {
     }
 
     public ImList<Tuple2<K,V>> toImList(){
-        ImList<Tuple2<K,V>> lst = ImList.empty();
+        ImList<Tuple2<K,V>> lst = ImList.of();
         for( var e : map.entrySet() ){
             lst = lst.prepend(Tuple2.of(e.getKey(), e.getValue()));
         }

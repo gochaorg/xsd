@@ -1,15 +1,13 @@
 package xyz.cofe.ts;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
-import xyz.cofe.im.struct.Tuple2;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static xyz.cofe.im.struct.Result.ok;
+import static xyz.cofe.coll.im.Result.ok;
 
 /**
  * Структурный тип
@@ -94,7 +92,7 @@ public final class Struct implements ExtendType,
         }
 
         //region typeParams : ImList<TypeParam>
-        private ImList<TypeParam> typeParams = ImList.empty();
+        private ImList<TypeParam> typeParams = ImList.of();
 
         public Builder typeParams(ImList<TypeParam> typeParams) {
             if (typeParams == null) throw new IllegalArgumentException("typeParams==null");
@@ -113,7 +111,7 @@ public final class Struct implements ExtendType,
 
         //endregion
         //region baseTypes : ImList<Type>
-        private Supplier<ImList<Result<Type, String>>> baseTypes = ImList::empty;
+        private Supplier<ImList<Result<Type, String>>> baseTypes = ImList::of;
 
         public Builder baseTypes(Supplier<ImList<Result<Type, String>>> baseTypes) {
             if (baseTypes == null) throw new IllegalArgumentException("baseTypes==null");
@@ -125,13 +123,13 @@ public final class Struct implements ExtendType,
         public Builder baseType(Type baseType) {
             if (baseType == null) throw new IllegalArgumentException("baseType==null");
             var b = clone();
-            b.baseTypes = () -> ImList.first(ok(baseType));
+            b.baseTypes = () -> ImList.of(ok(baseType));
             return b;
         }
 
         //endregion
         //region fields : Supplier<ImList<Field>>
-        private Supplier<ImList<Field>> fieldsProducer = ImList::empty;
+        private Supplier<ImList<Field>> fieldsProducer = ImList::of;
 
         public Builder fields(ImList<Field> fields) {
             if (fields == null) throw new IllegalArgumentException("fields==null");

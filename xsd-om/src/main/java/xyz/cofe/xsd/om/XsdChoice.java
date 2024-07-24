@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -59,8 +59,8 @@ public final class XsdChoice implements Xsd,
     public static ImList<XsdChoice> parseList(XmlNode el,Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdChoice((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdChoice((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;

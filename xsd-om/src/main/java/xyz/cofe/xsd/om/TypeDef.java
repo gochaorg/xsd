@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 
 public sealed interface TypeDef
     extends NameAttribute,
@@ -13,7 +13,7 @@ public sealed interface TypeDef
         if (typeQName == null) throw new IllegalArgumentException("typeQName==null");
         if (schemaOwner == null) throw new IllegalArgumentException("schemaOwner==null");
 
-        var ns = Result.of(typeQName.prefix(), "type prefix not found").fold(
+        var ns = Result.from(typeQName.prefix(), ()->"type prefix not found").fold(
             schemaOwner::findNamespaceByPrefix,
             ignore -> schemaOwner.getSelfNamespace()
         );
@@ -32,9 +32,9 @@ public sealed interface TypeDef
         if (typeQName == null) throw new IllegalArgumentException("typeQName==null");
         if (typeQNameContainer == null) throw new IllegalArgumentException("typeQNameContainer==null");
 
-        return Result.of(
+        return Result.from(
             typeQNameContainer.getSchemaOwner(),
-            "schemaOwner not found"
-        ).flatMap(schemaOwner -> resolveTypeDefs(typeQName, schemaOwner));
+            ()->"schemaOwner not found"
+        ).fmap(schemaOwner -> resolveTypeDefs(typeQName, schemaOwner));
     }
 }

@@ -1,7 +1,7 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
-import xyz.cofe.im.struct.Result;
+import xyz.cofe.coll.im.ImList;
+import xyz.cofe.coll.im.Result;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -60,8 +60,8 @@ public final class XsdUnique implements Xsd, XsdAnnotation.AnnotationProperty, I
         if (el == null) throw new IllegalArgumentException("el==null");
         if( parent==null ) throw new IllegalArgumentException("parent==null");
         return isMatch(el)
-            ? ImList.first(new XsdUnique((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdUnique((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -84,11 +84,11 @@ public final class XsdUnique implements Xsd, XsdAnnotation.AnnotationProperty, I
     }
 
     public Result<XsdSelector,String> getSelector(){
-        return Result.of(
-            elem().getChildren().flatMap(n -> XsdSelector.parseList(n,this)).head(),
-            "selector not found"
+        return Result.from(
+            elem().getChildren().fmap(n -> XsdSelector.parseList(n,this)).head(),
+            ()->"selector not found"
         );
     }
 
-    public ImList<XsdField> getFields(){ return elem().getChildren().flatMap(n -> XsdField.parseList(n,this)); }
+    public ImList<XsdField> getFields(){ return elem().getChildren().fmap(n -> XsdField.parseList(n,this)); }
 }

@@ -1,6 +1,6 @@
 package xyz.cofe.xsd.om;
 
-import xyz.cofe.im.struct.ImList;
+import xyz.cofe.coll.im.ImList;
 import xyz.cofe.xml.XmlElem;
 import xyz.cofe.xml.XmlNode;
 
@@ -150,8 +150,8 @@ public final class XsdRestriction implements Xsd,
     public static ImList<XsdRestriction> parseList(XmlNode el, Xsd parent) {
         if (el == null) throw new IllegalArgumentException("el==null");
         return isMatch(el)
-            ? ImList.first(new XsdRestriction((XmlElem) el, parent))
-            : ImList.empty();
+            ? ImList.of(new XsdRestriction((XmlElem) el, parent))
+            : ImList.of();
     }
 
     public final XmlElem elem;
@@ -177,7 +177,7 @@ public final class XsdRestriction implements Xsd,
     private ImList<Restriction> restrictions;
     public ImList<Restriction> getRestrictions(){
         if( restrictions!=null )return restrictions;
-        restrictions = elem.getChildren().flatMap(Restriction::parseList);
+        restrictions = elem.getChildren().fmap(Restriction::parseList);
         return restrictions;
     }
 }
